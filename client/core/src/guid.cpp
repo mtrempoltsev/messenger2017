@@ -1,5 +1,6 @@
-﻿//#include "stdafx.h" //windows only
-
+﻿#ifdef _WIN32 || _WIN64
+#include "stdafx.h" //windows only
+#endif
 #include "../include/guid.h"
 
 #include <boost/uuid/uuid_io.hpp>
