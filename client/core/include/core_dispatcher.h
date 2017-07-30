@@ -7,7 +7,7 @@ namespace m2
 {
     struct RegisterNewUserHandler final
     {
-        using CompletionHandler = std::function<void (Guid&& userId)>;
+        using CompletionHandler = std::function<void (Uuid&& userId)>;
         using ErrorHandler = std::function<void (Error&& error)>;
 
         CompletionHandler onComletion;
@@ -26,8 +26,6 @@ namespace m2
     class CoreDispatcher final
     {
     public:
-        static CoreDispatcher& instance();
-
         CoreDispatcher(CoreDispatcher&) = delete;
         CoreDispatcher& operator=(CoreDispatcher&) = delete;
 
@@ -35,9 +33,6 @@ namespace m2
         CoreDispatcher& operator=(CoreDispatcher&&) = delete;
 
         void registerNewUser(RegisterNewUserHandler handler);
-        void login(const Guid& guid, LoginHandler handler);
-
-    private:
-        CoreDispatcher();
+        void login(const Uuid& uuid, LoginHandler handler);
     };
 }

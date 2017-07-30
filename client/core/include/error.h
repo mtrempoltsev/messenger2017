@@ -4,6 +4,11 @@ namespace m2
 {
     struct Error final
     {
+        enum class Code
+        {
+            NetworkError
+        };
+
         Error(Code code, std::string&& message);
 
         Error(Error&) = delete;
@@ -11,11 +16,6 @@ namespace m2
 
         Error(Error&&) = default;
         Error& operator=(Error&&) = default;
-
-        enum class Code
-        {
-            NetworkError
-        };
 
         Code code;
         std::string message;
