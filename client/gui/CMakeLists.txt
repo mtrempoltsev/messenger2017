@@ -8,16 +8,12 @@ set(SUBPROJECT_ROOT "${M2_ROOT}/gui")
 # -------------------------   sources   -------------------------
 set(HEADERS
     stdafx.h
-
-    ${SHARED_HEADERS}
     )
 
 set(SOURCES
     src/stdafx.cpp
 
     src/main.cpp
-
-    ${SHARED_SOURCES}
     )
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
