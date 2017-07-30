@@ -52,7 +52,8 @@ include(cotire)
 
 
 # -------------------------    boost   --------------------------
-find_package(Boost COMPONENTS REQUIRED)
+find_package(Boost COMPONENTS
+    REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
 
