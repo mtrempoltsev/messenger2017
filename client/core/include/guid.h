@@ -1,7 +1,6 @@
 ﻿#pragma once
 
-#include <string>
-#include <boost/uuid/uuid.hpp>
+#include "../stdafx.h"
 namespace m2
 {
     class Uuid final
