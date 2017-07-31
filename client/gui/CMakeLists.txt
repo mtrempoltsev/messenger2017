@@ -21,9 +21,11 @@ set(SOURCES
     src/main.cpp
     )
 
+qt5_add_resources(RESOURCES qml/qml.qrc)
+
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 
-add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
+add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${RESOURCES})
 
 include_directories(${SUBPROJECT_ROOT})
 
