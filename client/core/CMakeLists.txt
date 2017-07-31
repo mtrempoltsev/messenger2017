@@ -12,6 +12,7 @@ set(HEADERS
     include/core_dispatcher.h
     include/error.h
     include/guid.h
+    include/config.h
     )
 
 set(SOURCES
@@ -20,6 +21,7 @@ set(SOURCES
     src/core_dispatcher.cpp
     src/error.cpp
     src/guid.cpp
+    src/config.cpp
     )
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
