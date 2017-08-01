@@ -1,103 +1,100 @@
 #include "../include/config.h"
 
-#include <iostream>
 #include <string>
+#include <fstream>
+#include <boost/property_tree/json_parser.hpp>
 
-using boost::property_tree::write_json;
-using m2::Uuid;
-using namespace m2::core;
+using namespace m2;
+using namespace core;
 
-/* PUBLIC METHODS */
+using boost::property_tree::ptree;
 
-Config::Config() : isValid_(false) {
-  // здесь специально ничего не происходит
-}
+std::map<Config::PropertyName, std::string> Config::propertyNameMap_ = {
+    { Config::PropertyName::ClientGuid, "ClientGuid" },
+    { Config::PropertyName::ServerGuid, "ServerGuid" }
+}; //Fill propernty name map
 
-/** ***********************************
- *  fill config from json string
- *  @author Alexander
- **************************************/
-ConfigError Config::ReadFromString(std::string jsonString) {
-  std::istringstream iss(jsonString);
-  if (iss.good()) return Read(iss);
-  return ConfigError::InvalidString;
-}
+Config::Config() :
+    hasChanges_(false) {
+} //constructor
 
-/** ***********************************
- * Open File and call Read function
- *
- * @author Vladimir
- **************************************/
-ConfigError Config::ReadFromFile(const std::string& jsonFileName) {
-  std::ifstream fs;
-  fs.open(jsonFileName);
-  if (fs.is_open()) {
-    return Read(fs);
-  }
-  return ConfigError::InvalidFile;
-}
+bool Config::CheckPropertyTree() {
+    bool ok = true;
+    std::string emptyString = std::string();
+    for (auto & it : propertyNameMap_) {
+        std::string bufStr = propertiesTree_.get<std::string>(it.second, emptyString);
+        if (bufStr == emptyString) ok = false;
+    }//foreach propertyNameMap_
+    return ok;
+}//CheckPropertyTree
 
-/**************************************
- * Open File for writing and call Write function
- *
- * by Vladimir
- **************************************/
-ConfigError Config::WriteToFile(const std::string& fileName) {
-  ConfigError result = ConfigError::InvalidFile;
-  std::ofstream fs(fileName);  // try to open file
-  if (fs.is_open()) {
-    result = Write(fs);
-    fs.close();
-  }
-  return result;
-}
+bool Config::Init(const std::string& fileName) {
+    bool ok = true;
+    try {
+        std::ifstream fs;
+        fs.open(fileName);
+        if (fs.is_open()) {
+            boost::property_tree::read_json(fs, propertiesTree_);
+            ok = CheckPropertyTree();
+        }//if file is open
+        else {
+            ok = false;
+        }//file not open
+    } //try read json
+    catch (std::exception& ex) {
+        //write message to log
+        //are we have a log?
+        ok = false;
+    } //handling exception
+    return ok;
+}//Init
 
-/***********************************************************************
-        return current Config state (fields) as Json String
-        Note: if isValid_ == false, method returns an empty string
-By Alexander
-************************************************************************/
-std::string Config::ToJsonString() {
-  std::string jsonString;
-  if (isValid_) {
-    std::ostringstream oss;
-    if (Write(oss) != ConfigError::WriteError) return oss.str();
-  }
+std::string Config::GetProperty(const PropertyName & property) const {
+    return propertiesTree_.get<std::string>(propertyNameMap_[property], std::string());
+}//GetProperty
+Uuid Config::GetClientGuid() const {
+    return Uuid(GetProperty(PropertyName::ClientGuid));
+}//GetClientGuid
 
-  return jsonString;
-}
+Uuid Config::GetServerGuid() const {
+    return Uuid(GetProperty(PropertyName::ServerGuid));
+}//GetServerGuid
 
-ConfigError Config::Write(std::ostream& jsonStream) {
-  ConfigError error = ConfigError::NoErrors;
-  return error;
-};
-/* PRIVATE METHODS */
+bool Config::SetClientGuid(const Uuid & uuid) {
+    return SetDataByKey(PropertyName::ClientGuid, uuid.ToString());
+}//SetClientGuid
 
-/** ***********************************
- *
- *  @author Alexander & Neilana
- **************************************/
-ConfigError Config::Read(std::istream& jsonStream) {
-  ConfigError error = ConfigError::NoErrors;
+bool Config::SetServerGuid(const Uuid & uuid) {
+    return SetDataByKey(PropertyName::ServerGuid, uuid.ToString());
+}//SetServerGuid
 
-  boost::property_tree::read_json(jsonStream, propertiesTree_);
+bool Config::SetDataByKey(const PropertyName & property, const std::string & data) {
+    bool result = true;
+    try {
+        propertiesTree_.put(propertyNameMap_[property], data);
+    } //try put data into propertiesTree
+    catch (boost::property_tree::ptree_bad_data & ex) {
+        //write message to log
+        //are we have a log?
+        result = false;
+    } //handling exception
+    return result;
+} //SetDataByKey
 
-  std::string emptyString = std::string();
+void Config::CommitChanges(const std::string & fileName) {
+    //1. Open File
+    //2. try to write propertiesTree_ into file
+    std::ofstream writer(fileName);
+    if (writer.is_open()) {
+        try {
+            boost::property_tree::write_json(writer, propertiesTree_);
+            hasChanges_ = false;
+        }//try
+        catch (boost::property_tree::json_parser_error & ex) {
+            //write message to log
+            //are we have a log?
+        }//catch
+        writer.close();
+    }//if file is open
+}//CommitChanges
 
-  std::string bufServerGuid = propertiesTree_.get<std::string>("ServerGuid", emptyString);
-  std::string bufClientGuid = propertiesTree_.get<std::string>("ClientGuid", emptyString);
-  std::string bufServerName = propertiesTree_.get<std::string>("ServerName", emptyString);
-
-  if ((bufServerGuid != emptyString) && (bufClientGuid != emptyString) && (bufServerName != emptyString)) {
-    fields_.serverGuid_.set(bufServerGuid);
-    fields_.clientGuid_.set(bufClientGuid);
-    fields_.serverName_ = bufServerName;
-
-    isValid_ = true;
-  } else {
-    isValid_ = false;
-    error = ConfigError::InvalidFields;
-  }
-
-  return error;
-}

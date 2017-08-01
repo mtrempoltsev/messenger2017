@@ -1,89 +1,48 @@
 #pragma once
 
-#include <boost/property_tree/json_parser.hpp>
+#include <map>
 #include <boost/property_tree/ptree.hpp>
-#include <fstream>
-#include <string>
 
 #include "guid.h"
 
 namespace m2 {
-namespace core {
-// possible errors that can occur while reading configuration form file or stream
-enum class ConfigError {
-  NoErrors,       ///< no errors occured
-  InvalidFile,    ///< error when trying to open a file
-  InvalidString,  ///< error when reading from a stream
-  InvalidJson,    ///< invalid JSON format
-  InvalidFields,  ///< configuration field contains invalid data
-  WriteError      ///< error while writing config into a file/stream
-};
-class Config {
-  // additional class for possible fields in the config file
-  class ConfigFields {
-   public:
-    m2::Uuid serverGuid_;
-    m2::Uuid clientGuid_;
-    std::string serverName_;
-  } fields_;
+    namespace core {
 
- public:
-  Config();
-  bool IsValid() { return isValid_; }
+        class Config final {
+        public:
+            //property names
+            enum class PropertyName
+            {
+                ClientGuid,
+                ServerGuid
+            };
 
-  // read/write functions
-  ConfigError ReadFromString(std::string jsonString);         ///< update current configuration from JSON-formatted string
-  ConfigError ReadFromFile(const std::string &jsonFileName);  ///< update current configuration from JSON-formatted file
-  ConfigError WriteToFile(const std::string &fileName);       ///< write current configuration into JSON-formatted file
-  ConfigError Write(std::ostream &jsonStream);
-  std::string ToJsonString();
+            Config();
 
-  // server guid getters
-  const m2::Uuid GetServerGuid() const { return fields_.serverGuid_; }
+            bool Init(const std::string & fileName);
 
-  // client guid getters
-  const m2::Uuid GetClientGuid() const { return fields_.clientGuid_; }
+            //getters
+            Uuid GetClientGuid() const;
+            Uuid GetServerGuid() const;
+            std::string GetProperty(const PropertyName & property) const;
 
-  // server guid setters
-  void SetServerGuid(const std::string &guid);
-  void SetServerGuid(const m2::Uuid &guid);
+            //setters
+            bool SetClientGuid(const Uuid & uuid);
+            bool SetServerGuid(const Uuid & uuid);
+            bool SetDataByKey(const PropertyName & property, const std::string & data);
+            //others methods
+            bool HasChanges() { return hasChanges_; }
+            void CommitChanges(const std::string & fileName);
 
-  // client guid setters
-  void SetClientGuid(const std::string &guid);
-  void SetClientGuid(const m2::Uuid &guid);
 
- private:
-  ConfigError Read(std::istream &jsonStream);  ///< update current configuration from JSON-formatted stream
+        private:
+            bool hasChanges_;
+            boost::property_tree::ptree propertiesTree_;
+            static std::map<PropertyName, std::string> propertyNameMap_;
 
-  //  m2::Uuid serverGuid_;
-  //  m2::Uuid clientGuid_;
-  //  std::string serverName_;
+            bool CheckPropertyTree();
 
-  // ConfigFields fields_;
+        };
 
-  bool isValid_;  ///< is current configuration correct
-  boost::property_tree::ptree propertiesTree_;
-
-  std::string fileName_;
-};
+    }
 }
-}
-
-// class ConfigFields {
-// public:
-//  m2::Uuid serverGuid_;
-//  m2::Uuid clientGuid_;
-//  std::string serverName_;
-//}
-
-// enum class FieldsNames {
-// serverGuid;
-// clientGuid;
-// serverName;
-//}
-
-// map <FieldsNames, std::string> fieldToName;
-// fieldToName[FieldsName::ServerGuid] = "ServerGUID"
-// fieldToName[FieldsName::ClientGuid] = "ClientGUID"
-
-// for (auto fieldToName : a)
