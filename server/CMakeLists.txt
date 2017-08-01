@@ -77,7 +77,7 @@ set(SOURCES
     src/stdafx.cpp
 
     src/main.cpp
-    )
+        src/Manager.cpp src/Manager.h src/RegisterManager.cpp src/RegisterManager.h)
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 
