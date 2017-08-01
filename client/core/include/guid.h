@@ -12,7 +12,7 @@ namespace m2
         Uuid(const std::string & uuid);
         std::string ToString() const;
         boost::uuids::uuid Get() const { return u_; }
-        void Set(const std::string& uuid);
+        bool Set(const std::string& uuid);
         void Generate();
     private:
         boost::uuids::uuid u_;

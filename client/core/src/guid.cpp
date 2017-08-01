@@ -19,7 +19,17 @@ std::string m2::Uuid::ToString() const
     return boost::uuids::to_string(u_);
 }
 
-void m2::Uuid::Set(const std::string &uuid)
+bool m2::Uuid::Set(const std::string &uuid)
 {
-    u_ = boost::lexical_cast<boost::uuids::uuid>(uuid);
+    boost::uuids::uuid temp;
+    try
+    {
+        temp = boost::lexical_cast<boost::uuids::uuid>(uuid);
+    }
+    catch (boost::bad_lexical_cast b)
+    {
+        return false;
+    }
+    u_ = temp;
+    return true;
 }
