@@ -1,14 +1,20 @@
 ﻿#pragma once
 
-#include "../stdafx.h"
-namespace m2 {
-class Uuid final {
- public:
-  std::string toString() const;
-  boost::uuids::uuid get() const { return u_; }
-  void set(const std::string& uuid);
+#include <boost/uuid/uuid.hpp>
+#include <string>
 
- private:
-  boost::uuids::uuid u_;
-};
+namespace m2
+{
+    class Uuid final
+    {
+    public:
+        Uuid() = default;
+        Uuid(const std::string & uuid);
+        std::string ToString() const;
+        boost::uuids::uuid Get() const { return u_; }
+        void Set(const std::string& uuid);
+        void Generate();
+    private:
+        boost::uuids::uuid u_;
+    };
 }
