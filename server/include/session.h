@@ -26,7 +26,7 @@ private:
     void readHeaderDone(const boost::system::error_code & error, std::size_t bytes_transferred);
     void readDataDone(const boost::system::error_code & error, std::size_t bytes_transferred, requestPtr request);
 
-    void sendResponse(const HttpResponse& response);
+    void sendResponse(responsePtr response);
     void sendResponseDone(const boost::system::error_code & error);
 private:
     boost::asio::io_service& service_;

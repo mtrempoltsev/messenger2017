@@ -1,5 +1,7 @@
 #include "../include/session.h"
 #include "../include/http_request.h"
+#include "../include/http_response.h"
+#include "../include/manager_controller.h"
 
 #include <iostream>
 
@@ -13,17 +15,19 @@ namespace server {
     : service_(service)
     , socket_(service)
     , write_strand_(service)
-    {}
+    {
+        LOG("!!! CREATE NEW SESSION !!!");
+    }
 
     boost::asio::ip::tcp::socket& Session::socket()
     {
         return socket_;
     }
 
-    void Session::sendResponse(const HttpResponse& response)
+    void Session::sendResponse(responsePtr response)
     {
-        LOG(response.toString());
-        async_write( socket_, boost::asio::buffer(response.toString()), write_strand_.wrap(
+        LOG(response->toString());
+        async_write( socket_, boost::asio::buffer(response->toString()), write_strand_.wrap(
             [me=shared_from_this()](const boost::system::error_code & ec, std::size_t){
                 me->sendResponseDone(ec);
             }));
@@ -80,6 +84,7 @@ namespace server {
     void Session::readDataDone(const boost::system::error_code & error, std::size_t bytes_transferred, requestPtr request)
     {
         if (!error) {
+            std::cout << "WHAT???" << std::endl;
             std::istream stream(&in_packet_);
             request->addData(stream);
             // Continue reading remaining data until EOF.
@@ -87,8 +92,9 @@ namespace server {
         }
         else if (error == boost::asio::error::eof)
         {
-            LOG("SEND");
-            sendResponse(HttpResponse(request->getData()));
+            ManagerController manager;
+            auto response = manager.doProcess(request);
+            sendResponse(response);
         }
         else {
             std::cout << "Error: " << error << std::endl;
