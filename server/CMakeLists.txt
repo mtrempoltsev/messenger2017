@@ -75,12 +75,12 @@ set(HEADERS
     )
 
 
-file(GLOB DATA src/Data/*)
+file(GLOB_RECURSE DATA src/Data/*.***)
 
 file(GLOB HEADERS include/*.h)
 file(GLOB SOURCES src/*.cpp)
 
-set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES} ${DATA})
+set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES} ${DATA} ${DATA_HPP})
 
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${DATA})
 

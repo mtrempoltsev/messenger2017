@@ -36,31 +36,27 @@ namespace dialog {
         //, boost::noncopyable
     {
     public:
-        typedef std::shared_ptr<ADialogs>  ptr;
 
         typedef TCashManager<AUserDialogs> LDialogCash;
         typedef AIndexManager::LUids       LUsers;
 
-    protected: /************| Construction |***************/
+    public: /***************| Construction |***************/
 
         ADialogs(const std::string&  Root);
         ADialogs(      std::string&& Root);
-
-    public:
-
-        static ptr Create(const std::string&  Root);
-        static ptr Create(      std::string&& Root);
 
     public: /***************| Interface |***************/
 
         // if it doesn't exist, it creates it
         AUserDialogs::ptr GetDialog(const AUser& User);
 
+        bool IsContains(const AUser& User);
+
     protected: /************| Members |***************/
 
         std::string   root;
-        AIndexManager users;
-        LDialogCash   dialogs;
+        AIndexManager index;
+        LDialogCash   cash;
 
     public:
 
@@ -78,7 +74,7 @@ namespace dialog {
     public: /***************| Operators |***************/
 
         AUserDialogs::ptr operator[](const AUser& User);
-
+        bool              operator()(const AUser& User);
     };
 
 }}}
