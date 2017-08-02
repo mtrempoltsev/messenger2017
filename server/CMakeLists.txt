@@ -35,7 +35,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${M2_BIN_DIR})
 
 
 #----------------------- compile options ------------------------
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 
 # ------------------------  3rd-parties  ------------------------
@@ -73,11 +73,8 @@ set(HEADERS
     stdafx.h
     )
 
-set(SOURCES
-    src/stdafx.cpp
-
-    src/main.cpp
-        src/Manager.cpp src/Manager.h src/RegisterManager.cpp src/RegisterManager.h)
+file(GLOB HEADERS include/*.h)
+file(GLOB SOURCES src/*.cpp)
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 
