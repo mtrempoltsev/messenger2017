@@ -76,7 +76,6 @@ set(HEADERS
 file(GLOB HEADERS include/*.h)
 file(GLOB SOURCES src/*.cpp)
 
-
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
