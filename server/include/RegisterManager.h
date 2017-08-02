@@ -1,31 +1,30 @@
-#ifndef M2_SERVER_REGISTERMANAGER_H
-#define M2_SERVER_REGISTERMANAGER_H
+#pragma once
+
 #include "Manager.h"
 #include "tuple"
 
 namespace m2 {
 namespace server {
+
 class RegisterManager : public Manager {
- public:
-  enum kindAction{
-    createEncrypted,
-    registerUser
-  };
-  struct Decrypted{ // неудачное название, переименуйте на что-нибудь более понятное
+public:
+  struct Decrypted { // неудачное название, переименуйте на что-нибудь более
+                     // понятное
     std::string publicKey;
     std::string serverString;
     std::string clientString;
   };
- public:
-  std::string doAction(const std::string &data, kindAction kind);
 
- protected:
-  std::string deserializePublicKey(const std::string &data);
+  virtual int doAction(const std::string &data, std::string &response) final;
+
+public:
+  static const ResponseType m_response_type = ResponseType::Register;
+
+protected:
   Decrypted deserializeDecrypted(const std::string &data);
- private:
+
+private:
   void save(const std::string &data);
 };
 }
 }
-
-#endif //M2_SERVER_REGISTERMANAGER_H
