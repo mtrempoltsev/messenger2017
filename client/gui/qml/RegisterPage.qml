@@ -31,19 +31,32 @@ Page {
 
         ColumnLayout {
             id: registerLayout
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             anchors.margins: 5
-            Layout.alignment: Qt.AlignHCenter
             Layout.minimumWidth: 300
             spacing: 4
 
             Text {
+                id: infoText
                 text: qsTr("Wellcome to messenger!")
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                font.pointSize: 15
                 font.bold: true
                 Layout.preferredHeight: 40
             }
 
+            BusyIndicator {
+                id: busyIndicator
+                Layout.alignment: Qt.AlignHCenter
+                visible: false
+            }
+
             Text {
+                id: text2
                 text: qsTr("Please choose your web server:")
+                verticalAlignment: Text.AlignBottom
                 font.italic: true
                 Layout.preferredHeight: 40
             }
@@ -74,8 +87,53 @@ Page {
                 anchors.right: parent.right
                 text: qsTr("Register")
 
-                onClicked: console.log(serverCombobox.currentText)
+                onClicked: {
+                    console.log(serverCombobox.currentText)
+                    root.state="loading"
+                    root.state="error"
+                }
             }
         }
     }
+
+
+    states: [
+        State {
+            name: "loading"
+
+            PropertyChanges {
+            }
+
+            PropertyChanges {
+                target: registerButton
+                enabled: false
+            }
+
+            PropertyChanges {
+                target: serverCombobox
+                enabled: false
+            }
+
+            PropertyChanges {
+                target: busyIndicator
+                visible: true
+            }
+
+            PropertyChanges {
+                target: infoText
+                text: qsTr("Loading, please wait...")
+            }
+        },
+        State {
+            name: "error"
+
+            PropertyChanges {
+                target: infoText
+                color: "#990020"
+                text: qsTr("Can not connect to server! Please try again.")
+                font.pointSize: 13
+                horizontalAlignment: Text.AlignHCenter
+            }
+        }
+    ]
 }
