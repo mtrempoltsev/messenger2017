@@ -33,6 +33,7 @@ void DataTest()
 
     // test folder
     std::string Root = "/home/kvilt/CLionProjects/messenger2017/server/Test/";
+    boost::filesystem::remove_all(Root);
 
     {   // create Users
         AUsers Users(Root);

@@ -45,6 +45,7 @@ namespace indices {
 
     protected: /************| Members |***************/
 
+        std::string root;
         std::string path;
 
         LUids uids;
@@ -54,6 +55,10 @@ namespace indices {
         std::string Path() const;
 
         const LUids& Uids() const;
+
+    protected:
+
+        std::string separate_root(const std::string& p);
 
     public: /***************| operators |***************/
 

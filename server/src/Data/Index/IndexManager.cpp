@@ -4,11 +4,13 @@
 using namespace indices;
 
 AIndexManager::AIndexManager(const std::string& Path)
-    : path(Path)
+    : root(separate_root(Path))
+    , path(Path)
 { LoadFromDisk(); }
 
 AIndexManager::AIndexManager(std::string&& Path)
-    : path(std::move(Path))
+    : root(separate_root(Path))
+    , path(std::move(Path))
 { LoadFromDisk(); }
 
 AIndexManager::~AIndexManager()
@@ -35,6 +37,7 @@ void AIndexManager::LoadFromDisk() {
 }
 
 void AIndexManager::StoreOnDisk() {
+    MakeDir(root);
     std::ofstream os(path);
     checkR(os.is_open());
     // send error
@@ -61,11 +64,18 @@ bool AIndexManager::IsContains(uuids::uuid Uid)
 
 /**********************************************************/
 
-std::string AIndexManager::Path() const
+std::string
+AIndexManager::Path() const
 { return path; }
 
-const AIndexManager::LUids& AIndexManager::Uids() const
+const AIndexManager::LUids&
+AIndexManager::Uids() const
 { return uids; }
+
+/**********************************************************/
+
+std::string AIndexManager::separate_root(const std::string& p)
+{ return p.substr(0, p.find_last_of('/')); }
 
 /**********************************************************/
 
