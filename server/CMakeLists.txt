@@ -23,24 +23,24 @@ message(STATUS "libraries output: " ${M2_LIB_DIR})
 
 
 # ---------------------------  paths  ---------------------------
-set(CMAKE_EXECUTABLE_OUTPUT_DIRECTORY_DEBUG     ${M2_BIN_DIR})
-set(CMAKE_EXECUTABLE_OUTPUT_DIRECTORY_RELEASE   ${M2_BIN_DIR})
-set(CMAKE_EXECUTABLE_OUTPUT_PATH                ${M2_BIN_DIR})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG       ${M2_LIB_DIR})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE     ${M2_LIB_DIR})
-set(CMAKE_LIBRARY_OUTPUT_PATH                  ${M2_LIB_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG        ${M2_BIN_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE      ${M2_BIN_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY              ${M2_BIN_DIR})
+set(CMAKE_EXECUTABLE_OUTPUT_DIRECTORY_DEBUG ${M2_BIN_DIR})
+set(CMAKE_EXECUTABLE_OUTPUT_DIRECTORY_RELEASE ${M2_BIN_DIR})
+set(CMAKE_EXECUTABLE_OUTPUT_PATH ${M2_BIN_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${M2_LIB_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${M2_LIB_DIR})
+set(CMAKE_LIBRARY_OUTPUT_PATH ${M2_LIB_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${M2_BIN_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${M2_BIN_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${M2_BIN_DIR})
 
 
 #----------------------- compile options ------------------------
-add_compile_options(-std=c++14)
+set(CMAKE_CXX_STANDARD 14)
 
 
 # ------------------------  3rd-parties  ------------------------
 set(M2_GLOBAL_3RD_PARTY "${M2_ROOT}/../3rd-party")
-set(M2_3RD_PARTY        "${M2_ROOT}/3rd-party")
+set(M2_3RD_PARTY "${M2_ROOT}/3rd-party")
 
 
 #----------- precompiled -----------
@@ -51,10 +51,9 @@ include(cotire)
 # -------------------------    boost   --------------------------
 find_package(Boost COMPONENTS
     system
-    filesystem
-
     REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
+
 
 # ----------------------- source groups  ------------------------
 macro(set_source_group group_name root_dir ${ARGN})
@@ -72,37 +71,10 @@ endmacro()
 # -------------------------   sources   -------------------------
 set(HEADERS
     stdafx.h
+    )
 
-# data
-        src/Data/stdafx.h
-
-        src/Data/User/User.h
-        src/Data/User/Users.h
-        src/Data/Dialog/Dialog.h
-        src/Data/Dialog/Dialogs.h
-        src/Data/Dialog/UserDialogs.h
-        src/Data/Message/Message.h
-        src/Data/Index/IndexManager.h
-        src/Data/Index/CashManager.hpp
-        src/Data/Index/FileHandler.h
-
-        src/Data/Data.hpp
-)
-
-set(SOURCES
-    src/stdafx.cpp
-    src/main.cpp
-
-# data
-        src/Data/User/User.cpp
-        src/Data/User/Users.cpp
-        src/Data/Dialog/Dialog.cpp
-        src/Data/Dialog/Dialogs.cpp
-        src/Data/Dialog/UserDialogs.cpp
-        src/Data/Message/Message.cpp
-        src/Data/Index/IndexManager.cpp
-        src/Data/Index/FileHandler.cpp
-        src/Data/stdafx.cpp)
+file(GLOB HEADERS include/*.h)
+file(GLOB SOURCES src/*.cpp)
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 
