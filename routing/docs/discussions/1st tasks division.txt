@@ -1,0 +1,20 @@
+Алексей:
+NetworkConnector
+	
+Настя:
+NodeInfo
+KBucket
+KBucketManager
+
+Валерий && Миша && Артем:
+Node
+Message - serialize/deserialize
+
+Артем && Валерий:
+CommandHandler
+	FindNodeHandler
+	FindDataHandler
+	FindProcessor
+		FindNodeProcessor
+		FindDataProcessor
+
