@@ -108,11 +108,14 @@ Rectangle {
 
         Button {
             id: cancel_button
-            x: 12
-            y: 252
-            width: 122
+            width: 130
             height: 40
             text: qsTr("Отмена")
+
+            anchors.left: parent.left
+            anchors.leftMargin: 12
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 8
 
             background: Rectangle {
                 radius: 5
@@ -127,11 +130,14 @@ Rectangle {
 
         Button {
             id: add_button
-            x: 166
-            y: 252
-            width: 122
+            width: 130
             height: 40
             text: qsTr("Добавить")
+
+            anchors.right: parent.right
+            anchors.rightMargin: 12
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 8
 
             background: Rectangle {
                 radius: 5
@@ -145,16 +151,18 @@ Rectangle {
         }
 
         Text {
-            x: 12
-            y: 88
+            anchors.left: guid_textField.left
+            anchors.bottom: guid_textField.top
+            anchors.bottomMargin: 5
+
             text: qsTr("Введите GUID пользователя:")
             font.pixelSize: 15
         }
 
         TextField {
             id: guid_textField
-            x: 12
-            y: 112
+            anchors.centerIn: parent
+            anchors.leftMargin: 12
             width: 276
             height: 39
             inputMethodHints: Qt.ImhFormattedNumbersOnly

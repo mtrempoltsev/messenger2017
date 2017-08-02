@@ -4,10 +4,9 @@ import QtQuick.Controls 2.2
 Page {
     width: 300
     height: 75
+    padding: 8
     Image {
         id: avatar
-        x: 8
-        y: 8
         width: 50
         height: 50
         source: "/demo/ava.jpg"
@@ -15,42 +14,49 @@ Page {
 
     Text {
         id: text_name
-        x: 64
-        y: 8
         width: 84
         height: 24
         text: qsTr("My name")
         font.pixelSize: 20
+
+        anchors.left: avatar.right
+        anchors.leftMargin: 10
     }
 
     Text {
         id: text_const_guid
-        x: 64
-        y: 40
         width: 33
         height: 15
         color: "#a8a8a8"
         text: qsTr("GUID:")
         font.pixelSize: 12
+
+        anchors.top: text_name.bottom
+        anchors.left: avatar.right
+        anchors.leftMargin: 10
+        anchors.topMargin: 5
     }
 
     Text {
         id: text_guid
-        x: 103
-        y: 40
         width: 64
         height: 15
         color: "#a8a8a8"
         text: qsTr("1111111111")
         font.pixelSize: 12
+
+        anchors.top: text_name.bottom
+        anchors.left: text_const_guid.right
+        anchors.leftMargin: 5
+        anchors.topMargin: 5
     }
 
     Button {
         id: button_settings
-        x: 239
-        y: 8
         width: 50
         height: 50
+
+        anchors.right: parent.right
         padding: 3
 
         background: Rectangle {
