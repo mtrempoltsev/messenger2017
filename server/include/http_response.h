@@ -8,13 +8,26 @@ namespace server {
 class HttpResponse
 {
 public:
-    HttpResponse(const std::string& data);
 
+	enum class HeaderType {
+		OK,
+		NOT_FOUND,
+
+	};
+
+    HttpResponse();
+
+    void setData(const std::string& data, HeaderType type = HeaderType::OK);
     std::string toString() const;
+
+private:
+	void changeHeader(HeaderType type);
 
 private:
     std::string header_;
     std::string data_;
 };
+
+typedef std::shared_ptr<HttpResponse> responsePtr;
 
 }}
