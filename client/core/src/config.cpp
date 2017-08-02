@@ -11,7 +11,8 @@ using boost::property_tree::ptree;
 
 std::map<Config::PropertyName, std::string> Config::propertyNameMap_ = {
     { Config::PropertyName::ClientGuid, "ClientGuid" },
-    { Config::PropertyName::ServerGuid, "ServerGuid" }
+    { Config::PropertyName::ServerGuid, "ServerGuid" },
+	{ Config::PropertyName::FilesFolderPath, "FilesFolderPath" }
 }; //Fill propernty name map
 
 Config::Config() :
@@ -43,7 +44,7 @@ bool Config::Init(const std::string& fileName) {
     } //try read json
     catch (std::exception& ex) {
         //write message to log
-        //are we have a log?
+        //do we have a log?
         ok = false;
     } //handling exception
     return ok;
@@ -60,6 +61,11 @@ Uuid Config::GetServerGuid() const {
     return Uuid(GetProperty(PropertyName::ServerGuid));
 }//GetServerGuid
 
+std::string Config::GetFilesFolderPath() const
+{
+	return GetProperty(PropertyName::FilesFolderPath);
+}//GetFilesFolderPath
+
 bool Config::SetClientGuid(const Uuid & uuid) {
     return SetDataByKey(PropertyName::ClientGuid, uuid.ToString());
 }//SetClientGuid
@@ -68,15 +74,21 @@ bool Config::SetServerGuid(const Uuid & uuid) {
     return SetDataByKey(PropertyName::ServerGuid, uuid.ToString());
 }//SetServerGuid
 
+bool Config::SetFilesFolderPath(const std::string & filesFolderPath)
+{
+	return SetDataByKey(PropertyName::FilesFolderPath, filesFolderPath);
+}//SetFilesFolderPath
+
 bool Config::SetDataByKey(const PropertyName & property, const std::string & data) {
-    bool result = true;
+    bool result = false;
     try {
         propertiesTree_.put(propertyNameMap_[property], data);
+		result = true;
+		hasChanges_ = true;
     } //try put data into propertiesTree
     catch (boost::property_tree::ptree_bad_data & ex) {
         //write message to log
-        //are we have a log?
-        result = false;
+        //do we have a log?
     } //handling exception
     return result;
 } //SetDataByKey
@@ -92,7 +104,7 @@ void Config::CommitChanges(const std::string & fileName) {
         }//try
         catch (boost::property_tree::json_parser_error & ex) {
             //write message to log
-            //are we have a log?
+            //do we have a log?
         }//catch
         writer.close();
     }//if file is open

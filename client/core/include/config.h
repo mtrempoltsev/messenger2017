@@ -14,7 +14,8 @@ namespace m2 {
             enum class PropertyName
             {
                 ClientGuid,
-                ServerGuid
+                ServerGuid,
+				FilesFolderPath
             };
 
             Config();
@@ -24,11 +25,13 @@ namespace m2 {
             //getters
             Uuid GetClientGuid() const;
             Uuid GetServerGuid() const;
+			std::string GetFilesFolderPath() const;
             std::string GetProperty(const PropertyName & property) const;
 
             //setters
             bool SetClientGuid(const Uuid & uuid);
             bool SetServerGuid(const Uuid & uuid);
+			bool SetFilesFolderPath(const std::string & filesFolderPath);
             bool SetDataByKey(const PropertyName & property, const std::string & data);
             //others methods
             bool HasChanges() { return hasChanges_; }

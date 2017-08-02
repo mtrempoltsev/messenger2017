@@ -21,15 +21,16 @@ std::string m2::Uuid::ToString() const
 
 bool m2::Uuid::Set(const std::string &uuid)
 {
-    boost::uuids::uuid temp;
+	bool result = false;
     try
     {
-        temp = boost::lexical_cast<boost::uuids::uuid>(uuid);
+		u_ = boost::lexical_cast<boost::uuids::uuid>(uuid);
+		result = true;
     }
     catch (boost::bad_lexical_cast b)
     {
-        return false;
+        //write a message to a log
+		//do we have a log?
     }
-    u_ = temp;
-    return true;
+    return result;
 }
