@@ -20,7 +20,7 @@ namespace server {
 
         acceptor_.async_accept( session->socket(), [=](auto ec)
             {
-                handleNewConnection(session, ec);
+                this->handleNewConnection(session, ec);
             });
 
         io_service_.run();
@@ -36,7 +36,7 @@ namespace server {
 
         acceptor_.async_accept( new_session->socket(), [=](auto ec)
             {
-                handleNewConnection(new_session, ec);
+                this->handleNewConnection(new_session, ec);
             });
     }
 }} // m2::server

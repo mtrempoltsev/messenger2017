@@ -51,6 +51,7 @@ include(cotire)
 # -------------------------    boost   --------------------------
 find_package(Boost COMPONENTS
     system
+    filesystem
     REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
@@ -73,12 +74,15 @@ set(HEADERS
     stdafx.h
     )
 
+
+file(GLOB DATA src/Data/*)
+
 file(GLOB HEADERS include/*.h)
 file(GLOB SOURCES src/*.cpp)
 
-set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
+set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES} ${DATA})
 
-add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
+add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${DATA})
 
 include_directories(${SUBPROJECT_ROOT})
 include_directories(include/)
