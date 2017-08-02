@@ -1,4 +1,4 @@
-#include "../include/manager_controller.h"
+#include "manager_controller.h"
 
 
 namespace m2 {
