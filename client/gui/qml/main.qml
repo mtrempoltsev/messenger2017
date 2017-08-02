@@ -7,9 +7,11 @@ import QtQuick.Controls 2.1
 
 ApplicationWindow {
     id: window
-    width: 540
-    height: 600
     visible: true
+
+    minimumHeight: stackView.currentItem.implicitHeight
+    minimumWidth: stackView.currentItem.implicitWidth
+
 
     StackView {
         id: stackView
