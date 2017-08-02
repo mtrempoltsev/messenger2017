@@ -1,4 +1,4 @@
-#include "../include/http_request.h"
+#include "http_request.h"
 
 
 namespace m2 {
@@ -9,7 +9,7 @@ HttpRequest::HttpRequest(std::istream& stream)
     std::string data;
     std::getline(stream, data);
     std::istringstream iss(data);
-    
+
     iss >> header_.method_;
     iss >> header_.uri_;
     iss >> header_.http_version_;

@@ -1,7 +1,7 @@
-#include "../include/session.h"
-#include "../include/http_request.h"
-#include "../include/http_response.h"
-#include "../include/manager_controller.h"
+#include "session.h"
+#include "http_request.h"
+#include "http_response.h"
+#include "manager_controller.h"
 
 #include <iostream>
 
@@ -46,7 +46,7 @@ namespace server {
 
     void Session::readHeader()
     {
-        boost::asio::async_read_until( socket_, in_packet_, HEADER_END, 
+        boost::asio::async_read_until( socket_, in_packet_, HEADER_END,
             [me=shared_from_this()](const boost::system::error_code & ec, std::size_t bytes_xfer)
             {
                 me->readHeaderDone(ec, bytes_xfer);

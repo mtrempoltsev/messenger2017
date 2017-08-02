@@ -109,6 +109,7 @@ set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
 include_directories(${SUBPROJECT_ROOT})
+include_directories(include/)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT stdafx.h)
 cotire(${PROJECT_NAME})
