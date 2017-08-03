@@ -91,7 +91,7 @@ Page {
                 onClicked: {
                     console.log(serverCombobox.currentText)
                     root.state="loading"
-//                    root.state="error"
+//                    stackView.push("qrc:/SettingsPage.qml")
                 }
             }
         }

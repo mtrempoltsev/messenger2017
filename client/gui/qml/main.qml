@@ -21,6 +21,8 @@ ApplicationWindow {
         onCurrentItemChanged: {
             window.minimumHeight = stackView.currentItem.implicitHeight
             window.minimumWidth = stackView.currentItem.implicitWidth
+            window.setHeight(window.minimumHeight)
+            window.setWidth(window.minimumWidth)
         }
     }
 }
