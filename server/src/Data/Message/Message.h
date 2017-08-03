@@ -22,58 +22,34 @@ namespace message {
     public: /***************| Construction |***************/
         // new message
         AMessage(std::istream& is);
-        AMessage( const std::string& Dir
-                , const std::string& Author
-                , const std::string& Time
-                , const std::string& Text
-        );
 
         // open existing message
-        AMessage(const std::string&  FileName);
-
-        ~AMessage();
+        AMessage(const std::string&  File);
+        AMessage(      std::string&& File);
 
     public: /***************| Interface |***************/
 
         AMessage& Serialize(std::ostream& os);
 
-        void Storage();
-
-        void Remove();
+        AMessage& Storage();
 
     protected: /************| Members |***************/
 
-        bool bChanged;
 
-        std::string dir;
-        std::string author;
+        std::string author; // or uuids::uuid ?
         std::string time;
+
         std::string text;
 
     public:
+        std::string& Author();
+        const std::string& Author() const;
 
-        const std::string& Author() const { return author; }
-        const std::string& Time()   const { return time;   }
-        const std::string& Text()   const { return text;   }
+        std::string& Time();
+        const std::string& Time() const;
 
-    public:
-
-        void SetAuthor(const std::string& New);
-        void SetTime  (const std::string& New);
-        void SetText  (const std::string& New);
-
-        void SetAuthor(std::string&& New);
-        void SetTime  (std::string&& New);
-        void SetText  (std::string&& New);
-
-    protected:
-
-        void init_meta(const std::string& FileName);
-        void load_text(const std::string& FileName);
-        void on_meta_change();
-        void on_text_chande();
-
-        std::string path();
+        std::string& Text();
+        const std::string& Text() const;
 
     public: /***************| operators |***************/
 

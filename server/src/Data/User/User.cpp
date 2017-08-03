@@ -19,27 +19,17 @@ AUser::AUser(uuids::uuid Uid, std::string&& PubKey)
 
 /****************************|  |****************************/
 
-bool AUser::IsValid() const
-{ return public_key.size() > 0; }
-
-/****************************|  |****************************/
-
 const std::string& AUser::PublicKey() const
 { return public_key; }
 
 uuids::uuid AUser::Uid() const
 { return uid; }
 
-/****************************|  |****************************/
+bool AUser::IsValid()
+{ return uid && public_key.size(); }
 
-AUser::operator bool() const
+AUser::operator bool()
 { return IsValid(); }
-
-AUser::operator uuids::uuid() const
-{ return uid; }
-
-AUser::operator std::string() const
-{ return public_key; }
 
 /****************************|  |****************************/
 

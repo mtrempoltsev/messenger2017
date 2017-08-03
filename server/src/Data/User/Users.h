@@ -3,7 +3,7 @@
 
 #include <unordered_set>
 
-#include "../Index/IndexManager.hpp"
+#include "../Index/IndexManager.h"
 #include "../Index/FileHandler.h"
 #include "User.h"
 
