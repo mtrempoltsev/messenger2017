@@ -6,6 +6,7 @@ import QtQuick.Controls.Styles 1.4
 
 Page{
     id: chatPage
+    anchors.fill: parent
 
     header: ToolBar {
         background: Rectangle {
@@ -29,7 +30,7 @@ Page{
                 fillMode: Image.PreserveAspectFit
 
                 //заглушка
-                source: "file:C:/Users/Jerry/Desktop/dialog/asd.jpg"
+                source: "/demo/asd.jpg"
             }
 
 
@@ -72,7 +73,7 @@ Page{
 
     Rectangle{
         anchors.fill: parent
-        ChatListView{}
+        ChatListView{id: listView; model: ChatMessagesModel{id: messages}}
     }
 
 
@@ -114,6 +115,7 @@ Page{
 
                 TextArea {
                     id: chatMessageField
+                    selectByMouse: true
 
                     wrapMode: TextEdit.Wrap
                     renderType: Text.NativeRendering
@@ -137,6 +139,12 @@ Page{
                 Layout.maximumHeight: 50
 
                 text: "send"
+
+                onClicked: {
+                    messages.append({"guid": 1, "messText":chatMessageField.text, "messTime": "18:00"})
+                    listView.positionViewAtEnd()
+                    chatMessageField.clear()
+                }
             }
         }
     }
