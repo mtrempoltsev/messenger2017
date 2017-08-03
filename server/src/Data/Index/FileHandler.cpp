@@ -21,7 +21,7 @@ AFileHandler::AFileHandler(
     , cash(50)
 {}
 
-
+/**********************************************************/
 
 AFileHandler::LCFilePtr
 AFileHandler::ReadFile(const std::string& FileName)
@@ -69,6 +69,8 @@ int AFileHandler::RemoveFile(const std::string& FileName) {
     return std::remove(path.c_str());
 }
 
+/**********************************************************/
+
 AFileHandler::LFilePtr
 AFileHandler::read_from_disk(const std::string& FileName)
 {
@@ -84,6 +86,8 @@ AFileHandler::read_from_disk(const std::string& FileName)
 
     return ptr;
 }
+
+/**********************************************************/
 
 const std::string& AFileHandler::Root()
 { return root; }

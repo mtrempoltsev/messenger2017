@@ -5,7 +5,7 @@
 
 #include "../stdafx.h"
 #include "../Message/Message.h"
-#include "../Index/IndexManager.h"
+#include "../Index/IndexManager.hpp"
 #include "../Index/CashManager.hpp"
 
 
@@ -30,8 +30,48 @@ namespace dialog {
      * . In takes a time of synchronisation
      *
      * *****
+     * chunk message loading::
+     * 0                        on creation
+     * 0 - 1                    next chank read
+     * 0 - 1 - 2                next chank read
+     *     1 - 2 - 3            0-th was removed
+     *         2 - 3 - 4        1-th was removed
+     *             3 - 4 - 5    2-d  was removed
+     *
+     * *****
+     * chunk index reading:: - for example: in case of 1k msg/day and usage float as data type : 1.4 mb on chat * 200 chats * 5000
+     *
+     * what if make index as routing node, containig a time of chunk's first record.
+     * 01.02.2017 23.05.15
+     *      01.02.2017 23.05.15     | chunk : 01.02.2017 23.05.15
+     *      01.02.2017 23.05.25     |
+     *      01.02.2017 23.15.25     | chank could be difference lenght
+     *      02.02.2017 12.18.00     |
+     *      ...                     |
+     *      05.02.2017 08.56.13     |
+     * 08.02.2017 23.05.15
+     *      08.02.2017 23.05.15
+     *      ...
+     * *****
+     * >> get all messages since DATE (or all, DATE = 0)
+     *      -> goto Main Index
+     *      -> get list of required once
+     *      -> itr:: load index
+     *          -> itr:: create message
+     *              -> add to cash
+     *              -> searialaize to ostream
+     *          ->close index
+     *
+     *  *
+     * *****
+     * >> write message
+     *      -> add to cash
+     *      -> add to index
+     *
+     * *****
      * create iterators
      *
+     * create a 2-lvl index system
      */
     class ADialog
             : boost::enable_shared_from_this<ADialog>
@@ -39,40 +79,39 @@ namespace dialog {
     {
     public:
 
-        typedef std::shared_ptr<ADialog> ptr;
+        typedef std::shared_ptr<ADialog>   ptr;
 
-        typedef std::list<AMessage> Messages; // how to use a cash manager?
+        typedef TCashManager<AMessage>     LMessages;
+        typedef TIndexManager<std::string> LIndexManager;
 
     protected: /************| Construction |***************/
 
         ADialog(const std::string&  Root, uuids::uuid Uid);
         ADialog(      std::string&& Root, uuids::uuid Uid);
 
-        ADialog(std::istream& is, const std::string&  Root);
-        ADialog(std::istream& is,       std::string&& Root);
-
     public:
 
         static ptr Create(const std::string&  Root, uuids::uuid Uid);
         static ptr Create(      std::string&& Root, uuids::uuid Uid);
 
-        static ptr Create(std::istream& is, const std::string&  Root);
-        static ptr Create(std::istream& is,       std::string&& Root);
-
     public: /***************| Interface |***************/
-
+        // main function
         void Serialize(std::ostream& os, std::string since);
+
+        void AddMessage(const std::string&  text, const std::string& time);
+        void AddMessage(std::istream& is);
 
     protected: /************| Members |***************/
 
         uuids::uuid uid;
         std::string root;
 
-        Messages    messages;
+        LIndexManager index;
+        LMessages     messages;
 
     public:
-              uuids::uuid  Uid()  const;
-        const std::string& Root() const;
+              uuids::uuid  Uid()  const { return uid;  }
+        const std::string& Root() const { return root; }
 
     public: /***************| operators |***************/
 

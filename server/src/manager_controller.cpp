@@ -1,6 +1,5 @@
 #include "manager_controller.h"
-#include "RegisterManager.h"
-#include "SendKeyManager.h"
+
 
 namespace m2 {
 namespace server {
@@ -15,25 +14,19 @@ namespace server {
 
         std::string uri = request->getHeader().uri_;
         std::string data = request->getData();
-        std::string response;
-        int code = 200;
 
         // http://localhost:8282/some/command1
-        if (uri == "/user/register/sendKey") {
+        if (uri == "/some/command1") {
             // do something
-            SendKeyManager sendKeyManager;
-            code = sendKeyManager.doAction(data, response);
-            answer->setData(response);
+            answer->setData(data);
         }
-        else if (uri == "/user/register") {
+        else if (uri == "/some/command2") {
             // do something
-            RegisterManager registerManager;
-            code = registerManager.doAction(data, response);
-            answer->setData(response);
+            answer->setData(data);
         }
         else {
             // do something
-           // answer->setData(data, HttpResponse::HeaderType::NOT_FOUND);
+            answer->setData(data, HttpResponse::HeaderType::NOT_FOUND);
         }
 
         return answer;

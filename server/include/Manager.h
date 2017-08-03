@@ -1,14 +1,15 @@
 #pragma once
 
 #include "string"
-#include <sstream>
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/stream.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <iostream>
 
 namespace pt = boost::property_tree;
 
-enum  ResponseType
+enum class ResponseType
 {
   SendKey,
   Register,
@@ -22,17 +23,10 @@ namespace server {
 
 class Manager
 {
- public:
-  struct Error{
-    int code;
-    std::string jsonBody;
-  };
 public:
   virtual int doAction (const std::string &data, std::string &response) = 0;
   static const ResponseType m_response_type = ResponseType::INVALID;
- protected:
-  std::string createError(const std::string message);
- };
+};
 
 
 }

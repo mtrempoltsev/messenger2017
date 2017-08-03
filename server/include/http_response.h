@@ -9,13 +9,19 @@ class HttpResponse
 {
 public:
 
+	enum class HeaderType {
+		OK,
+		NOT_FOUND,
+
+	};
+
     HttpResponse();
 
-    void setData(const std::string& data, int code = 200);
+    void setData(const std::string& data, HeaderType type = HeaderType::OK);
     std::string toString() const;
 
 private:
-	void changeHeader(int code);
+	void changeHeader(HeaderType type);
 
 private:
     std::string header_;

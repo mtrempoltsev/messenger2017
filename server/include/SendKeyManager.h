@@ -17,7 +17,7 @@ protected:
   std::string deserializePublicKey(const std::string &data);
 
 private:
-  std::string createResponse(const std::string &publicKey);
+  void save(const std::string &data);
 };
 }
 }

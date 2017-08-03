@@ -26,9 +26,12 @@ int N = 0;
 
 #define BLOCK(n, txt) out << nof(n) << OK << txt << end
 
+namespace fs = boost::filesystem;
 
 void DataTest()
 {
+
+
     Set(3);
 
     // test folder
@@ -76,7 +79,7 @@ void DataTest()
         assert(user_dialog);
 
         // check, we took right user
-        assert(user_dialog->Uid() == Alice.Uid());
+        assert(user_dialog->Uid() == Alice);
 
         /***************/
 
@@ -86,10 +89,21 @@ void DataTest()
         assert(dialog);
 
         // check, we have right dialog
-        assert(dialog->Uid() == Bob.Uid());
+        assert(dialog->Uid() == Bob);
+
+        /***************/
+        //                                  ss.mm.hh dd.mm.yyyy
+        const std::string data1 = "01.36.15 03.08.2017";
+        const std::string data2 = "56.36.15 03.08.2017";
+        dialog->AddMessage("__TEST_TEXT", data1);
+        dialog->AddMessage("__TEST_TEXT", data2);
+
+        assert(fs::exists(dialog->Root() + data1 + "^2"));
+        assert(fs::exists(dialog->Root() + data2 + "^2"));
+
+        /***************/
 
     } BLOCK(3, "static message test");
-
 
 }
 

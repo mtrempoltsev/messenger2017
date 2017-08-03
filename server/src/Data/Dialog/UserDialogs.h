@@ -45,7 +45,7 @@ namespace dialog {
     public:
         typedef std::shared_ptr<AUserDialogs> ptr;
         typedef TCashManager<ADialog>         LDialogCash;
-        typedef const AIndexManager::LUids    LChatSet;
+        typedef AIndexManager::LUids          LChatSet;
 
     protected: /************| Construction |***************/
 
@@ -73,10 +73,10 @@ namespace dialog {
 
     public:
 
-        const std::string& Root() const;
-        size_t CashLength() const;
-        uuids::uuid Uid() const;
-        LChatSet& Chats() const;
+              uuids::uuid  Uid()        const { return uid;                 }
+        const std::string& Root()       const { return root;                }
+        const LChatSet&    Chats()      const { return index.Uids();        }
+              size_t       CashLength() const { return dialogs.CashLength();}
 
     public:
 
