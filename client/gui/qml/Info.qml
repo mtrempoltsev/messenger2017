@@ -2,8 +2,11 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 
 Page {
-    width: 300
-    height: 75
+    id:root
+    implicitWidth: 300
+    implicitHeight: 75
+//    width: 300
+//    height: 75
     padding: 8
     Image {
         id: avatar
@@ -73,7 +76,7 @@ Page {
         }
 
         onClicked: {
-            console.log("loading settings page")
+            stackView.push("qrc:/qml/SettingsPage.qml")
         }
     }
 }

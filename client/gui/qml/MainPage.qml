@@ -3,23 +3,24 @@ import QtQuick.Controls 2.2
 
 Page {
     id: mainpage
-    width: parent.width
-    height: parent.height
-
+    //todod need remake
+    anchors.fill: parent
+    implicitHeight: 500
+    implicitWidth: leftside.implicitWidth + rightside.implicitWidth + 2
     Page {
         id: leftside
-        width: 300
         height: parent.height
-
+        implicitWidth: info.implicitWidth
         Info {
             id: info
+
         }
 
         Rectangle {
             id: split_left
             color: "lightGray"
             height: 1
-            width: 300
+            width: parent.width
             anchors.top: info.bottom
         }
 
@@ -37,20 +38,12 @@ Page {
         anchors.left: leftside.right
     }
 
-    StackView {
+    ChatPage {
         id: rightside
-        z: -1
         height: parent.height
-
+        implicitWidth: 300
         anchors.left: split_center.right
         anchors.right: parent.right
-
-        initialItem: Page {
-            Label {
-                text: "Выберите чат"
-                anchors.centerIn: parent
-            }
-        }
     }
 
     AddDialog {

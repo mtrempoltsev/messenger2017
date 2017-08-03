@@ -21,7 +21,7 @@ set(SOURCES
     src/main.cpp
     )
 
-qt5_add_resources(RESOURCES qml/qml.qrc)
+qt5_add_resources(RESOURCES application.qrc)
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 
