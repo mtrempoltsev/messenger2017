@@ -12,7 +12,8 @@ using boost::property_tree::ptree;
 std::map<Config::PropertyName, std::string> Config::propertyNameMap_ = {
     { Config::PropertyName::ClientGuid, "ClientGuid" },
     { Config::PropertyName::ServerGuid, "ServerGuid" },
-	{ Config::PropertyName::FilesFolderPath, "FilesFolderPath" }
+	{ Config::PropertyName::FilesFolderPath, "FilesFolderPath" },
+	{ Config::PropertyName::KeysFilePath, "KeysFilePath" }
 }; //Fill propernty name map
 
 Config::Config() :
@@ -43,7 +44,7 @@ bool Config::Init(const std::string& fileName) {
         }//file not open
     } //try read json
     catch (std::exception& ex) {
-        //write message to log
+        //write a message to a log
         //do we have a log?
         ok = false;
     } //handling exception
@@ -53,6 +54,7 @@ bool Config::Init(const std::string& fileName) {
 std::string Config::GetProperty(const PropertyName & property) const {
     return propertiesTree_.get<std::string>(propertyNameMap_[property], std::string());
 }//GetProperty
+
 Uuid Config::GetClientGuid() const {
     return Uuid(GetProperty(PropertyName::ClientGuid));
 }//GetClientGuid
@@ -65,6 +67,11 @@ std::string Config::GetFilesFolderPath() const
 {
 	return GetProperty(PropertyName::FilesFolderPath);
 }//GetFilesFolderPath
+
+std::string Config::GetKeysFilePath() const
+{
+	return GetProperty(PropertyName::KeysFilePath);
+}//GetKeysFilePath
 
 bool Config::SetClientGuid(const Uuid & uuid) {
     return SetDataByKey(PropertyName::ClientGuid, uuid.ToString());
@@ -79,6 +86,11 @@ bool Config::SetFilesFolderPath(const std::string & filesFolderPath)
 	return SetDataByKey(PropertyName::FilesFolderPath, filesFolderPath);
 }//SetFilesFolderPath
 
+bool Config::SetKeysFilePath(const std::string & keysFilePath)
+{
+	return SetDataByKey(PropertyName::KeysFilePath, keysFilePath);
+}//SetKeysFilePath
+
 bool Config::SetDataByKey(const PropertyName & property, const std::string & data) {
     bool result = false;
     try {
@@ -87,7 +99,7 @@ bool Config::SetDataByKey(const PropertyName & property, const std::string & dat
 		hasChanges_ = true;
     } //try put data into propertiesTree
     catch (boost::property_tree::ptree_bad_data & ex) {
-        //write message to log
+        //write a message to a log
         //do we have a log?
     } //handling exception
     return result;
@@ -103,7 +115,7 @@ void Config::CommitChanges(const std::string & fileName) {
             hasChanges_ = false;
         }//try
         catch (boost::property_tree::json_parser_error & ex) {
-            //write message to log
+            //write a message to a log
             //do we have a log?
         }//catch
         writer.close();
