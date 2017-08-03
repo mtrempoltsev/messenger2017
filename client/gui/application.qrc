@@ -9,5 +9,9 @@
         <file>demo/ava.jpg</file>
         <file>img/new_message.png</file>
         <file>img/settings.png</file>
+        <file>qml/ChatListView.qml</file>
+        <file>qml/ChatMessagesModel.qml</file>
+        <file>qml/ChatPage.qml</file>
+        <file>qml/ContactsList.qml</file>
     </qresource>
 </RCC>

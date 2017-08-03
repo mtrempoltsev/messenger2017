@@ -3,24 +3,24 @@ import QtQuick.Controls 2.2
 
 Page {
     id: mainpage
-    height: 500 //todod need remake
-    width: 500 //todod need remake
-    implicitHeight: height
-    implicitWidth: width
+    //todod need remake
+    anchors.fill: parent
+    implicitHeight: 500
+    implicitWidth: leftside.implicitWidth + rightside.implicitWidth + 2
     Page {
         id: leftside
-        width: 300
         height: parent.height
-
+        implicitWidth: info.implicitWidth
         Info {
             id: info
+
         }
 
         Rectangle {
             id: split_left
             color: "lightGray"
             height: 1
-            width: 300
+            width: parent.width
             anchors.top: info.bottom
         }
 
@@ -38,21 +38,12 @@ Page {
         anchors.left: leftside.right
     }
 
-    StackView {
-        // Мне кажется это здесь не нужно
-        id: dialogStackView
-        z: -1
+    ChatPage {
+        id: rightside
         height: parent.height
-
+        implicitWidth: 300
         anchors.left: split_center.right
         anchors.right: parent.right
-
-        initialItem: Page {
-            Label {
-                text: qsTr("Choose chat")
-                anchors.centerIn: parent
-            }
-        }
     }
 
     AddDialog {

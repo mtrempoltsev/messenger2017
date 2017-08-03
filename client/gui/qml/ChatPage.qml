@@ -6,7 +6,6 @@ import QtQuick.Controls.Styles 1.4
 
 Page{
     id: chatPage
-    anchors.fill: parent
 
     header: ToolBar {
         background: Rectangle {

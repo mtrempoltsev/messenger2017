@@ -3,8 +3,10 @@ import QtQuick.Controls 2.2
 
 Page {
     id:root
-    width: 300
-    height: 75
+    implicitWidth: 300
+    implicitHeight: 75
+//    width: 300
+//    height: 75
     padding: 8
     Image {
         id: avatar
