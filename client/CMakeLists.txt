@@ -4,6 +4,7 @@ project(m2)
 
 set(CORE_PROJECT_NAME m2-core)
 set(GUI_PROJECT_NAME m2-gui)
+set(SHARED_PROJECT_NAME m2-shared)
 
 get_filename_component(M2_ROOT "${CMAKE_SOURCE_DIR}" ABSOLUTE)
 
@@ -37,8 +38,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${M2_BIN_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${M2_BIN_DIR})
 
 
+# --------------------------  shared  ---------------------------
+set(SHARED_ROOT "${M2_ROOT}/../shared")
+
+include_directories("${SHARED_ROOT}/include")
+
+
 #----------------------- compile options ------------------------
-add_compile_options(-std=c++11)
+set(CMAKE_CXX_STANDARD 14)
 
 
 # ------------------------  3rd-parties  ------------------------
@@ -48,6 +55,7 @@ set(M2_3RD_PARTY "${M2_ROOT}/3rd-party")
 
 #----------- precompiled -----------
 list(APPEND CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY}/cotire-1.7.10/CMake")
+list(APPEND CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY}/cmake")
 include(cotire)
 
 
@@ -71,5 +79,6 @@ endmacro()
 
 
 # --------------------------  subdirs   --------------------------
+add_subdirectory(${SHARED_ROOT} shared)
 add_subdirectory(core)
 add_subdirectory(gui)
