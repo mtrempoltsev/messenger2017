@@ -2,26 +2,39 @@
 
 using namespace m2::server;
 
-RegisterManager::Decrypted
+RegisterManager::StringsPair
 RegisterManager::deserializeDecrypted(const std::string &data) {
   pt::ptree request;
-  Decrypted info;
-  boost::iostreams::stream<boost::iostreams::array_source> stream(data.c_str(),
-                                                                  data.size());
-  try {
-    boost::property_tree::read_json(stream, request);
-    info.publicKey = request.get<std::string>("debug.public_key");
-    info.serverString = request.get<std::string>("debug.server_string");
-    info.clientString = request.get<std::string>("debug.client_string");
-  } catch (const pt::ptree_error &e) {
-    std::cout << e.what() << std::endl; // TODO придумать как это обрабатывать
-  }
+  StringsPair info;
+  std::stringstream stream;
+  stream << data;
+
+  boost::property_tree::read_json(stream, request);
+  info.serverString = request.get<std::string>("server_string");
+  info.clientString = request.get<std::string>("client_string");
+
   return info;
 }
 
 int RegisterManager::doAction(const std::string &data, std::string &response) {
-  Decrypted info = deserializeDecrypted(data);
-
-  return 0;
+  StringsPair info;
+  try {
+    info = deserializeDecrypted(data);
+  } catch (const pt::ptree_error &e) {
+    std::cout << e.what() << std::endl;
+    response = createError("client_string and decrypted server_string");
+    return 403;
+  }
+  response = createResponse(info.serverString, info.clientString);
+  //TODO save
+  return 200;
+}
+std::string RegisterManager::createResponse(const std::string &server_string, const std::string &client_string) {
+  std::string session_id = "test"; //TODO
+  pt::ptree tree;
+  std::stringstream stream;
+  tree.put("session_id", session_id);
+  boost::property_tree::write_json(stream, tree);
+  return stream.str();
 }
 void RegisterManager::save(const std::string &data) {}
