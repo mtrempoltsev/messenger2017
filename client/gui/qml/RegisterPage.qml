@@ -5,21 +5,22 @@ import QtQuick.Layouts 1.3
 
 Page {
     id: root
-    implicitWidth: 450
-    implicitHeight: 350
+    implicitWidth: mainLayout.implicitWidth * 1.1
+    implicitHeight: mainLayout.implicitHeight * 1.1
     ColumnLayout {
         id:mainLayout
+        antialiasing: false
+        scale: 1
         anchors.fill: parent
-        Layout.minimumWidth: 450
-        Layout.minimumHeight: 350
-
         Rectangle {
             id: logo
             Layout.alignment: Qt.AlignTop
             Layout.fillWidth: true
             height: 100
             color: 'lightblue'
+            implicitWidth: logoText.implicitWidth
             Text {
+                id: logoText
                 anchors.fill: logo
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
@@ -33,7 +34,6 @@ Page {
             id: registerLayout
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             anchors.margins: 5
-            Layout.minimumWidth: 300
             spacing: 4
 
             Text {
@@ -49,12 +49,13 @@ Page {
 
             BusyIndicator {
                 id: busyIndicator
+                running: false
                 Layout.alignment: Qt.AlignHCenter
                 visible: false
             }
 
             Text {
-                id: text2
+                id: helperText
                 text: qsTr("Please choose your web server:")
                 verticalAlignment: Text.AlignBottom
                 font.italic: true
@@ -90,7 +91,7 @@ Page {
                 onClicked: {
                     console.log(serverCombobox.currentText)
                     root.state="loading"
-                    root.state="error"
+//                    root.state="error"
                 }
             }
         }
@@ -102,26 +103,38 @@ Page {
             name: "loading"
 
             PropertyChanges {
+                target: root
             }
 
             PropertyChanges {
                 target: registerButton
+                opacity: 0.5
+                visible: true
                 enabled: false
             }
 
             PropertyChanges {
                 target: serverCombobox
+                opacity: 0.5
+                visible: true
                 enabled: false
             }
 
             PropertyChanges {
                 target: busyIndicator
+                running: true
                 visible: true
             }
 
             PropertyChanges {
                 target: infoText
-                text: qsTr("Loading, please wait...")
+                text: qsTr("Loading to %1. Please wait ".arg(serverCombobox.currentText))
+            }
+
+            PropertyChanges {
+                target: helperText
+                opacity: 1
+                visible: false
             }
         },
         State {

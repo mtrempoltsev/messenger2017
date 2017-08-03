@@ -17,5 +17,10 @@ ApplicationWindow {
         id: stackView
         anchors.fill: parent
         initialItem: RegisterPage {}
+
+        onCurrentItemChanged: {
+            window.minimumHeight = stackView.currentItem.implicitHeight
+            window.minimumWidth = stackView.currentItem.implicitWidth
+        }
     }
 }
