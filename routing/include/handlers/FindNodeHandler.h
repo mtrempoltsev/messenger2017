@@ -9,5 +9,20 @@ public:
     ~FindNodeHandler();
 #pragma endregion
 
+#pragma region __ Methods __
+
+private:
+#pragma region __ Private methods __
+    Message* processMessage(Message message);
+#pragma endregion
+
+public:
+#pragma region __ Public methods __
+
+#pragma endregion
+
+#pragma endregion
+
+
 };
 
