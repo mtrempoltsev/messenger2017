@@ -3,9 +3,10 @@ import QtQuick.Controls 2.2
 
 Page {
     id: mainpage
-    width: parent.width
-    height: parent.height
-
+    height: 500 //todod need remake
+    width: 500 //todod need remake
+    implicitHeight: height
+    implicitWidth: width
     Page {
         id: leftside
         width: 300
@@ -38,7 +39,8 @@ Page {
     }
 
     StackView {
-        id: rightside
+        // Мне кажется это здесь не нужно
+        id: dialogStackView
         z: -1
         height: parent.height
 
@@ -47,7 +49,7 @@ Page {
 
         initialItem: Page {
             Label {
-                text: "Выберите чат"
+                text: qsTr("Choose chat")
                 anchors.centerIn: parent
             }
         }

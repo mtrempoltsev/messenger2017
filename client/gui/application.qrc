@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/AddDialog.qml</file>
+        <file>qml/Info.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/MainPage.qml</file>
+        <file>qml/RegisterPage.qml</file>
+        <file>qml/SettingsPage.qml</file>
+        <file>demo/ava.jpg</file>
+        <file>img/new_message.png</file>
+        <file>img/settings.png</file>
+    </qresource>
+</RCC>

@@ -2,6 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 
 Page {
+    id:root
     width: 300
     height: 75
     padding: 8
@@ -73,7 +74,7 @@ Page {
         }
 
         onClicked: {
-            console.log("loading settings page")
+            stackView.push("qrc:/qml/SettingsPage.qml")
         }
     }
 }
