@@ -2,7 +2,7 @@
 
 
 
-FindNodeHandler::FindNodeHandler(Node * node) :CommandHandler(node)
+FindNodeHandler::FindNodeHandler(Node * node):CommandHandler(node)
 {
 }
 
