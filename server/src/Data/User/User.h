@@ -31,7 +31,7 @@ namespace user {
 
         void Serialaize(std::ostream& os);
 
-        bool IsValid();
+        bool IsValid() const;
 
     protected: /************| Members |***************/
 
@@ -47,7 +47,9 @@ namespace user {
 
         std::ostream& operator<<(std::ostream& os);
 
-        operator bool();
+        operator bool() const;
+        operator std::string() const;
+        operator uuids::uuid() const;
     };
 
 

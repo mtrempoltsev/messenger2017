@@ -76,7 +76,7 @@ namespace indices {
         { uids.insert(Uid); }
 
         void Remove(_Tp Uid)
-        { uids.erase(Uid); }
+        { uids.erase(Uid);  }
 
         bool IsContains(_Tp Uid)
         { return uids.find(Uid) != uids.end(); }
@@ -90,11 +90,8 @@ namespace indices {
 
     public:
 
-        std::string Path() const
-        { return path; }
-
-        const LUids& Uids() const
-        { return uids; }
+        std::string  Path() const { return path; }
+        const LUids& Uids() const { return uids; }
 
     protected:
 
