@@ -45,17 +45,15 @@ namespace dialog {
     public:
         typedef std::shared_ptr<AUserDialogs> ptr;
         typedef TCashManager<ADialog>         LDialogCash;
-        typedef const AIndexManager::LUids    LChatSet;
+        typedef AIndexManager::LUids          LChatSet;
 
     protected: /************| Construction |***************/
 
         AUserDialogs(const std::string&  Root, uuids::uuid Uid);
-        AUserDialogs(      std::string&& Root, uuids::uuid Uid);
 
     public:
 
         AUserDialogs(const AUserDialogs& ) = default;
-        //AUserDialogs(      AUserDialogs&&) = default;
 
         static ptr Create(const std::string&  Root, uuids::uuid Uid);
         static ptr Create(      std::string&& Root, uuids::uuid Uid);
@@ -63,6 +61,8 @@ namespace dialog {
     public: /***************| Interface |***************/
 
         ADialog::ptr GetDialog(uuids::uuid Uid);
+
+        bool IsContains(uuids::uuid Uid);
 
     protected: /************| Members |***************/
 
@@ -73,9 +73,10 @@ namespace dialog {
 
     public:
 
-        const std::string& Root() const;
-        LChatSet& Chats() const;
-        size_t CashLength() const;
+              uuids::uuid  Uid()        const { return uid;                 }
+        const std::string& Root()       const { return root;                }
+        const LChatSet&    Chats()      const { return index.Uids();        }
+              size_t       CashLength() const { return dialogs.CashLength();}
 
     public:
 
@@ -88,6 +89,7 @@ namespace dialog {
     public: /***************| Operators |***************/
 
         ADialog::ptr operator[](uuids::uuid Uid);
+        bool         operator()(uuids::uuid Uid);
 
         bool operator==(const uuids::uuid& Uid) const;
 

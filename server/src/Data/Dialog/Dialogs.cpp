@@ -8,49 +8,45 @@ using namespace m2::data::dialog;
 
 ADialogs::ADialogs(const std::string& Root)
     : root(Root)
-    , users(root)
-    , dialogs(256)
+    , index(root + "Index")
+    , cash(256)
 {}
 
 ADialogs::ADialogs(std::string&& Root)
     : root(std::move(Root))
-    , users(root)
-    , dialogs(256)
+    , index(root + "Index")
+    , cash(256)
 {}
-
-ADialogs::ptr ADialogs::Create(const std::string& Root)
-{
-    return ptr(new ADialogs(Root));
-}
-
-ADialogs::ptr ADialogs::Create(std::string&& Root)
-{
-    return ptr(new ADialogs(std::move(Root)));
-}
 
 /****************************|  |****************************/
 
 AUserDialogs::ptr ADialogs::GetDialog(const AUser& User) {
     uuids::uuid Uid = User.Uid();
 
-    checkR(users[Uid]) create_dialogs(Uid);
+    // new user
+    checkR(index[Uid]) create_dialogs(Uid);
 
-    auto ptr = dialogs[Uid];
+    // from cash
+    auto ptr = cash[Uid];
     ifR(ptr) ptr;
 
+    // from disk
     return AUserDialogs::Create(root + Uid.str() + "/", Uid);
 }
 
-ADialogs::LUsers ADialogs::Users() const
-{ return users.Uids(); }
+bool ADialogs::IsContains(const AUser& User)
+{ return index[User]; }
 
 /****************************|  |****************************/
 
 size_t ADialogs::CashLength() const
-{ return dialogs.CashLength(); }
+{ return cash.CashLength(); }
+
+ADialogs::LUsers ADialogs::Users() const
+{ return index.Uids(); }
 
 void ADialogs::SetCashLength(size_t NewLength)
-{  dialogs.SetCashLength(NewLength); }
+{  cash.SetCashLength(NewLength); }
 
 /****************************|  |****************************/
 
@@ -58,8 +54,8 @@ AUserDialogs::ptr ADialogs::create_dialogs(uuids::uuid Uid) {
     auto tmp = AUserDialogs::Create(root  + Uid.str() + "/", Uid);
     checkR(tmp) tmp;
 
-    dialogs.Add(tmp);
-    users  .Add(Uid);
+    cash.Add(tmp);
+    index  .Add(Uid);
     return tmp;
 }
 
@@ -68,6 +64,9 @@ AUserDialogs::ptr ADialogs::create_dialogs(uuids::uuid Uid) {
 AUserDialogs::ptr
 ADialogs::operator[](const AUser& User)
 { return GetDialog(User); }
+
+bool ADialogs::operator()(const AUser& User)
+{ return IsContains(User); }
 
 
 

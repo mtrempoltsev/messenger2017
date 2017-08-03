@@ -20,8 +20,8 @@ namespace indices {
     {
     public:
 
-        typedef std::shared_ptr<_Tp> LPtr;
-        typedef std::list<LPtr>      LCash;
+        using LPtr  = std::shared_ptr<_Tp>;
+        using LCash = std::list<LPtr>;
 
     public: /***************| Construction |***************/
 
@@ -35,11 +35,13 @@ namespace indices {
         LPtr Add(const Args&... El) {
             auto ptr = std::make_shared<_Tp>(El...);
             cash.push_back(ptr);
+            clamp();
             return ptr;
         }
 
        LPtr Add(LPtr ptr) {
            cash.push_back(ptr);
+           clamp();
            return ptr;
        }
 
@@ -120,6 +122,26 @@ namespace indices {
             Normalize();
         }
 
+    protected: /************|  |***************/
+
+        void clamp() {
+            if(cash.size() > cash_length)
+                cash.pop_front();
+        }
+
+    public: /***************| Tterators |***************/
+
+        typename LCash::iterator begin()
+        { return cash.begin(); }
+
+        typename LCash::iterator end()
+        { return cash.end(); }
+
+        typename LCash::const_iterator begin() const
+        { return cash.begin(); }
+
+        typename LCash::const_iterator end() const
+        { return cash.end(); }
 
     public: /***************| operators |***************/
 
@@ -131,11 +153,3 @@ namespace indices {
 }
 
 #endif //M2_SERVER_CASHMANAGER_H
-
-/*
-TCashManager<ADialog>::Cmp <uint128>
-
-
-function<bool (const ADialog &, const uint128 &)>(ADialog&, TCashManager<ADialog>::LCash&)
-
- */
