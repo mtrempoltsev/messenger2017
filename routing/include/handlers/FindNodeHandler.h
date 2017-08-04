@@ -13,7 +13,7 @@ public:
 
 private:
 #pragma region __ Private methods __
-    Message* processMessage(Message message);
+    Message* handleMessage(Message message);
 #pragma endregion
 
 public:

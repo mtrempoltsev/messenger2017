@@ -1,4 +1,4 @@
-#include "FindNodeHandler.h"
+#include "handlers/FindNodeHandler.h"
 
 
 
@@ -10,10 +10,10 @@ FindNodeHandler::~FindNodeHandler()
 {
 }
 
-Message* FindNodeHandler::processMessage(Message message)
+Message* FindNodeHandler::handleMessage(Message message)
 {
     Guid guid = message.getGuid();
-    vector<NodeInfo> neighbours = node->kbucket_manager.getNeighbours(guid);
+    std::vector<NodeInfo> neighbours = node->kbucket_manager.getNeighbours(guid);
     Message* reply = new Message(/*parameters*/);
     //initialize reply with data
     return reply;
