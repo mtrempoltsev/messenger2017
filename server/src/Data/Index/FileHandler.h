@@ -72,7 +72,7 @@ namespace indices {
 
     public: /***********| Operators |************/
 
-        LCFilePtr operator[](const std::string& FileName);
+        LCFilePtr operator()(const std::string& FileName);
 
     };
 

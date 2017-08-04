@@ -6,21 +6,6 @@
 
 
 
-/********
- *
- * Creation -> try to detect index file
- *              ** create index
- *              ** log in
- *              #########
- *          -> load index to memory
- *
- *
- *
- * ******
- * >> make cash cleaning
- */
-
-
 namespace m2     {
 namespace data   {
 namespace dialog {
@@ -29,52 +14,34 @@ namespace dialog {
 
     /**
      *
-     *
      */
     class ADialogs
-        : boost::enable_shared_from_this<ADialogs>
-        //, boost::noncopyable
+            : public TDialogSystem<AUserDialogs>
     {
     public:
 
-        typedef TCashManager<AUserDialogs> LDialogCash;
-        typedef AIndexManager::LUids       LUsers;
+        using MPPtr =       std::shared_ptr<ADialog>;
+        using CPPtr = const std::shared_ptr<ADialog>;
 
-    public: /***************| Construction |***************/
+    public:
 
         ADialogs(const std::string&  Root);
-        ADialogs(      std::string&& Root);
-
-    public: /***************| Interface |***************/
-
-        // if it doesn't exist, it creates it
-        AUserDialogs::ptr GetDialog(const AUser& User);
-
-        bool IsContains(const AUser& User);
-
-    protected: /************| Members |***************/
-
-        std::string   root;
-        AIndexManager index;
-        LDialogCash   cash;
 
     public:
 
-        size_t CashLength() const;
-        LUsers Users() const;
+        // return UserDialog, if it doesn't exist - creates
+        MPtr Get(const uuids::uuid& User)       override ;
+        // return UserDialog, if it doesn't exist - nullptr
+        CPtr Get(const uuids::uuid& User) const override ;
 
-    public:
+        // combine 2 Get functions
+        MPPtr Get(const uuids::uuid& Sender, const uuids::uuid& Sendee);
+        CPPtr Get(const uuids::uuid& Sender, const uuids::uuid& Sendee) const;
 
-        void SetCashLength(size_t NewLength);
+    protected:
 
-    protected: /************|  |***************/
+        MPtr create_dialogs(uuids::uuid Uid);
 
-        AUserDialogs::ptr create_dialogs(uuids::uuid Uid);
-
-    public: /***************| Operators |***************/
-
-        AUserDialogs::ptr operator[](const AUser& User);
-        bool              operator()(const AUser& User);
     };
 
 }}}

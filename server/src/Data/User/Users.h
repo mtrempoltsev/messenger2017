@@ -58,12 +58,12 @@ namespace user {
 
 
     public: /***************| Operators |***************/
-
-        AUser operator[](const uuids::uuid& Uid);
+      bool  operator[](const uuids::uuid& Uid);
      private:
       AUsers(const std::string& RootDir);
       AUsers(AUsers const&) = delete;
       AUsers& operator= (AUsers const&) = delete;
+      AUser operator()(const uuids::uuid& Uid);
     };
 
 

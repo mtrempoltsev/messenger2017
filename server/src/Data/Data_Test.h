@@ -28,11 +28,11 @@ int N = 0;
 
 namespace fs = boost::filesystem;
 
+#include "Dialog/DialogSystem.hpp"
+
 void DataTest()
 {
-
-
-    Set(3);
+    Set(4);
 
     // test folder
     std::string Root = "/home/kvilt/CLionProjects/messenger2017/server/Test/";
@@ -68,33 +68,34 @@ void DataTest()
         AUsers   users(Root);
         ADialogs dialogs(Root + "Dialogs/");
 
-        auto Alice = users[1];
-        auto Bob   = users[2];
+        auto Alice = users(1);
+        auto Bob   = users(2);
 
         /***************/
 
         // create user_dialogs for new user
-        assert(!dialogs(Alice));
-        auto user_dialog = dialogs[Alice];
+        assert(!dialogs[Alice]);
+        auto user_dialog = dialogs(Alice);
         assert(user_dialog);
 
         // check, we have a right user
-        assert(user_dialog->Uid() == Alice);
+        assert(*user_dialog == Alice);
 
         /***************/
 
         // create dialog with a new talker
-        assert(!(*user_dialog)(Bob));
-        auto dialog = (*user_dialog)[Bob];
+        assert(!(*user_dialog)[Bob]);
+        auto dialog = (*user_dialog)(Bob);
         assert(dialog);
 
         // check, we have a right dialog
-        assert(dialog->Uid() == Bob);
+        assert(*dialog == Bob);
 
         /***************/
         //                         ss.mm.hh dd.mm.yyyy
         const std::string data1 = "01.36.15 03.08.2017";
         const std::string data2 = "56.36.15 03.08.2017";
+
         // add 2 messages to Alice's chat
         dialog->AddMessage(data2, "__TEST_TEXT");
         dialog->AddMessage(data1, "__TEST_TEXT");
@@ -103,14 +104,26 @@ void DataTest()
         assert(fs::exists(dialog->Root() + data1 + "^2"));
         assert(fs::exists(dialog->Root() + data2 + "^2"));
 
-        // remove first
+        // remove first message
         dialog->DeleteMessage(data1);
         assert(!fs::exists(dialog->Root() + data1 + "^2"));
 
-        /***************/
-
     } BLOCK(3, "static message test");
 
+    { // alternative dialog getting
+        AUsers   users(Root);
+        ADialogs dialogs(Root + "Dialogs/");
+
+        auto Alice = users(1);
+        auto Bob   = users(2);
+
+        /***************/
+
+        auto dialog = dialogs.Get(Alice, Bob);
+        assert(dialog);
+
+
+    } BLOCK(4, "forward dialog taking");
 }
 
 

@@ -6,67 +6,59 @@
 
 using namespace m2::data::dialog;
 
-ADialogs::ADialogs(const std::string& Root)
-    : root(Root)
-    , index(root + "Index")
-    , cash(256)
-{}
 
-ADialogs::ADialogs(std::string&& Root)
-    : root(std::move(Root))
-    , index(root + "Index")
-    , cash(256)
+ADialogs::ADialogs(const std::string&  Root)
+        : TDialogSystem(Root, "Index", 256)
 {}
 
 /****************************|  |****************************/
 
-AUserDialogs::ptr ADialogs::GetDialog(const AUser& User) {
-    uuids::uuid Uid = User.Uid();
-
-    // new user
-    checkR(index[Uid]) create_dialogs(Uid);
+ADialogs::MPtr
+ADialogs::Get(const uuids::uuid& User) {
 
     // from cash
-    auto ptr = cash[Uid];
-    ifR(ptr) ptr;
+    if (index[User]) {
+        auto ptr = cash(User);
+        ifR(ptr) ptr;
+    } else create_dialogs(User);
 
     // from disk
-    return AUserDialogs::Create(root + Uid.str() + "/", Uid);
+    return cash.Add(root + User.str() + "/", User);
 }
 
-bool ADialogs::IsContains(const AUser& User)
-{ return index[User]; }
+ADialogs::CPtr
+ADialogs::Get(const uuids::uuid& User) const {
+    checkR(index[User]) nullptr;
 
-/****************************|  |****************************/
+    // from cash
+    auto ptr = cash(Uid());
+    ifR(ptr) ptr;
 
-size_t ADialogs::CashLength() const
-{ return cash.CashLength(); }
-
-ADialogs::LUsers ADialogs::Users() const
-{ return index.Uids(); }
-
-void ADialogs::SetCashLength(size_t NewLength)
-{  cash.SetCashLength(NewLength); }
-
-/****************************|  |****************************/
-
-AUserDialogs::ptr ADialogs::create_dialogs(uuids::uuid Uid) {
-    auto tmp = AUserDialogs::Create(root  + Uid.str() + "/", Uid);
-    checkR(tmp) tmp;
-
-    cash.Add(tmp);
-    index  .Add(Uid);
-    return tmp;
+    //from disk
+    return cash.Add(root + User.str() + "/", User);
 }
 
 /****************************|  |****************************/
 
-AUserDialogs::ptr
-ADialogs::operator[](const AUser& User)
-{ return GetDialog(User); }
+ADialogs::MPtr
+ADialogs::create_dialogs(uuids::uuid Uid) {
+    AUserDialogs tmp(root  + Uid.str() + "/", Uid);
+          index.Add(Uid);
+    return cash.Add(tmp);
+}
 
-bool ADialogs::operator()(const AUser& User)
-{ return IsContains(User); }
+ADialogs::MPPtr
+ADialogs::Get(const uuids::uuid& Sender, const uuids::uuid& Sendee) {
+    auto user_dialog = Get(Sender);
+    checkR(user_dialog) nullptr;
+    return (*user_dialog)(Sendee);
+}
 
+ADialogs::CPPtr
+ADialogs::Get(const uuids::uuid& Sender, const uuids::uuid& Sendee) const {
+    auto user_dialog = Get(Sender);
+    checkR(user_dialog) nullptr;
+    return (*user_dialog)(Sendee);
+}
 
-
+/****************************|  |****************************/

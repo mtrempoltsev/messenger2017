@@ -57,7 +57,7 @@ namespace indices {
                 uids.emplace(Uid);
         }
 
-        void StoreOnDisk () {
+        void StoreOnDisk () const {
             MakeDir(root);
             std::ofstream os(path);
             checkR(os.is_open());
@@ -72,13 +72,13 @@ namespace indices {
             }
         }
 
-        void Add   (_Tp Uid)
+        void Add       (const _Tp& Uid)
         { uids.insert(Uid); }
 
-        void Remove(_Tp Uid)
-        { uids.erase(Uid);  }
+        void Remove    (const _Tp& Uid)
+        { uids.erase (Uid); }
 
-        bool IsContains(_Tp Uid)
+        bool IsContains(const _Tp& Uid) const
         { return uids.find(Uid) != uids.end(); }
 
     protected: /************| Members |***************/
@@ -100,7 +100,7 @@ namespace indices {
 
     public: /***************| operators |***************/
 
-        bool operator[](_Tp Uid)
+        bool operator[](const _Tp& Uid) const
         { return IsContains(Uid); }
 
     };
