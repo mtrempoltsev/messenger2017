@@ -11,19 +11,23 @@ option(ENABLE_TESTS "Enable m2-core tests" OFF)
 set(HEADERS
     stdafx.h
 
+    include/config.h
+    include/contact.h
     include/core_dispatcher.h
     include/error.h
     include/guid.h
-    include/config.h
+    include/message.h
     )
 
 set(SOURCES
     src/stdafx.cpp
 
+    src/config.cpp
+    src/contact.cpp
     src/core_dispatcher.cpp
     src/error.cpp
     src/guid.cpp
-    src/config.cpp
+    src/message.cpp
     )
 
 if (ENABLE_TESTS)

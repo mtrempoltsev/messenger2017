@@ -1,9 +1,10 @@
 ﻿#pragma once
 
+#include "contact.h"
 #include "error.h"
 #include "guid.h"
+#include "message.h"
 #include <functional>
-#include <string>
 #include <vector>
 
 namespace m2
@@ -27,30 +28,6 @@ namespace m2
             ErrorHandler onError;
         };
 
-        class MessageInfo {
-        public:
-            MessageInfo() {};
-            MessageInfo(const std::string& participants,
-                        const std::string& from,
-                        //const TimeStamp& sendTime,
-                        const std::string& message = "") {
-                participants_ = participants;
-                from_ = from;
-                //sendTime_ = sendTime;
-                message_ = message;
-            }
-
-            //using TimeStamp = std::chrono::system_clock::time_point;
-
-            friend std::ofstream& operator << (std::ofstream& stream, const MessageInfo& mi);
-            friend std::ifstream& operator >> (std::ifstream& stream, MessageInfo& mi);
-        private:
-            std::string participants_;
-            std::string from_;
-            //TimeStamp sendTime_;
-            std::string message_;
-        };
-
         class CoreDispatcher final
         {
         public:
@@ -64,7 +41,7 @@ namespace m2
             void registerNewUser(RegisterNewUserHandler handler);
             void login(const Uuid& uuid, LoginHandler handler);
 
-            using ContactList = std::vector<std::string>;
+            using ContactList = std::vector<Contact>;
             using MessageStory = std::vector<MessageInfo>;
 
             MessageStory GetMessageStory(const std::string& username) const;

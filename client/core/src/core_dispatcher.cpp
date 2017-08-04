@@ -1,6 +1,8 @@
 ﻿#include "stdafx.h"
 
 #include "../include/core_dispatcher.h"
+#include "../include/contact.h"
+#include "../include/message.h"
 #include <exception>
 #include <fstream>
 #include <pwd.h>
@@ -65,11 +67,11 @@ void CoreDispatcher::SaveContactList(const CoreDispatcher::ContactList& contacts
 CoreDispatcher::ContactList CoreDispatcher::GetContactList() const {
     std::string defaultPath = GetDefaultPath();
     std::ifstream stream(defaultPath + contactListFileName);
-    std::vector<std::string> contactList = {};
+    ContactList contactList = {};
     try {
         if (stream.is_open()) {
-            std::string contactName;
-            while(getline(stream, contactName)) {
+            Contact contactName;
+            while(stream >> contactName) {
                 contactList.push_back(contactName);
             }
         }
@@ -80,22 +82,6 @@ CoreDispatcher::ContactList CoreDispatcher::GetContactList() const {
 
     stream.close();
     return contactList;
-}
-
-std::ifstream& operator >> (std::ifstream& stream, MessageInfo& mi) {
-    stream >> mi.participants_ >>
-              mi.from_ >>
-              //mi.sendTime_ >>
-              mi.message_;
-    return stream;
-}
-
-std::ofstream& operator << (std::ofstream& stream, const MessageInfo& mi) {
-    stream << mi.participants_ << " "
-           << mi.from_ << " "
-           //<< mi.sendTime_ << " "
-           << mi.message_;
-    return stream;
 }
 
 CoreDispatcher::MessageStory CoreDispatcher::GetMessageStory(const std::string& username) const {
