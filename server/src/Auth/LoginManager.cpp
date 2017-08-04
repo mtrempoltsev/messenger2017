@@ -35,5 +35,5 @@ std::string LoginManager::createResponse(const std::string &server_string,
   std::stringstream stream;
   tree.put("session_id", session_id);
   boost::property_tree::write_json(stream, tree);
-  return std::__cxx11::string();
+  return std::string();
 }

@@ -36,6 +36,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${M2_BIN_DIR})
 
 #----------------------- compile options ------------------------
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lssl -lcrypto -W -Wall -Wcast-align -pedantic -fstack-protector-all -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wcast-align -Wno-format -Wno-long-long -Wmissing-declarations -Wno-unused-function")
 
 
 # ------------------------  3rd-parties  ------------------------
@@ -52,8 +53,14 @@ include(cotire)
 find_package(Boost COMPONENTS
     system
     filesystem
+    random
     REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
+
+#-------------------------    open SSL    -----------------------
+
+find_package(OpenSSL REQUIRED)
+include_directories(${OPENSSL_INCLUDE_DIR})
 
 
 # ----------------------- source groups  ------------------------
@@ -91,4 +98,4 @@ set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT s
 cotire(${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME}
-    ${Boost_LIBRARIES})
+    ${Boost_LIBRARIES} ssl crypto)
