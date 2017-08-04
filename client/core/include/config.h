@@ -29,7 +29,7 @@ namespace m2 {
             Uuid GetServerGuid() const;
 			std::string GetFilesFolderPath() const;
 			std::string GetKeysFilePath() const;
-			std::stirng GetHistoryFolderPath() const;
+			std::string GetHistoryFolderPath() const;
             std::string GetProperty(const PropertyName & property) const;
 
             //setters
