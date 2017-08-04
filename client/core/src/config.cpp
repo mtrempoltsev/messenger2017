@@ -13,7 +13,8 @@ std::map<Config::PropertyName, std::string> Config::propertyNameMap_ = {
     { Config::PropertyName::ClientGuid, "ClientGuid" },
     { Config::PropertyName::ServerGuid, "ServerGuid" },
 	{ Config::PropertyName::FilesFolderPath, "FilesFolderPath" },
-	{ Config::PropertyName::KeysFilePath, "KeysFilePath" }
+	{ Config::PropertyName::KeysFilePath, "KeysFilePath" },
+	{Config::PropertyName::HistoryFolderPath, "HistoryFolderPath" }
 }; //Fill propernty name map
 
 Config::Config() :
@@ -63,15 +64,17 @@ Uuid Config::GetServerGuid() const {
     return Uuid(GetProperty(PropertyName::ServerGuid));
 }//GetServerGuid
 
-std::string Config::GetFilesFolderPath() const
-{
+std::string Config::GetFilesFolderPath() const {
 	return GetProperty(PropertyName::FilesFolderPath);
 }//GetFilesFolderPath
 
-std::string Config::GetKeysFilePath() const
-{
+std::string Config::GetKeysFilePath() const {
 	return GetProperty(PropertyName::KeysFilePath);
 }//GetKeysFilePath
+
+std::string Config::GetHistoryFolderPath() const {
+	return GetProperty(PropertyName::HistoryFolderPath);
+}//GetHistoryFolderPath
 
 bool Config::SetClientGuid(const Uuid & uuid) {
     return SetDataByKey(PropertyName::ClientGuid, uuid.ToString());
@@ -81,15 +84,17 @@ bool Config::SetServerGuid(const Uuid & uuid) {
     return SetDataByKey(PropertyName::ServerGuid, uuid.ToString());
 }//SetServerGuid
 
-bool Config::SetFilesFolderPath(const std::string & filesFolderPath)
-{
+bool Config::SetFilesFolderPath(const std::string & filesFolderPath) {
 	return SetDataByKey(PropertyName::FilesFolderPath, filesFolderPath);
 }//SetFilesFolderPath
 
-bool Config::SetKeysFilePath(const std::string & keysFilePath)
-{
+bool Config::SetKeysFilePath(const std::string & keysFilePath) {
 	return SetDataByKey(PropertyName::KeysFilePath, keysFilePath);
 }//SetKeysFilePath
+
+bool Config::SetHistoryFolderPath(const std::string & historyFolderPath) {
+	return SetDataByKey(PropertyName::HistoryFolderPath, historyFolderPath);
+}//SetHistoryFolderPath
 
 bool Config::SetDataByKey(const PropertyName & property, const std::string & data) {
     bool result = false;
