@@ -3,6 +3,7 @@
 #include "Registration/RegisterSendKeyManager.h"
 #include "Auth/LoginManager.h"
 #include "Auth/LoginSendKeyManager.h"
+#include "iostream"
 
 namespace m2 {
 namespace server {
@@ -25,6 +26,7 @@ namespace server {
             // do something
             RegisterSendKeyManager sendKeyManager;
             code = sendKeyManager.doAction(data, response);
+            std::cout<<"REQUEST: "<<response<<std::endl;
             answer->setData(response, code);
         }
         else if (uri == "/user/register") {

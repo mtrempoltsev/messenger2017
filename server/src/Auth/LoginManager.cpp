@@ -5,6 +5,7 @@ int LoginManager::doAction(const std::string &data, std::string &response) {
   StringsPair info;
   try {
     info = deserialize(data);
+    response = createResponse(info.serverString, info.clientString);
   } catch (const pt::ptree_error &e) {
     std::cout << e.what() << std::endl;
     response = createError("client_string and decrypted server_string");

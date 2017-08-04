@@ -17,6 +17,7 @@ int RegisterSendKeyManager::doAction(const std::string &data, std::string &respo
   std::string publicKey;
   try {
     publicKey = deserialize(data);
+    response = createResponse(publicKey);
   }
   catch (const pt::ptree_error &e) {
     std::cout << e.what() << std::endl;
