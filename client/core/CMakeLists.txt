@@ -4,6 +4,8 @@ project(${CORE_PROJECT_NAME})
 
 set(SUBPROJECT_ROOT "${M2_ROOT}/core")
 
+option(ENABLE_TESTS "Enable m2-core tests" OFF)
+
 
 # -------------------------   sources   -------------------------
 set(HEADERS
@@ -23,6 +25,10 @@ set(SOURCES
     src/guid.cpp
     src/config.cpp
     )
+
+if (ENABLE_TESTS)
+add_subdirectory (tests)
+endif()
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 
