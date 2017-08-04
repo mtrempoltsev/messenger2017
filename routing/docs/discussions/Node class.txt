@@ -1,0 +1,21 @@
+####################### Node #########################
+KBucketManager kbucket_manager;
+DHT dht_table;
+NetworkConnector connector;
+map<MessageType, CommandHandler> handlers;
+Validator validator;
+FindNodeProcessor find_node_processor;
+FindDataProcessor find_data_processor;
+StoreProcessor store_processor;
+PingProcessor ping_processor;
+
+
+public:
+Node (int port);
+
+void start(string bootstrap);
+void stop();
+
+private:
+void onMessageReceive(byte* message, size_t size);
+
