@@ -4,6 +4,7 @@ namespace m2
 {
     enum class PerformResult
     {
-        Success
+        Success,
+        NetworkError
     };
 }

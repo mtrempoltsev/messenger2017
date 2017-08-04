@@ -63,7 +63,7 @@ void m2::HttpConnection::perform(
     auto writeFunction =
         [&requestBody](char* data, size_t size)
         {
-            requestBody.assign(data, data + size);
+            requestBody.insert(requestBody.end(), data, data + size);
         };
     perform(request, writeFunction, completion, progress);
 }
@@ -78,31 +78,32 @@ void m2::HttpConnection::perform(
 
     header_.clear();
 
-    const auto url = domain_ + request.uri;
+    const auto url = domain_ + request.uri_;
     curl_easy_setopt(curl_, CURLOPT_URL, url.c_str());
 
-    parent_->perform(this, request.timeout);
+    parent_->perform(this, request.timeout_);
 }
 
-void m2::HttpConnection::onPerformComplete(PerformResult result)
+void m2::HttpConnection::onPerformComplete(CURLcode result)
 {
     if (completion_)
     {
         auto response = std::make_unique<HttpResponse>();
 
-        response->code = 0;
+        response->code_ = 0;
 
-        if (result == PerformResult::Success)
+        if (result == CURLE_OK)
         {
-            curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, &response->code);
-            response->header.swap(header_);
+            curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, &response->code_);
+            response->header_.swap(header_);
         }
         else
         {
             header_.clear();
         }
 
-        completion_(result, std::move(response));
+        //TODO add actual codes
+        completion_(result == CURLE_OK ? PerformResult::Success : PerformResult::NetworkError, std::move(response));
     }
 }
 
