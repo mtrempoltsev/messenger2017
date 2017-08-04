@@ -1,6 +1,6 @@
 #pragma once
-#include "Node.h"
-#include "Message.h"
+#include "../Node.h"
+#include "../data_structures/Message.h"
 
 
 /// Command handler is an abstract class for all handlers of incoming messages
@@ -28,7 +28,7 @@ private:
 
 public:
 #pragma region __ Public methods __
-    virtual void processMessage(Message message);
+    virtual Message* processMessage(Message message);
 #pragma endregion  
 #pragma endregion
 
