@@ -21,8 +21,8 @@ endif()
 message(STATUS "binaries output: " ${M2_BIN_DIR})
 message(STATUS "libraries output: " ${M2_LIB_DIR})
 
-
 # ---------------------------  paths  ---------------------------
+
 set(CMAKE_EXECUTABLE_OUTPUT_DIRECTORY_DEBUG ${M2_BIN_DIR})
 set(CMAKE_EXECUTABLE_OUTPUT_DIRECTORY_RELEASE ${M2_BIN_DIR})
 set(CMAKE_EXECUTABLE_OUTPUT_PATH ${M2_BIN_DIR})
@@ -33,35 +33,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${M2_BIN_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${M2_BIN_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${M2_BIN_DIR})
 
-
 #----------------------- compile options ------------------------
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lssl -lcrypto -W -Wall -Wcast-align -pedantic -fstack-protector-all -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wcast-align -Wno-format -Wno-long-long -Wmissing-declarations -Wno-unused-function")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wcast-align -pedantic -fstack-protector-all -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wcast-align -Wno-format -Wno-long-long -Wno-unused-function -Wno-unused-parameter")
 
 
 # ------------------------  3rd-parties  ------------------------
 set(M2_GLOBAL_3RD_PARTY "${M2_ROOT}/../3rd-party")
 set(M2_3RD_PARTY "${M2_ROOT}/3rd-party")
-
-
-#----------- precompiled -----------
-list(APPEND CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY}/cotire-1.7.10/CMake")
-include(cotire)
-
-
-# -------------------------    boost   --------------------------
-find_package(Boost COMPONENTS
-    system
-    filesystem
-    random
-    REQUIRED)
-include_directories(${Boost_INCLUDE_DIR})
-
-#-------------------------    open SSL    -----------------------
-
-find_package(OpenSSL REQUIRED)
-include_directories(${OPENSSL_INCLUDE_DIR})
-
 
 # ----------------------- source groups  ------------------------
 macro(set_source_group group_name root_dir ${ARGN})
@@ -75,12 +54,11 @@ macro(set_source_group group_name root_dir ${ARGN})
     endforeach()
 endmacro()
 
-
 # -------------------------   sources   -------------------------
+
 set(HEADERS
     stdafx.h
-        )
-
+)
 
 file(GLOB DATA src/Data/*)
 
@@ -94,8 +72,26 @@ add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${DATA})
 include_directories(${SUBPROJECT_ROOT})
 include_directories(include/)
 
+#-------------------------    open SSL    -----------------------
+
+find_package(OpenSSL REQUIRED)
+include_directories(${OPENSSL_INCLUDE_DIR})
+target_link_libraries (${PROJECT_NAME} ${OPENSSL_LIBRARIES})
+
+# -------------------------    boost   --------------------------
+find_package(Boost COMPONENTS
+    system
+    filesystem
+    random
+    REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME}
+    ${Boost_LIBRARIES})
+
+# ------------------------- precompiled -------------------------
+
+list(APPEND CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY}/cotire-1.7.10/CMake")
+include(cotire)
 set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT stdafx.h)
 cotire(${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME}
-    ${Boost_LIBRARIES} ssl crypto)

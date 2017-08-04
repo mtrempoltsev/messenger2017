@@ -51,14 +51,14 @@ namespace indices {
             for (auto i : cash)
                 ifR(cmp(*i, key)) i;
             return nullptr;
-        };
+        }
 
         template <typename Key>
         MPtr Get(Key key) const {
             for (auto i : cash)
                 ifR(*i == key) i;
             return nullptr;
-        };
+        }
 
         template <typename Key, class Cmp>
         void Remove(Key key, Cmp cmp) {
@@ -69,7 +69,7 @@ namespace indices {
                     itr = cash.erase(itr);
                 else ++itr;
             }
-        };
+        }
 
         template <typename Key>
         void Remove(Key key) {
@@ -80,7 +80,7 @@ namespace indices {
                     itr = cash.erase(itr);
                 else ++itr;
             }
-        };
+        }
 
         void Normalize() {
             auto itr = cash.begin();
