@@ -16,7 +16,6 @@ namespace server {
     , socket_(service)
     , write_strand_(service)
     {
-        LOG("!!! CREATE NEW SESSION !!!");
     }
 
     boost::asio::ip::tcp::socket& Session::socket()
@@ -41,6 +40,7 @@ namespace server {
 
     void Session::start()
     {
+        LOG("!!! START NEW SESSION !!!");
         readHeader();
     }
 
