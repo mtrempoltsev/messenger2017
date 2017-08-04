@@ -15,5 +15,7 @@
         <file>qml/ContactsList.qml</file>
         <file>demo/asd.jpg</file>
         <file>demo/dsa.jpg</file>
+        <file>qml/ContactWidget.qml</file>
+        <file>qml/ContactWidgetModel.qml</file>
     </qresource>
 </RCC>

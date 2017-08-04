@@ -59,6 +59,7 @@ ListView{
                     Layout.maximumHeight: -1
 
                     color: guid == 1 ? "#e0e0f0" : "#f0f0f0"
+                    radius: 5
 
                     ColumnLayout{
                         id: textlayout
@@ -88,7 +89,8 @@ ListView{
                             text: contacts.get(guid).name
 
                             //заглушка
-                            color: guid == 1? "red":"#9d81ba"
+
+                            color: guid == 1? "#9d81ba":"red"
                         }
 
 
@@ -154,5 +156,3 @@ ListView{
         }
     }
 }
-
-

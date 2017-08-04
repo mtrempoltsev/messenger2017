@@ -5,10 +5,9 @@ import QtQuick.Layouts 1.3
 
 Page {
     id: root
-    height: 500
-    width: 500
-    implicitHeight: height
-    implicitWidth: width
+    anchors.fill: parent
+    implicitHeight: 500
+    implicitWidth: 500
 
     header: ToolBar {
         id: toolBar
@@ -19,7 +18,8 @@ Page {
                 text: qsTr("‹")
                 font.bold: true
                 font.pointSize: toolBar.fontSize
-                onClicked: stackView.pop()
+//                onClicked: stackView.pop()
+                onClicked: rightside.pop()
             }
             Label {
                 text: qsTr("Settings")
