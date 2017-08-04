@@ -64,7 +64,7 @@ namespace indices {
 
     public:
 
-        const std::string& Root();
+        const std::string& Root() const;
 
     protected: /********|  |**************/
 

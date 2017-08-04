@@ -25,7 +25,7 @@ struct HttpRequestHeader
 class HttpRequest
 {
 public:
-    HttpRequest(std::istream& stream);
+    explicit HttpRequest(std::istream& stream);
     ~HttpRequest();
 
     void addData(std::istream& stream);

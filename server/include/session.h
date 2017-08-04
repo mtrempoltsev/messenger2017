@@ -14,7 +14,7 @@ public:
     Session(const Session &) = delete;
     Session &operator=(const Session &) = delete;
 
-    Session(boost::asio::io_service& service);
+    explicit Session(boost::asio::io_service& service);
 
     void start();
 

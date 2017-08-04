@@ -7,15 +7,15 @@ AMessage::AMessage(const std::string& Dir
                  , const std::string& Author
                  , const std::string& Time
                  , const std::string& Text
-)   : dir   (Dir)
+)   : bChanged(true)
+    , dir   (Dir)
     , author(Author)
     , time  (Time)
     , text  (Text)
-    , bChanged(1)
 {}
 
 AMessage::AMessage(const std::string& FileName)
-    : bChanged(0)
+    : bChanged(false)
 {
     init_meta(FileName);
     load_text(FileName);
@@ -24,10 +24,10 @@ AMessage::AMessage(const std::string& FileName)
 AMessage::AMessage(const std::string& Dir
                  , const std::string& Author
                  , const std::string& Time
-)   : dir   (Dir)
+)   : bChanged(false)
+    , dir   (Dir)
     , author(Author)
     , time  (Time)
-    , bChanged(0)
 { load_text(path()); }
 
 AMessage::~AMessage()

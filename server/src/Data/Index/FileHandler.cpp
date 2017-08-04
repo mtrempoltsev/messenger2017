@@ -89,7 +89,7 @@ AFileHandler::read_from_disk(const std::string& FileName)
 
 /**********************************************************/
 
-const std::string& AFileHandler::Root()
+const std::string& AFileHandler::Root() const
 { return root; }
 
 AFileHandler::LCFilePtr
