@@ -89,7 +89,6 @@ ListView{
                             text: contacts.get(guid).name
 
                             //заглушка
-
                             color: guid == 1? "#9d81ba":"red"
                         }
 

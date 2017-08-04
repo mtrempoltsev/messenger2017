@@ -59,6 +59,32 @@ Page {
                 anchors.centerIn: parent
             }
         }
+
+        states: State{
+                name: "noAnimation"
+                PropertyChanges {
+                    target: animation
+                    duration: 0
+                }
+
+            }
+
+
+        pushEnter: Transition {
+                XAnimator {
+                    id: animation
+                    from: (rightside.mirrored ? 1 : -1) * -rightside.width
+                    to: 0
+                    duration: 400
+                    easing.type: Easing.OutCubic
+                }
+            }
+
+        function pushNoAnimation(item){
+            state = "noAnimation";
+            push(item);
+            state = "";
+        }
     }
 
 //    ChatPage {

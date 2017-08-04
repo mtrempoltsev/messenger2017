@@ -159,7 +159,7 @@ Rectangle {
 
                 onClicked: {
                     rightside.pop()
-                    rightside.push(["qrc:/qml/ChatPage.qml"])
+                    rightside.pushNoAnimation(["qrc:/qml/ChatPage.qml"])
 //                    listView.model = ChatListView;
                     listView.currentIndex = index
                 }
