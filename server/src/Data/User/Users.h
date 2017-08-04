@@ -25,8 +25,13 @@ namespace user {
         typedef AIndexManager::LUids LUsers;
 
     public: /***************| Construction |***************/
+      static AUsers& instance()
+      {
+        // согласно стандарту, этот код ленивый и потокобезопасный
+        static AUsers s("./");
+        return s;
+      }
 
-        AUsers(const std::string& RootDir);
 
     public: /***************| Interface |***************/
 
@@ -55,6 +60,10 @@ namespace user {
     public: /***************| Operators |***************/
 
         AUser operator[](const uuids::uuid& Uid);
+     private:
+      AUsers(const std::string& RootDir);
+      AUsers(AUsers const&) = delete;
+      AUsers& operator= (AUsers const&) = delete;
     };
 
 

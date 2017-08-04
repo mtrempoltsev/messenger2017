@@ -1,7 +1,8 @@
 #include "Registration/RegisterManager.h"
+#include "../Data/User/Users.h"
 
 using namespace m2::server;
-#include "../Data/User/Users.h"
+
 
 RegisterManager::StringsPair RegisterManager::deserialize(const std::string &data) {
   pt::ptree request;
@@ -28,7 +29,8 @@ int RegisterManager::doAction(const std::string &data, std::string &response) {
     return 403;
   }
   response = createResponse();
-  //m2::data::user::AUsers users;
+  //тут должен быть fingerprint
+  //m2::data::user::AUsers::instance().CreateUser(id, "public_key"); //тут должен быть public_key
 
   //TODO save
   return 200;
