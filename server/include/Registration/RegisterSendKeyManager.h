@@ -21,10 +21,14 @@ protected:
 private:
   std::string createResponse(const std::string &publicKey);
 
-  std::string rsaEncrypt(RSA *pubKey, const std::string str) const;
+  std::string rsaEncryptPublic(RSA *pubKey, const std::string str) const;
+  std::string rsaEncryptPrivate(RSA *pubKey, const std::string str) const;
 
-  std::unique_ptr<RSA> createRSAWithFilename(std::string filename, bool isKeyPublic);///< temporary function for testing
-  std::unique_ptr<RSA> createRSAWithPublicKey(const std::string &key);
+
+  RSA *createRSAWithFilename(std::string filename, bool isKeyPublic);///< temporary function for testing
+  RSA *createRSAWithPublicKey (const std::string &key);
+  RSA *createRSAWithPrivateKey (const std::string &key);
+
 };
 }
 }

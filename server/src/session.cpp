@@ -83,11 +83,17 @@ namespace server {
     void Session::readDataDone(const boost::system::error_code & error, std::size_t bytes_transferred, requestPtr request)
     {
         if (!error) {
-            std::cout << "WHAT???" << std::endl;
             std::istream stream(&in_packet_);
             request->addData(stream);
             // Continue reading remaining data until EOF.
-            readData(request);
+            int headerSize = request->getContentSize();
+            int dataSize = request->getData().size();
+            if (dataSize < headerSize) {
+                readData(request);
+            }
+            else {
+                readDataDone(boost::asio::error::eof, 0, request);
+            }
         }
         else if (error == boost::asio::error::eof)
         {
