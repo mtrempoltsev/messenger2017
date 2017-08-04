@@ -17,5 +17,7 @@
         <file>demo/dsa.jpg</file>
         <file>qml/ContactWidget.qml</file>
         <file>qml/ContactWidgetModel.qml</file>
+        <file>img/affix.png</file>
+        <file>img/send.png</file>
     </qresource>
 </RCC>
