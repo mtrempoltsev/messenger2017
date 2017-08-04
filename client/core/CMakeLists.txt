@@ -13,6 +13,8 @@ set(HEADERS
     include/error.h
     include/guid.h
     include/config.h
+    include/context.h
+    include/init.h
     )
 
 set(SOURCES
@@ -22,6 +24,7 @@ set(SOURCES
     src/error.cpp
     src/guid.cpp
     src/config.cpp
+    src/init.cpp
     )
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
