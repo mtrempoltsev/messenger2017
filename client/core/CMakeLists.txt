@@ -21,7 +21,6 @@ set(SOURCES
     src/stdafx.cpp
 
     src/core_dispatcher.cpp
-    src/error.cpp
     src/guid.cpp
     src/config.cpp
     src/init.cpp

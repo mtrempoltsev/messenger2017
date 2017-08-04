@@ -10,7 +10,7 @@ namespace m2
             NetworkError
         };
 
-        Error(Code code, std::string&& message);
+        Error(Code code, std::string&& message) : code{code}, message{message}{};
 
         Error(Error&) = delete;
         Error& operator=(Error&) = delete;
