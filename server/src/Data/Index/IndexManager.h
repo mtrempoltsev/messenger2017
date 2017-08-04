@@ -28,8 +28,8 @@ namespace indices {
 
     public: /***************| Construction |***************/
 
-        AIndexManager(const std::string&  Path);
-        AIndexManager(      std::string&& Path);
+        explicit AIndexManager(const std::string&  Path);
+        explicit AIndexManager(      std::string&& Path);
 
         ~AIndexManager();
 

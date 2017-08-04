@@ -37,7 +37,7 @@ namespace user {
 
         // get existing user, if not - AUser == false
         AUser GetUser (uuids::uuid Uid);
-        bool  IsExists(uuids::uuid Uid);
+        bool  IsExists(uuids::uuid Uid) const;
 
         // add new user to database
         AUser CreateUser(uuids::uuid Uid, const std::string&  PublicKey);

@@ -22,7 +22,7 @@ AUser AUsers::GetUser(uuids::uuid Uid) {
     return AUser(Uid, file->second);
 }
 
-bool AUsers::IsExists(uuids::uuid Uid)
+bool AUsers::IsExists(uuids::uuid Uid) const
 { return users[Uid]; }
 
 AUser AUsers::CreateUser(uuids::uuid Uid, const std::string& PublicKey
