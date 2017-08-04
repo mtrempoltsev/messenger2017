@@ -7,6 +7,7 @@
 #include "../Message/Message.h"
 #include "../Index/IndexManager.hpp"
 #include "../Index/CashManager.hpp"
+#include "DialogSystem.hpp"
 
 
 
@@ -74,51 +75,27 @@ namespace dialog {
      * create a 2-lvl index system
      */
     class ADialog
-            : boost::enable_shared_from_this<ADialog>
-    //        , boost::noncopyable
+            : public TDialogSystem<AMessage, std::string>
     {
     public:
 
-        typedef std::shared_ptr<ADialog>   ptr;
-
-        typedef TCashManager<AMessage>     LMessages;
-        typedef TIndexManager<std::string> LIndexManager;
-
-    protected: /************| Construction |***************/
-
         ADialog(const std::string&  Root, uuids::uuid Uid);
-        ADialog(      std::string&& Root, uuids::uuid Uid);
-
-    public:
-
-        static ptr Create(const std::string&  Root, uuids::uuid Uid);
-        static ptr Create(      std::string&& Root, uuids::uuid Uid);
 
     public: /***************| Interface |***************/
         // main function
         void Serialize    (std::ostream& os, std::string since);
-        void AddMessage   (std::istream& is);
-        void AddMessage   (const std::string& time, const std::string& text);
+
+        MPtr AddMessage   (std::istream& is);
+        MPtr AddMessage   (const std::string& time, const std::string& text);
         void DeleteMessage(const std::string& time);
 
-    protected: /************| Members |***************/
-
-        uuids::uuid uid;
-        std::string root;
-
-        LIndexManager index;
-        LMessages     messages;
-
-    public:
-              uuids::uuid  Uid()  const { return uid;  }
-        const std::string& Root() const { return root; }
+        MPtr Get(const std::string& time)       override;
+        CPtr Get(const std::string& time) const override;
 
     public: /***************| operators |***************/
 
         // send ALL messages
         std::ostream& operator<<(std::ostream& os);
-
-        bool operator==(const uuids::uuid& Uid) const;
     };
 
 

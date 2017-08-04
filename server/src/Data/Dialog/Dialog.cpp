@@ -5,32 +5,16 @@ using namespace m2::data::dialog;
 
 
 ADialog::ADialog(const std::string& Root, uuids::uuid Uid)
-    : root(Root)
-    , uid (Uid)
-    , index(root + "_Index")
-    , messages(25)
-{}
-
-ADialog::ADialog(std::string&& Root, uuids::uuid Uid)
-    : root(std::move(Root))
-    , uid (Uid)
-    , index(root + "_Index")
-    , messages(25)
+    : TDialogSystem(Root, "Index", 256, Uid)
 {}
 
 /**********************************************************/
 
-ADialog::ptr ADialog::Create(const std::string& Root, uuids::uuid Uid)
-{ return ptr(new ADialog(Root, Uid)); }
-
-ADialog::ptr ADialog::Create(std::string&& Root, uuids::uuid Uid)
-{ return ptr(new ADialog(std::move(Root), Uid)); }
-
-/**********************************************************/
-
-void ADialog::AddMessage(const std::string& time, const std::string& text) {
-    messages.Add(AMessage(root, uid.str(), time, text));
-    index.Add(time);
+ADialog::MPtr
+ADialog::AddMessage(const std::string& time, const std::string& text) {
+    auto tmp = AMessage(root, uid.str(), time, text);
+          index.Add(time);
+    return cash.Add(tmp);
 }
 
 void ADialog::DeleteMessage(const std::string& time) {
@@ -38,12 +22,30 @@ void ADialog::DeleteMessage(const std::string& time) {
     index.Remove(time);
 
     AMessage msg(root, uid.str(), time);
-    messages.Remove(msg);
+    cash.Remove(msg);
     msg.Remove();
 }
 
+ADialog::MPtr
+ADialog::Get(const std::string& time) {
+    checkR(index[time]) nullptr;
+
+    // from cash
+    AMessage tmp(root, uid.str(), time); //TODO::make key compare
+    auto ptr = cash(tmp);
+    ifR (ptr) ptr;
+
+    // from disk
+    return cash.Add(tmp);
+}
+
+ADialog::CPtr
+ADialog::Get(const std::string& time) const {
+    checkR(index[time]) nullptr;
+
+    // from cash
+    AMessage tmp(root, uid.str(), time); //TODO::make key compare
+    return cash(tmp);
+}
+
 /**********************************************************/
-
-bool ADialog::operator==(const uuids::uuid& Uid) const
-{ return uid == Uid; }
-

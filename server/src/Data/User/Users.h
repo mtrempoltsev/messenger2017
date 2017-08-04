@@ -54,7 +54,8 @@ namespace user {
 
     public: /***************| Operators |***************/
 
-        AUser operator[](const uuids::uuid& Uid);
+        bool  operator[](const uuids::uuid& Uid);
+        AUser operator()(const uuids::uuid& Uid);
     };
 
 

@@ -20,40 +20,41 @@ namespace indices {
     {
     public:
 
-        using LPtr  = std::shared_ptr<_Tp>;
-        using LCash = std::list<LPtr>;
+        using MPtr  =       std::shared_ptr<_Tp>;
+        using CPtr  = const std::shared_ptr<_Tp>;
+        using LCash =       std::list<MPtr>;
 
     public: /***************| Construction |***************/
 
-        TCashManager(size_t CashLength = 25)
+        TCashManager(const size_t& CashLength = 25)
             : cash_length(CashLength)
         {}
 
     public: /***************| Interface |***************/
 
         template<typename ...Args>
-        LPtr Add(const Args&... El) {
+        MPtr Add(const Args&... El) {
             auto ptr = std::make_shared<_Tp>(El...);
             cash.push_back(ptr);
             clamp();
             return ptr;
         }
 
-       LPtr Add(LPtr ptr) {
+       MPtr Add(MPtr ptr) {
            cash.push_back(ptr);
            clamp();
            return ptr;
        }
 
         template <typename Key, typename Cmp>
-        LPtr Get(Key key, Cmp cmp) {
+        MPtr Get(Key key, Cmp cmp) const {
             for (auto i : cash)
                 ifR(cmp(*i, key)) i;
             return nullptr;
         };
 
         template <typename Key>
-        LPtr Get(Key key) {
+        MPtr Get(Key key) const {
             for (auto i : cash)
                 ifR(*i == key) i;
             return nullptr;
@@ -89,11 +90,11 @@ namespace indices {
         }
 
         template <typename Key, class Cmp>
-        bool IsContains(const Key& rs, Cmp cmp)
+        bool IsContains(const Key& rs, Cmp cmp) const
         { return Get(rs, cmp) ? true : false; }
 
         template <typename Key>
-        bool IsContains(const Key& rs)
+        bool IsContains(const Key& rs) const
         { return Get(rs) ? true : false; }
 
         void Clear()
@@ -106,14 +107,9 @@ namespace indices {
 
     public:
 
-        const LCash& Cash() const
-        { return cash; }
-
-        size_t CashLength() const
-        { return cash_length; }
-
-        size_t Size() const
-        { return cash.size(); }
+        const LCash& Cash()       const { return cash;        }
+              size_t CashLength() const { return cash_length; }
+              size_t Size()       const { return cash.size(); }
 
     public:
 
@@ -146,8 +142,11 @@ namespace indices {
     public: /***************| operators |***************/
 
         template <typename _Tq>
-        LPtr operator[](const _Tq& rs)
-        { return Get(rs); }
+        MPtr operator()(const _Tq& rs) const { return Get(rs); }
+
+        template <typename _Tq>
+        bool operator[](const _Tq& rs) const
+        { return IsContains(rs); }
     };
 
 }

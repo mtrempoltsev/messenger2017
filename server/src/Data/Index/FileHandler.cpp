@@ -93,5 +93,5 @@ const std::string& AFileHandler::Root()
 { return root; }
 
 AFileHandler::LCFilePtr
-AFileHandler::operator[](const std::string& FileName)
+AFileHandler::operator()(const std::string& FileName)
 { return ReadFile(FileName); }
