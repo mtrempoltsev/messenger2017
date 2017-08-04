@@ -17,16 +17,16 @@ namespace m2
 
     struct HttpResponse final
     {
-        long code;
-        Data header;
+        long code_;
+        Data header_;
     };
 
     using HttpResponsePtr = std::unique_ptr<HttpResponse>;
 
     struct HttpRequest final
     {
-        std::string uri;
-        std::chrono::milliseconds timeout;
+        std::string uri_;
+        std::chrono::milliseconds timeout_;
     };
 
     class HttpClient;
@@ -68,7 +68,7 @@ namespace m2
         void perform(const HttpRequest& request, WriteFunction writeFunction,
             CompletionHandler completion, ProgressHandler progress);
 
-        void onPerformComplete(PerformResult result);
+        void onPerformComplete(CURLcode result);
 
         void close();
 
