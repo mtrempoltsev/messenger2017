@@ -1,7 +1,7 @@
 #include "Manager.h"
 using namespace m2::server;
 
-std::string m2::server::Manager::createError(const std::string message) {
+std::string Manager::createError(const std::string message) {
   pt::ptree tree;
   std::stringstream stream;
   tree.put("error_msg", message);

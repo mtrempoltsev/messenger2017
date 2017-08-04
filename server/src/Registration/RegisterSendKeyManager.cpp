@@ -1,8 +1,8 @@
-#include "SendKeyManager.h"
+#include "Registration/RegisterSendKeyManager.h"
 
 using namespace m2::server;
 
-std::string SendKeyManager::deserializePublicKey(const std::string &data) {
+std::string RegisterSendKeyManager::deserialize(const std::string &data) {
   pt::ptree request;
   std::string publicKey;
   std::stringstream stream;
@@ -13,10 +13,10 @@ std::string SendKeyManager::deserializePublicKey(const std::string &data) {
   return publicKey;
 }
 
-int SendKeyManager::doAction(const std::string &data, std::string &response) {
+int RegisterSendKeyManager::doAction(const std::string &data, std::string &response) {
   std::string publicKey;
   try {
-    publicKey = deserializePublicKey(data);
+    publicKey = deserialize(data);
   }
   catch (const pt::ptree_error &e) {
     std::cout << e.what() << std::endl;
@@ -26,7 +26,7 @@ int SendKeyManager::doAction(const std::string &data, std::string &response) {
 
   return 200;
 }
-std::string SendKeyManager::createResponse(const std::string &publicKey) {
+std::string RegisterSendKeyManager::createResponse(const std::string &publicKey) {
   std::string server_string = "test"; //TODO
   std::string client_string = "test2"; //TODO
   pt::ptree tree;

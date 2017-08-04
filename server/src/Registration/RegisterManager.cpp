@@ -1,9 +1,9 @@
-#include "RegisterManager.h"
+#include "Registration/RegisterManager.h"
 
 using namespace m2::server;
+#include "../Data/User/Users.h"
 
-RegisterManager::StringsPair
-RegisterManager::deserializeDecrypted(const std::string &data) {
+RegisterManager::StringsPair RegisterManager::deserialize(const std::string &data) {
   pt::ptree request;
   StringsPair info;
   std::stringstream stream;
@@ -19,22 +19,22 @@ RegisterManager::deserializeDecrypted(const std::string &data) {
 int RegisterManager::doAction(const std::string &data, std::string &response) {
   StringsPair info;
   try {
-    info = deserializeDecrypted(data);
+    info = deserialize(data);
   } catch (const pt::ptree_error &e) {
     std::cout << e.what() << std::endl;
     response = createError("client_string and decrypted server_string");
     return 403;
   }
-  response = createResponse(info.serverString, info.clientString);
+  response = createResponse();
+  //m2::data::user::AUsers users;
+
   //TODO save
   return 200;
 }
-std::string RegisterManager::createResponse(const std::string &server_string, const std::string &client_string) {
-  std::string session_id = "test"; //TODO
+std::string RegisterManager::createResponse() {
   pt::ptree tree;
   std::stringstream stream;
-  tree.put("session_id", session_id);
-  boost::property_tree::write_json(stream, tree);
+  boost::property_tree::write_json(stream, tree); //empty tree
   return stream.str();
 }
 void RegisterManager::save(const std::string &data) {}

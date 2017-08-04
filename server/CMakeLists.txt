@@ -72,13 +72,13 @@ endmacro()
 # -------------------------   sources   -------------------------
 set(HEADERS
     stdafx.h
-    )
+        )
 
 
 file(GLOB DATA src/Data/*)
 
-file(GLOB HEADERS include/*.h)
-file(GLOB SOURCES src/*.cpp)
+file(GLOB HEADERS include/*.h include/*/*.h)
+file(GLOB SOURCES src/*.cpp src/*/*.cpp)
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES} ${DATA})
 

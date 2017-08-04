@@ -27,11 +27,14 @@ class Manager
     int code;
     std::string jsonBody;
   };
+  struct StringsPair {
+    std::string serverString;
+    std::string clientString;
+  };
 public:
   virtual int doAction (const std::string &data, std::string &response) = 0;
   static const ResponseType m_response_type = ResponseType::INVALID;
- protected:
-  std::string createError(const std::string message);
+  static std::string createError(const std::string message) ;
  };
 
 

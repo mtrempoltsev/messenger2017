@@ -6,7 +6,7 @@
 namespace m2 {
 namespace server {
 
-class SendKeyManager : public Manager {
+class RegisterSendKeyManager : public Manager {
 public:
   virtual int doAction(const std::string &data, std::string &response) final;
 
@@ -14,7 +14,7 @@ public:
   static const ResponseType m_response_type = ResponseType::SendKey;
 
 protected:
-  std::string deserializePublicKey(const std::string &data);
+  std::string deserialize(const std::string &data);
 
 private:
   std::string createResponse(const std::string &publicKey);
