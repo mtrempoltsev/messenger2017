@@ -2,10 +2,12 @@
 
 #include <map>
 #include <typeindex>
-#include <iostream>
 
 class Context{
 public:
+    Context(const Context& other) = delete;
+    Context(Context&& other) = delete;
+
     static Context& get_instance(){
         static Context context{}; 
         return context;
