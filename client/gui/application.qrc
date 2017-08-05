@@ -17,5 +17,6 @@
         <file>demo/dsa.jpg</file>
         <file>qml/ContactWidget.qml</file>
         <file>qml/ContactWidgetModel.qml</file>
+        <file>qml/ChatListDelegateItem.qml</file>
     </qresource>
 </RCC>
