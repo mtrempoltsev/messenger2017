@@ -17,6 +17,13 @@ void Core::Start() {
   JobLoop();
 }
 
+void Core::stopCore() {
+  std::cout << "Stop core!" << std::endl;
+  std::unique_lock<std::mutex> lock(mutex_);
+  keepWorking_ = false;
+  hasJob_.notify_one();
+}
+
 LoginManager* Core::getLoginManager() { return loginManager_.get(); }
 
 ContactManager::ContactList Core::GetContactList(const std::string& contactId) {

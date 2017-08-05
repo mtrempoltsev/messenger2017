@@ -52,6 +52,8 @@ class Core {
   m2::core::Config config_;
   void JobLoop();
 
+  void stopCore();
+
   std::shared_ptr<ContactManager> GetContactManager() {
     return contactManager_;
   }

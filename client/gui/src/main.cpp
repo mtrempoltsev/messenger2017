@@ -1,9 +1,14 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+
 #include <iostream>
 #include <thread>
 #include "../../core/include/core.h"
 #include "../../core/include/core_dispatcher.h"
+
+#include <registrationcontroler.h>
+
+using namespace m2::gui::controler;
 
 using m2::core::Core;
 using m2::core::CoreDispatcher;
@@ -20,6 +25,8 @@ int main(int argc, char *argv[]) {
   QGuiApplication app(argc, argv);
 
   QQmlApplicationEngine engine;
+
+  RegistrationControler::declareQML();
 
   engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
   if (engine.rootObjects().isEmpty()) return -1;
@@ -40,9 +47,9 @@ int main(int argc, char *argv[]) {
   dispatcher.registerUser(rh);
   dispatcher.login(lh);
 
-  coreThread.join();
+  // coreThread.join();
 
-  // return 0;
-  // return 0;
-  return app.exec();
+  int res = app.exec();
+  dispatcher.stopCore();
+  return res;
 }

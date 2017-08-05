@@ -9,6 +9,7 @@
 namespace m2 {
 namespace core {
 
+void CoreDispatcher::stopCore() { core_->stopCore(); }
 void CoreDispatcher::login(LoginHandler handler) {
   JobType job = [handler](Core &core) {
     std::string uuid = core.getLoginManager()->login();

@@ -49,6 +49,8 @@ class CoreDispatcher final {
   void login(LoginHandler handler);
   void registerUser(RegisterHandler handler);
 
+  void stopCore();
+
   std::shared_ptr<Core> core_;
 };
 

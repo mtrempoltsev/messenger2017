@@ -20,5 +20,8 @@
         <file>img/affix.png</file>
         <file>img/send.png</file>
         <file>qml/ChatListDelegateItem.qml</file>
+        <file>qml/LoginPage.qml</file>
+        <file>qml/RectangleLogo.qml</file>
+        <file>qml/PageWithLogo.qml</file>
     </qresource>
 </RCC>
