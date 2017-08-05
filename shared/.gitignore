@@ -33,6 +33,12 @@ cmake-build-debug/
 *.dylib
 *.dll
 
+**[Dd]ebug/
+**[Rr]elease/
+
+**CMakeFiles/
+**CMakeTmp/
+
 # Fortran module files
 *.mod
 *.smod
@@ -42,6 +48,7 @@ cmake-build-debug/
 *.la
 *.a
 *.lib
+*.tlog
 
 # Executables
 *.exe

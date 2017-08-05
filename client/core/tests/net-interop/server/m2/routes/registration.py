@@ -35,7 +35,7 @@ class RegistrationProcessModule(Module, HandlerHelper):
             key = RSA.import_key(params["public_key"])
             message = get_random_bytes(32)
             cipher_rsa = PKCS1_OAEP.new(key)
-            secret_key = KDF.PBKDF2(self._context.get("SECRET_KEY"), "mysalt")
+            secret_key = KDF.PBKDF2(self._context.get("SECRET_KEY").decode('utf-8'), "mysalt")
             cipher_aes = AES.new(secret_key, AES.MODE_EAX)
             return web.Response(body={
                 "server_string": cipher_rsa.encrypt(),
