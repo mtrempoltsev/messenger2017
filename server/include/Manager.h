@@ -38,6 +38,10 @@ public:
         std::string serverString;
         std::string clientString;
     };
+    enum class response_result {
+        ok,
+        wrong_response,
+    };
 public:
     Manager(Database *database);
     virtual HttpResponse::Code doAction(const std::string &data, std::string &response) = 0;

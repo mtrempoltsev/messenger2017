@@ -10,6 +10,11 @@ namespace server
 
 class RegisterManager: public Manager
 {
+    struct userInfo
+    {
+        uuids::uuid fingerprint;
+        std::string clientPublicKey;
+    };
 public:
     RegisterManager(Database *db);
 
@@ -19,10 +24,11 @@ public:
     static const ResponseType m_response_type = ResponseType::Register;
 
 private:
-    void save(const std::string &data);
+    void save(const userInfo &info);
     StringsPair deserialize(const std::string &data);
 
-    std::string createResponse();
+
+    response_result createResponse (StringsPair pair, userInfo &result);
 };
 }
 }
