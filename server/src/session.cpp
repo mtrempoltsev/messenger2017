@@ -47,9 +47,9 @@ namespace server {
     void Session::readHeader()
     {
         boost::asio::async_read_until( socket_, in_packet_, HEADER_END,
-            [me=shared_from_this()](const boost::system::error_code & ec, std::size_t bytes_xfer)
+            [me=shared_from_this()](const boost::system::error_code & ec, std::size_t)
             {
-                me->readHeaderDone(ec, bytes_xfer);
+                me->readHeaderDone(ec);
             });
     }
 
@@ -57,13 +57,13 @@ namespace server {
     {
         // Start reading remaining data until EOF.
         boost::asio::async_read(socket_, in_packet_, boost::asio::transfer_at_least(1),
-            [me=shared_from_this(), request](const boost::system::error_code & ec, std::size_t bytes_xfer)
+            [me=shared_from_this(), request](const boost::system::error_code & ec, std::size_t)
             {
-                me->readDataDone(ec, bytes_xfer, request);
+                me->readDataDone(ec, request);
             });
     }
 
-    void Session::readHeaderDone(const boost::system::error_code & error, std::size_t bytes_transferred)
+    void Session::readHeaderDone(const boost::system::error_code & error)
     {
         if (error) {
             return;
@@ -77,11 +77,11 @@ namespace server {
             readData(request);
         }
         else {
-            readDataDone(boost::asio::error::eof, 0, request);
+            readDataDone(boost::asio::error::eof, request);
         }
     }
 
-    void Session::readDataDone(const boost::system::error_code & error, std::size_t bytes_transferred, requestPtr request)
+    void Session::readDataDone(const boost::system::error_code & error, requestPtr request)
     {
         if (!error) {
             std::istream stream(&in_packet_);
@@ -93,7 +93,7 @@ namespace server {
                 readData(request);
             }
             else {
-                readDataDone(boost::asio::error::eof, 0, request);
+                readDataDone(boost::asio::error::eof, request);
             }
         }
         else if (error == boost::asio::error::eof)
