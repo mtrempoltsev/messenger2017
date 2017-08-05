@@ -68,6 +68,7 @@ endmacro()
 
 
 # -------------------------   sources   -------------------------
+include_directories(include/core/ include/data_structures include/handlers include/handlers/processors)
 set(HEADERS
         stdafx.h
         include/core/Node.h

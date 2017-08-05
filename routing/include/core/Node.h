@@ -4,9 +4,15 @@
 
 class Node //friend class CommandHandler
 {
-    //Validator validator;
-public:
-    Node();
-    ~Node();
+  //Validator validator;
+ public:
+  Node();
+  ~Node();
+
+ private:
+  DHT dht;
+  KBucketManager kbucketManager;
+
+
 };
 
