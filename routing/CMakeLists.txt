@@ -50,7 +50,7 @@ include(cotire)
 
 # -------------------------    boost   --------------------------
 find_package(Boost COMPONENTS
-    REQUIRED)
+        REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
 
@@ -68,15 +68,38 @@ endmacro()
 
 
 # -------------------------   sources   -------------------------
+include_directories(include/ )
 set(HEADERS
-    stdafx.h
-    )
+        stdafx.h
+        include/core/Node.h
+        include/data_structures/Message.h
+        include/data_structures/NodeInfo.h
+        include/handlers/CommandHandler.h
+        include/handlers/FindDataHandler.h
+        include/handlers/FindNodeHandler.h
+        include/processors/FindDataProcessor.h
+        include/processors/FindNodeProcessor.h
+        include/processors/FindProcessor.h
+        include/kbuckets/KBucket.h
+        include/kbuckets/KBucketsManager.h
+        include/kbuckets/KBucketsTools.h
+        )
 
 set(SOURCES
-    src/stdafx.cpp
-
-    src/main.cpp
-    )
+        src/stdafx.cpp
+        src/core/Node.cpp
+        src/data_structures/Message.cpp
+        src/handlers/CommandHandler.cpp
+        src/handlers/FindDataHandler.cpp
+        src/handlers/FindNodeHandler.cpp
+        src/processors/FindDataProcessor.cpp
+        src/processors/FindNodeProcessor.cpp
+        src/processors/FindProcessor.cpp
+        src/kbuckets/KBucketsTools.cpp
+        src/kbuckets/KBucket.cpp
+        src/kbuckets/KBucketsManager.cpp
+        src/main.cpp
+        )
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 
@@ -88,4 +111,4 @@ set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT s
 cotire(${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME}
-    ${Boost_LIBRARIES})
+        ${Boost_LIBRARIES})
