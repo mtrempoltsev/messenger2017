@@ -3,22 +3,27 @@
 #include "Manager.h"
 #include "Data/Data.hpp"
 
-namespace m2 {
-namespace server {
 
-class RegisterManager : public Manager {
- public:
+namespace m2
+{
+namespace server
+{
 
-  virtual int doAction(const std::string &data, std::string &response) final;
+class RegisterManager: public Manager
+{
+public:
+    RegisterManager(Database *db);
 
- public:
-  static const ResponseType m_response_type = ResponseType::Register;
+    virtual HttpResponse::Code doAction(const std::string &data, std::string &response) final;
 
- private:
-  void save(const std::string &data);
-  StringsPair deserialize(const std::string &data);
+public:
+    static const ResponseType m_response_type = ResponseType::Register;
 
-  std::string createResponse();
+private:
+    void save(const std::string &data);
+    StringsPair deserialize(const std::string &data);
+
+    std::string createResponse();
 };
 }
 }

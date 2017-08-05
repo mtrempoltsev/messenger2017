@@ -8,10 +8,10 @@
 namespace m2 {
 namespace server {
 
-    ManagerController::ManagerController()
-    {
-    }
+   ManagerController::ManagerController(Database *database): db(database)
+   {
 
+   }
     responsePtr ManagerController::doProcess(requestPtr request)
     {
         responsePtr answer = std::make_shared<HttpResponse>();
@@ -19,32 +19,32 @@ namespace server {
         std::string uri = request->getHeader().uri_;
         std::string data = request->getData();
         std::string response;
-        int code = 200;
+        HttpResponse::Code code = HttpResponse::Code::OK;
 
         // http://localhost:8282/some/command1
         if (uri == "/user/register/sendKey") {
 
-            RegisterSendKeyManager sendKeyManager;
+            RegisterSendKeyManager sendKeyManager(db);
             code = sendKeyManager.doAction(data, response);
             std::cout<<"REQUEST: "<<response<<std::endl;
         }
         else if (uri == "/user/register") {
 
-            RegisterManager registerManager;
+            RegisterManager registerManager(db);
             code = registerManager.doAction(data, response);
         }
         else if (uri == "/user/auth/sendKey") {
 
-            LoginSendKeyManager sendKeyManager;
+            LoginSendKeyManager sendKeyManager(db);
             code = sendKeyManager.doAction(data, response);
         }
         else if (uri == "/user/auth") {
 
-            LoginManager loginManager;
+            LoginManager loginManager(db);
             code = loginManager.doAction(data, response);
         }
         else {
-            code = 403;
+            code = HttpResponse::Code::NOT_FOUND;
             response = Manager::createError("Something wrong");
         }
 

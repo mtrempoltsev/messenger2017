@@ -2,6 +2,7 @@
 
 #include "http_request.h"
 #include "http_response.h"
+#include "../src/Data/Database.h"
 
 namespace m2 {
 namespace server {
@@ -9,10 +10,12 @@ namespace server {
 class ManagerController
 {
 public:
-	ManagerController();
+	ManagerController(Database *database);
 	responsePtr doProcess(requestPtr request);
 
 private:
+	Database *db;
+
 
 };
 

@@ -2,6 +2,7 @@
 
 #include <boost/asio.hpp>
 #include "session.h"
+#include "../src/Data/Database.h"
 
 namespace m2 {
 namespace server {
@@ -19,6 +20,7 @@ private:
 private:
     boost::asio::io_service io_service_;
     boost::asio::ip::tcp::acceptor acceptor_;
+    Database *db;
 };
 }} // m2::server
 

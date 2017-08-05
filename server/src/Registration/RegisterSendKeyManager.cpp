@@ -1,6 +1,5 @@
 #include "Registration/RegisterSendKeyManager.h"
 
-
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -17,98 +16,138 @@
 
 using namespace m2::server;
 
-std::string RegisterSendKeyManager::deserialize(const std::string &data) {
-  pt::ptree request;
-  std::string publicKey;
-  std::stringstream stream;
-  stream << data;
-  boost::property_tree::read_json(stream, request);
-  publicKey = request.get<std::string>("public_key");
-
-  return publicKey;
-}
-
-int RegisterSendKeyManager::doAction(const std::string &data, std::string &response) {
-  std::string publicKey;
-  try {
-    publicKey = deserialize(data);
-//    response = createResponse(publicKey);
-  }
-  catch (const pt::ptree_error &e) {
-    std::cout << e.what() << std::endl;
-    response = createError("Unknown algorithm");
-    return 403;
-  }
-
-  return 200;
-}
-
-
-std::string RegisterSendKeyManager::rsaEncrypt(RSA *pubKey,
-                                            const std::string str) const {
-  std::vector<unsigned char> result_string;
-  std::vector<unsigned char> input_string;
-  for (const auto &elem : str)
-    input_string.push_back(elem);
-
-  result_string.resize(input_string.size());
-
-  int resultLen;
-
-  resultLen = RSA_public_encrypt(input_string.size(), input_string.data(),
-                                 result_string.data(), pubKey, PADDING);
-  if (resultLen == -1)
-    std::cout << "ERROR: RSA_public_encrypt: "
-              << ERR_error_string(ERR_get_error(), NULL) << "\n";
-
-  return {result_string.begin(), result_string.end()};
-}
-
-std::unique_ptr<RSA> RegisterSendKeyManager::createRSAWithFilename (std::string filename , bool isKeyPublic)
+std::string RegisterSendKeyManager::deserialize(const std::string &data)
 {
-  FILE * fp = fopen(filename.c_str (),"rb");
+    pt::ptree request;
+    std::string publicKey;
+    std::stringstream stream;
+    stream << data;
+    boost::property_tree::read_json(stream, request);
+    publicKey = request.get<std::string>("public_key");
 
-  if(fp == NULL)
-    {
-      printf("Unable to open file %s \n",filename.c_str ());
+    return publicKey;
+}
+
+HttpResponse::Code RegisterSendKeyManager::doAction(const std::string &data, std::string &response)
+{
+    std::string publicKey;
+    try {
+        publicKey = deserialize(data);
+        response = createResponse(publicKey);
+    }
+    catch (const pt::ptree_error &e) {
+        std::cout << e.what() << std::endl;
+        response = createError("Unknown algorithm");
+        return HttpResponse::Code::FORBIDEN;
+    }
+
+    return HttpResponse::Code::OK;
+}
+
+std::string RegisterSendKeyManager::rsaEncryptPublic(RSA *pubKey,
+                                                     const std::string str) const
+{
+    std::vector<unsigned char> result_string;
+    std::vector<unsigned char> input_string;
+    for (const auto &elem : str)
+        input_string.push_back(elem);
+
+    result_string.resize(1024);
+
+    int resultLen;
+
+    resultLen = RSA_public_encrypt(input_string.size(), (const unsigned char *) (str.c_str()),
+                                   result_string.data(), pubKey, PADDING);
+    if (resultLen == -1)
+        std::cout << "ERROR: RSA_public_encrypt: "
+                  << ERR_error_string(ERR_get_error(), NULL) << "\n";
+
+    return {result_string.begin(), result_string.end()};
+}
+
+std::string RegisterSendKeyManager::rsaEncryptPrivate(RSA *privateKey,
+                                                      const std::string str) const
+{
+    std::vector<unsigned char> result_string;
+    std::vector<unsigned char> input_string;
+    for (const auto &elem : str)
+        input_string.push_back(elem);
+
+    result_string.resize(10000);
+
+    int resultLen;
+
+    resultLen = RSA_private_encrypt(input_string.size(), (const unsigned char *) (str.c_str()),
+                                    result_string.data(), privateKey, PADDING);
+    if (resultLen == -1)
+        std::cout << "ERROR: RSA_public_encrypt: "
+                  << ERR_error_string(ERR_get_error(), NULL) << "\n";
+
+    return {result_string.begin(), result_string.end()};
+}
+
+RSA *RegisterSendKeyManager::createRSAWithFilename(std::string filename, bool isKeyPublic)
+{
+    FILE *fp = fopen(filename.c_str(), "rb");
+
+    if (fp == NULL) {
+        std::cout << "Unable to open file " << filename << "\n";
         return NULL;
     }
-  RSA *rsa= RSA_new() ;
+    RSA *rsa = RSA_new();
+    if (isKeyPublic)
+        PEM_read_RSA_PUBKEY(fp, &rsa, NULL, NULL);
+    else
+        PEM_read_RSAPrivateKey(fp, &rsa, NULL, NULL);
 
-  if(isKeyPublic)
-    rsa = PEM_read_RSA_PUBKEY(fp, &rsa,NULL, NULL);
-  else
-    rsa = PEM_read_RSAPrivateKey(fp, &rsa,NULL, NULL);
-
-  return std::unique_ptr<RSA>(rsa);
+    return rsa;
 }
 
-std::unique_ptr<RSA> RegisterSendKeyManager::createRSAWithPublicKey (const std::string &key)
+RSA *RegisterSendKeyManager::createRSAWithPublicKey(const std::string &key)
 {
-  std::unique_ptr<BIO> bufio (BIO_new_mem_buf((void *)(key.c_str ()), -1));
-
-  return std::unique_ptr<RSA>(PEM_read_bio_RSA_PUBKEY(bufio.get(), 0, 0, 0));
+    BIO *bufio(BIO_new_mem_buf((void *) (key.c_str()), -1));
+    RSA *rsa = RSA_new();
+    PEM_read_bio_RSA_PUBKEY(bufio, &rsa, 0, 0);
+    BIO_free(bufio);
+    return rsa;
 }
 
-std::string RegisterSendKeyManager::createResponse(const std::string &publicKey) {
+RSA *RegisterSendKeyManager::createRSAWithPrivateKey(const std::string &key)
+{
+    BIO *bufio(BIO_new_mem_buf((void *) (key.c_str()), -1));
+    RSA *rsa = RSA_new();
+    PEM_read_bio_RSAPrivateKey(bufio, &rsa, 0, 0);
+    BIO_free(bufio);
+    return rsa;
+}
 
-  std::unique_ptr<RSA> clientPublicRSA (createRSAWithPublicKey (publicKey));
-  std::unique_ptr<RSA> serverPrivateRSA (createRSAWithFilename ("pivate.pem", false));
+std::string RegisterSendKeyManager::createResponse(const std::string &publicKey)
+{
 
-  boost::uuids::uuid uuid = boost::uuids::random_generator()();
-  std::string stringForCrypt = boost::uuids::to_string(uuid);
+    RSA *clientPublicRSA(createRSAWithPublicKey(publicKey));
+    RSA *serverPrivateRSA(createRSAWithFilename("private_key.pem", false));
 
-  std::string serverString = rsaEncrypt (serverPrivateRSA.get (), stringForCrypt);
-  std::string clientString = rsaEncrypt (clientPublicRSA.get(), stringForCrypt);
-  std::string encryptedPublicKey = rsaEncrypt (serverPrivateRSA.get (), publicKey);
+    boost::uuids::uuid uuid = boost::uuids::random_generator()();
+    std::string stringForCrypt = boost::uuids::to_string(uuid);
 
-  pt::ptree tree;
-  std::stringstream stream;
-  tree.put("server_string", serverString);
-  tree.put("client_string", clientString);
-  tree.put("encr_public_key", encryptedPublicKey);
-  boost::property_tree::write_json(stream, tree);
+    std::string clientString = rsaEncryptPublic(clientPublicRSA, stringForCrypt);
+    std::string serverString = rsaEncryptPrivate(serverPrivateRSA, stringForCrypt + publicKey);
 
-  return stream.str();
+    RSA_free(clientPublicRSA);
+    RSA_free(serverPrivateRSA);
+
+    pt::ptree tree;
+    std::stringstream stream;
+    tree.put("client_string", clientString);
+    tree.put("server_string", serverString);
+    boost::property_tree::write_json(stream, tree);
+
+    return stream.str();
+}
+
+RegisterSendKeyManager::RegisterSendKeyManager(Database *database)
+    : Manager(database)
+{
+
 }
 

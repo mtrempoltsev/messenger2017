@@ -23,14 +23,21 @@ HttpRequest::HttpRequest(std::istream& stream)
         }
     }
 
-    std::string content{ std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>() };
-    data_ = std::move(content);
+    data_.assign( std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>() );
 }
 
 void HttpRequest::addData(std::istream& stream)
 {
-    std::string content{ std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>() };
-    data_ += content;
+    data_.append( std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>() );
+}
+
+int HttpRequest::getContentSize()
+{
+    if (header_.header_fields_.count(CONTENT_LENGTH) > 0) {
+        return std::stoi(header_.header_fields_.at(CONTENT_LENGTH));
+    }
+
+    return 0;
 }
 
 HttpRequestHeader& HttpRequest::getHeader()

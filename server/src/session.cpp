@@ -11,10 +11,10 @@ void LOG(const std::string& log) {
 
 namespace m2 {
 namespace server {
-    Session::Session(boost::asio::io_service& service)
-    : service_(service)
-    , socket_(service)
+    Session::Session(boost::asio::io_service& service, Database *database)
+    : socket_(service)
     , write_strand_(service)
+    , db(database)
     {
     }
 
@@ -47,9 +47,9 @@ namespace server {
     void Session::readHeader()
     {
         boost::asio::async_read_until( socket_, in_packet_, HEADER_END,
-            [me=shared_from_this()](const boost::system::error_code & ec, std::size_t bytes_xfer)
+            [me=shared_from_this()](const boost::system::error_code & ec, std::size_t)
             {
-                me->readHeaderDone(ec, bytes_xfer);
+                me->readHeaderDone(ec);
             });
     }
 
@@ -57,13 +57,13 @@ namespace server {
     {
         // Start reading remaining data until EOF.
         boost::asio::async_read(socket_, in_packet_, boost::asio::transfer_at_least(1),
-            [me=shared_from_this(), request](const boost::system::error_code & ec, std::size_t bytes_xfer)
+            [me=shared_from_this(), request](const boost::system::error_code & ec, std::size_t)
             {
-                me->readDataDone(ec, bytes_xfer, request);
+                me->readDataDone(ec, request);
             });
     }
 
-    void Session::readHeaderDone(const boost::system::error_code & error, std::size_t bytes_transferred)
+    void Session::readHeaderDone(const boost::system::error_code & error)
     {
         if (error) {
             return;
@@ -71,28 +71,34 @@ namespace server {
 
         std::istream stream(&in_packet_);
         auto request = std::make_shared<HttpRequest>(stream);
-        int headerSize = request->getFieldValue<int>(CONTENT_LENGTH);
+        int headerSize = request->getContentSize();
         int dataSize = request->getData().size();
         if (dataSize < headerSize) {
             readData(request);
         }
         else {
-            readDataDone(boost::asio::error::eof, 0, request);
+            readDataDone(boost::asio::error::eof, request);
         }
     }
 
-    void Session::readDataDone(const boost::system::error_code & error, std::size_t bytes_transferred, requestPtr request)
+    void Session::readDataDone(const boost::system::error_code & error, requestPtr request)
     {
         if (!error) {
-            std::cout << "WHAT???" << std::endl;
             std::istream stream(&in_packet_);
             request->addData(stream);
             // Continue reading remaining data until EOF.
-            readData(request);
+            int headerSize = request->getContentSize();
+            int dataSize = request->getData().size();
+            if (dataSize < headerSize) {
+                readData(request);
+            }
+            else {
+                readDataDone(boost::asio::error::eof, request);
+            }
         }
         else if (error == boost::asio::error::eof)
         {
-            ManagerController manager;
+            ManagerController manager(db);
             auto response = manager.doProcess(request);
             sendResponse(response);
         }
