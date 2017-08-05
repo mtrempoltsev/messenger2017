@@ -4,42 +4,67 @@ import QtQuick.Layouts 1.1
 
 
 RowLayout {
+
+    function getMsgAligment() {
+        return sentByMe ? Qt.AlignRight : Qt.AlignLeft
+    }
+
     id: delegateItem
-
     readonly property bool sentByMe: guid == 1
+    layoutDirection: sentByMe ? Qt.RightToLeft : Qt.LeftToRight
+    Layout.alignment: getMsgAligment()
+    width: parent.width
 
-    anchors.right: sentByMe ? parent.right : undefined
     spacing: 6
+
     Image{
         id: itemIcon
 
         fillMode: Image.PreserveAspectFit
-        //            verticalAlignment: Image.AlignTop
         Layout.alignment: Qt.AlignTop
         //заглушка
         source: contacts.get(guid).avatar
     }
 
+    ColumnLayout {
+        Layout.alignment: Qt.AlignTop
+        RowLayout {
+            Layout.alignment: Qt.AlignTop | getMsgAligment()
+            Text {
+                id: itemUserName
+                text: contacts.get(model.guid).name
+            }
 
-    Label {
-        property real maxLen: root.width - itemIcon.width - delegateItem.spacing
-        id:label
-        text: model["messText"]
-        wrapMode: Text.WrapAnywhere
-        Layout.maximumWidth: {
-            maxLen/* > paintedWidth? paintedWidth : maxLen*/
-        }
-        background: Rectangle {
-            color: sentByMe ? "lightgrey" : "lightblue"
-            width: label.maxLen > label.paintedWidth? label.paintedWidth : label.maxLen
+            Text {
+                id: itemTime
+                text: model.messTime
+            }
         }
 
-        color: sentByMe ? "black" : "white"
+
+
+        Label {
+            property real maxLen: delegateItem.width - itemIcon.width - delegateItem.spacing -2
+            id:msgLabel
+            text: model.messText
+            wrapMode: Text.WrapAnywhere
+            Layout.maximumWidth: {
+                maxLen/* > paintedWidth? paintedWidth : maxLen*/
+            }
+            background: Rectangle {
+                id: msgLabelBackground
+                color: sentByMe ? "lightgrey" : "lightblue"
+                width: msgLabel.maxLen > msgLabel.paintedWidth? msgLabel.paintedWidth : msgLabel.maxLen
+            }
+
+            color: sentByMe ? "black" : "white"
+        }
     }
+
+
+
 
     Item {
         Layout.fillWidth: true
-
     }
-
 }
