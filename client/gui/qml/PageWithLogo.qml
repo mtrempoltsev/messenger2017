@@ -9,13 +9,23 @@ Page {
     }
 
     property var controler
+    property alias footerButton: footerToolBar.children
     default property alias contents: placeholder.children
 
     implicitWidth: getMax(logo.implicitWidth, mainLayout.implicitWidth) * 1.1
-    implicitHeight: (logo.implicitHeight + mainLayout.implicitHeight) * 1.1
+    implicitHeight: {
+        if (footer)
+         return (logo.implicitHeight + mainLayout.implicitHeight + footer.implicitHeight) * 1.1
+        return (logo.implicitHeight + mainLayout.implicitHeight) * 1.1
+    }
 
     header: RectangleLogo {
         id: logo
+    }
+
+    footer: ToolBar {
+        id: footerToolBar
+        property int fontSize: 12
     }
 
     ColumnLayout {
@@ -29,5 +39,7 @@ Page {
             spacing: 4
         }
     }
+
+
 
 }

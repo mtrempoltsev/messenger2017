@@ -32,7 +32,7 @@ void RegistrationControler::registrationSuccessed(const std::string &guid)
 void RegistrationControler::registrationFailed()
 {
 
-    emit finishRegisterFailed("Test");
+    emit finishRegisterFailed("Error");
 }
 
 

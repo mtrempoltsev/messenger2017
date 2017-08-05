@@ -77,6 +77,12 @@ PageWithLogo {
         }
     }
 
+    footerButton: ToolButton {
+        text: qsTr("Back to login screen")
+        anchors.fill: parent
+        font.pointSize: parent.fontSize
+        onClicked: stackView.pop()
+    }
 
     states: [
         State {
@@ -123,9 +129,7 @@ PageWithLogo {
             PropertyChanges {
                 target: infoText
                 color: "#990020"
-                text: qsTr("Can not connect to server! Please try again.")
                 font.pointSize: 13
-                horizontalAlignment: Text.AlignHCenter
             }
         }
     ]

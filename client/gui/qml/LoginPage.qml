@@ -34,14 +34,62 @@ PageWithLogo {
         }
     }
 
-    Button {
-        id: registerButton
-        anchors.left: parent.left
-        anchors.right: parent.right
-        text: qsTr("Register")
-
-        onClicked: {
-            onFinishRegisterSuccessed: stackView.push("qrc:/qml/RegisterPage.qml")
-        }
+    footerButton: ToolButton {
+        anchors.fill:parent
+        text: qsTr("Register new user")
+        font.pointSize: parent.fontSize
+        onClicked: stackView.push("qrc:/qml/RegisterPage.qml")
     }
+
+
+    states: [
+        State {
+            name: "loading"
+
+            PropertyChanges {
+                target: busyIndicator
+                visible: true
+                running: true
+            }
+
+            PropertyChanges {
+                target: infoText
+                text: qsTr("Loading... Please wait.")
+            }
+
+            PropertyChanges {
+                target: loginButton
+                enabled: false
+            }
+
+            PropertyChanges {
+                target: registerButton
+                enabled: false
+            }
+        },
+        State {
+            name: "Error"
+            PropertyChanges {
+                target: busyIndicator
+                running: false
+                visible: false
+            }
+
+            PropertyChanges {
+                target: infoText
+                color: "#8f001d"
+                text: qsTr("Some error")
+            }
+
+            PropertyChanges {
+                target: loginButton
+                enabled: true
+            }
+
+            PropertyChanges {
+                target: registerButton
+                enabled: true
+            }
+        }
+    ]
 }
