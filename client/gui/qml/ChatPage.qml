@@ -73,10 +73,14 @@ Page{
 
     //////////////////////////////////////////////////////////////////////
 
-    Rectangle{
-        anchors.fill: parent
-        ChatListView{id: listView; model: ChatMessagesModel{id: messages}}
-    }
+
+
+        ChatListView{
+            id: listView
+            anchors.fill: parent
+            model: ChatMessagesModel{id: messages}
+        }
+
 
 
     //////////////////////////////////////////////////////////////////////

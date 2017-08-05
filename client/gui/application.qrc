@@ -19,5 +19,6 @@
         <file>qml/ContactWidgetModel.qml</file>
         <file>img/affix.png</file>
         <file>img/send.png</file>
+        <file>qml/ChatListDelegateItem.qml</file>
     </qresource>
 </RCC>
