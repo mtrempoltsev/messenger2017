@@ -1,3 +1,4 @@
 #pragma once
-
-void init();
+namespace m2{
+    void init();
+}
