@@ -23,8 +23,8 @@ public:
 private:
     void readHeader();
     void readData(requestPtr request);
-    void readHeaderDone(const boost::system::error_code & error, std::size_t bytes_transferred);
-    void readDataDone(const boost::system::error_code & error, std::size_t bytes_transferred, requestPtr request);
+    void readHeaderDone(const boost::system::error_code & error);
+    void readDataDone(const boost::system::error_code & error, requestPtr request);
 
     void sendResponse(responsePtr response);
     void sendResponseDone(const boost::system::error_code & error);
