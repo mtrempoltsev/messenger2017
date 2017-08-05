@@ -1,14 +1,11 @@
 #pragma once
 //#include "CommandHandler.h"
+#include "Message.h"
 
 class Node //friend class CommandHandler
 {
-private:
-
-
     //Validator validator;
 public:
-
     Node();
     ~Node();
 };

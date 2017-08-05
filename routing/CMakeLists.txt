@@ -76,7 +76,7 @@ set(SOURCES
     src/stdafx.cpp
 
     src/main.cpp
-    )
+    )
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 
