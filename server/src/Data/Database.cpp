@@ -17,15 +17,15 @@ bool Database::CreateUser(uuids::uuid uid, const std::string &publicKey)
 }
 std::string Database::getPublicServerKey()
 {
-    return std::__cxx11::string();
+    return std::string();
 }
 std::string Database::getPrivateClient()
 {
-    return std::__cxx11::string();
+    return std::string();
 }
 std::string Database::getUserPublicKey(uuids::uuid Uid)
 {
-    return std::__cxx11::string();
+    return std::string();
 }
 }
 }
