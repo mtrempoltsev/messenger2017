@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include <string>
+#include <boost/uuid/uuid.hpp>
 
 namespace m2
 {

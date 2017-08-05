@@ -2,6 +2,7 @@
 #define M2_SERVER_DATABASE_H
 #include "stdafx.h"
 #include "Data/Users.h"
+
 namespace m2  {
 namespace server
 {

@@ -2,6 +2,7 @@
 
 #include "error.h"
 #include "guid.h"
+#include <functional>
 
 namespace m2
 {
