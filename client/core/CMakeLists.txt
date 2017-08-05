@@ -13,10 +13,13 @@ set(HEADERS
 
     include/config.h
     include/contact.h
+    include/core.h
     include/core_dispatcher.h
     include/error.h
+    include/json_builder.h
     include/guid.h
     include/message.h
+    include/path_settings.h
     )
 
 set(SOURCES
@@ -24,8 +27,10 @@ set(SOURCES
 
     src/config.cpp
     src/contact.cpp
+    src/core.cpp
     src/core_dispatcher.cpp
     src/error.cpp
+    src/json_builder.cpp
     src/guid.cpp
     src/message.cpp
     )
@@ -39,6 +44,7 @@ set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
 include_directories(${SUBPROJECT_ROOT})
+include_directories(${SUBPROJECT_ROOT}/include)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT stdafx.h)
 cotire(${PROJECT_NAME})

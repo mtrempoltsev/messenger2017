@@ -1,5 +1,8 @@
 /build/
 /bin/
+/shared
+/core/cotire
+/gui/cotire
 
 ##### CMake
 CMakeCache.txt

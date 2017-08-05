@@ -1,18 +1,26 @@
+#include "core.h"
+#include "core_dispatcher.h"
 #include <iostream>
-#include "../include/core_dispatcher.h"
+#include <sstream>
+#include <string>
 
 int main() {
     {
         using namespace m2;
         using namespace core;
 
-        CoreDispatcher cd;
-        CoreDispatcher::ContactList contacts =
-            { Contact("uuid1", "Ivan"),
-              Contact("uuid2", "Sergey"),
-              Contact("uuid3", "Vadim")
-          };
+        ContactManager::ContactList contacts = { Contact("uuid1", "Ivan"),
+                                                 Contact("uuid2", "Alex"),
+                                                 Contact("uuid3", "Vadim") };
 
+        Core core;
+        core.SaveContactList(contacts);
+        ContactManager::ContactList contacts2 = core.GetContactList("user1");
+
+        for (auto& i : contacts2) {
+            std::cout << i << std::endl;
+        }
+/*
         cd.SaveContactList(contacts);
 
         CoreDispatcher::ContactList contacts1 = cd.GetContactList();
@@ -30,7 +38,7 @@ int main() {
         cd.SaveMessageStory(ms, "user1");
 
         CoreDispatcher::MessageStory ms1 = cd.GetMessageStory("user1");
-        cd.SaveMessageStory(ms1, "user2");
+        cd.SaveMessageStory(ms1, "user2");*/
     }
 
     return 0;

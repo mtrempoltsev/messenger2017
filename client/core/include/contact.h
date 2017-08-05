@@ -1,26 +1,43 @@
 #pragma once
 
-#include <fstream>
+#include <iostream>
 #include <string>
+#include <vector>
 
 namespace m2 {
-    namespace core {
+namespace core {
 
-        class Contact {
-        public:
-            Contact() {};
-            Contact(const std::string& uuid,
-                    const std::string& nickname) {
-                uuid_ = uuid;
-                nickname_ = nickname;
-            }
+    class Contact {
+    public:
+        Contact() {};
+        Contact(const std::string& uuid,
+                const std::string& nickname) {
+            uuid_ = uuid;
+            nickname_ = nickname;
+        }
 
-            friend std::ifstream& operator >> (std::ifstream& stream, Contact& contact);
-            friend std::ofstream& operator << (std::ofstream& stream, const Contact& contact);
-        private:
-            std::string uuid_;
-            std::string nickname_;
-        };
+        std::string GetId() const {
+            return uuid_;
+        }
 
-    } //core
+        std::string GetNickname() const {
+            return nickname_;
+        }
+
+        friend std::istream& operator >> (std::istream& stream, Contact& contact);
+        friend std::ostream& operator << (std::ostream& stream, const Contact& contact);
+    private:
+        std::string uuid_;
+        std::string nickname_;
+    };
+
+    class ContactManager {
+    public:
+        using ContactList = std::vector<Contact>;
+
+        void SaveContactList(const ContactList& contacts);
+        ContactList GetContactList(const std::string& contactId) const;
+    };
+
+} //core
 } //m2

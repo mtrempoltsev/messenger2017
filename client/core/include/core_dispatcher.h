@@ -41,14 +41,6 @@ namespace m2
             void registerNewUser(RegisterNewUserHandler handler);
             void login(const Uuid& uuid, LoginHandler handler);
 
-            using ContactList = std::vector<Contact>;
-            using MessageStory = std::vector<MessageInfo>;
-
-            MessageStory GetMessageStory(const std::string& username) const;
-            void SaveMessageStory(const MessageStory& ms, const std::string& contactName);
-
-            void SaveContactList(const ContactList& contacts);
-            ContactList GetContactList() const;
         };
 
     } // core

@@ -9,6 +9,8 @@ set(SOURCES
     test.cpp
     )
 
+include_directories(${SUBPROJECT_ROOT}/include)
+
 # -------------------------    boost   --------------------------
 find_package(Boost COMPONENTS
     REQUIRED)
