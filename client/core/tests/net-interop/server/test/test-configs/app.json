@@ -1,4 +1,0 @@
-{
-  "server_port": 8080,
-  "SECRET_KEY": "my-beautiful-password"
-}
