@@ -1,6 +1,9 @@
 #pragma once
 #include "CommandHandler.h"
 
+namespace m2 {
+namespace routing {
+
 class FindDataHandler : public CommandHandler
 {
 
@@ -11,4 +14,6 @@ public:
 #pragma endregion
 
 };
-
+        
+} // namespace routing
+} // namespace m2

@@ -2,6 +2,8 @@
 #include "../Node.h"
 #include "../data_structures/Message.h"
 
+namespace m2 {
+namespace routing {
 
 /// Command handler is an abstract class for all handlers of incoming messages
 class CommandHandler
@@ -32,7 +34,7 @@ public:
 #pragma endregion  
 #pragma endregion
 
-
-
 };
-
+        
+} // namespace routing
+} // namespace m2

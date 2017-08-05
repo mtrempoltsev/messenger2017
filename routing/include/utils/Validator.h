@@ -1,4 +1,8 @@
 #pragma once
+
+namespace m2 {
+namespace routing {
+        
 class Validator
 {
 public:
@@ -6,3 +10,5 @@ public:
     ~Validator();
 };
 
+} // namespace routing
+} // namespace m2

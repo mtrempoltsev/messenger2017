@@ -2,6 +2,9 @@
 //#include "CommandHandler.h"
 #include "Message.h"
 
+namespace m2 {
+namespace routing {
+
 class Node //friend class CommandHandler
 {
   //Validator validator;
@@ -16,3 +19,5 @@ class Node //friend class CommandHandler
 
 };
 
+} // namespace routing
+} // namespace m2
