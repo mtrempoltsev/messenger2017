@@ -1,7 +1,13 @@
 #pragma once
 
+#include <map>
+#include <list>
+#include <algorithm>
+
 #include "data_structures/NodeInfo.h"
 #include "kbuckets/KBucket.h"
+#include "kbuckets/KBucketsTools.h"
+#include "utils/Config.h"
 
 namespace m2 {
 namespace routing {
@@ -17,7 +23,11 @@ public:
     void getNeighbours(const NodeInfo &nodeInfo) const;
 
 private:
-//    std::map<int, KBucket> intervalToBucket;
+    std::map<int, KBucket> intervalToBucket;
+
+    NodeInfo ourNodeInfo;
+
+    int getIntervalInMap(int xorResult);
 
 };
         
