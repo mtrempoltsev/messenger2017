@@ -9,6 +9,10 @@ struct NodeInfo
     boost::uuids::uuid uuid;
     std::string ip;
     int port;
+
+    friend bool operator==(const NodeInfo &first, const NodeInfo &second) {
+        return first.uuid == second.uuid;
+    };
 };
 
 } // namespace routing

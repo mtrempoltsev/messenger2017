@@ -22,12 +22,16 @@ public:
 
     void getNeighbours(const NodeInfo &nodeInfo) const;
 
+    void setNodeInfo(const NodeInfo &nodeInfo);
+
 private:
     std::map<int, KBucket> intervalToBucket;
 
     NodeInfo ourNodeInfo;
 
     int getIntervalInMap(int xorResult);
+
+    void split(int interval, const NodeInfo &newNodeInfo);
 
 };
         

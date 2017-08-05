@@ -36,7 +36,7 @@ namespace routing {
                 //TODO replace by KBucket method
                 bool foundOurs = (std::find(bucketList.begin(), bucketList.end(), ourNodeInfo) != bucketList.end());
                 if (foundOurs) { //this bucket contains ourNodeInfo
-                    //TODO split
+                    split(bucketIndex, newNodeInfo);
                     return;
                 } else {
                     auto lastConnectedNodeInfo = bucket.oldest();
@@ -60,17 +60,28 @@ namespace routing {
     int KBucketsManager::getIntervalInMap(int xorResult)
     {
         std::list<int> smallerKeys;
-        std::copy_if(intervalToBucket.begin(), intervalToBucket.end(),
-                                        std::back_inserter(smallerKeys),
-                     [xorResult](std::pair<int, KBucket> keyToValue) {
-                         return keyToValue.first < xorResult;
-                     });
+
+        std::for_each(intervalToBucket.begin(), intervalToBucket.end(),
+                      [xorResult, &smallerKeys](std::pair<int, KBucket> keyToValue) {
+                          int index = keyToValue.first;
+                          if (index < xorResult) {
+                              smallerKeys.push_back(index);
+                          }
+                      });
 
         if (smallerKeys.size() == 0) //actually we shouldn't face this situation...
             return -1;
 
         auto result = std::max_element(smallerKeys.begin(), smallerKeys.end());
         return *result;
+    }
+
+    void KBucketsManager::setNodeInfo(const NodeInfo &nodeInfo) {
+        ourNodeInfo = nodeInfo;
+    }
+
+    void KBucketsManager::split(int interval, const NodeInfo &newNodeInfo) {
+
     }
 
 } // namespace routing
