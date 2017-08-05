@@ -5,29 +5,29 @@
 static class Config
 {
 
-#pragma region __ Fields __ 
+
 private:
     static int alpha;
-#pragma endregion
 
 
-#pragma region __ Constructor __
+
+
 public:
-    Constants() {
+    Config() {
         alpha = 3;
     }
-#pragma endregion
 
 
-#pragma region __ Methods __
+
+
 
 public:
-#pragma region __ Public methods __
+
     static int getAlpha() {
         return alpha;
     }
-#pragma endregion  
-#pragma endregion
+
+
 
 
 

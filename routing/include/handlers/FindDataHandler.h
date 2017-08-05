@@ -1,14 +1,14 @@
 #pragma once
 #include "CommandHandler.h"
 
-class FindDataHandler : public CommandHandler
+class FindDataHandler : CommandHandler
 {
 
-#pragma region __ Constructor and destructor __
+
 public:
     FindDataHandler(Node* node);
     ~FindDataHandler();
-#pragma endregion
+
 
 };
 

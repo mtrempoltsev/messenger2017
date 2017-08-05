@@ -1,17 +1,14 @@
 #pragma once
+#include "data_structures/NodeInfo.h"
+
 class Processor
 {
-#pragma region __ Constructor and destructor __ 
 public:
     Processor();
     ~Processor();
-#pragma endregion
 
 public:
-#pragma region __ Public methods __
-    virtual void process();
-#pragma endregion
-
+    virtual void process(NodeInfo node_info, void* additional_data);
 
 };
 

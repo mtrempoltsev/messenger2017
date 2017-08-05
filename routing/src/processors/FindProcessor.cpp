@@ -4,3 +4,4 @@ Message * FindProcessor::handleMessage(Message message)
 {
     return nullptr;
 }
+
