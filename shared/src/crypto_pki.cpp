@@ -52,7 +52,8 @@ namespace common
     }
 
     std::string OpenSSL_RSA_CryptoProvider::actor_(bool encryption, const std::string &string) const {
-        std::unique_ptr<unsigned char[]> buf { new unsigned char[2*RSA_size(key_.get())] };
+        size_t rsa_size = RSA_size(key_.get());
+        std::unique_ptr<unsigned char[]> buf { new unsigned char[2*rsa_size] };
         std::string res;
         size_t total_bytes_done = 0;
         auto actor =  encryption ?
@@ -60,9 +61,9 @@ namespace common
                       : (public_ ? &RSA_public_decrypt : &RSA_private_decrypt);
 
         do {
-            auto bytes_done = actor(static_cast<int>(string.size()),
+            auto bytes_done = actor(static_cast<int>(std::min(string.size(), rsa_size/2)),
                     (const unsigned char *)(string.c_str()+total_bytes_done), buf.get(),
-                                    key_.get(), RSA_PKCS1_OAEP_PADDING);
+                                    key_.get(), RSA_PKCS1_PADDING);
             if (bytes_done == -1) {
                 throw common::OpenSSL_CryptoError("Error during public key encryption: ");
             }

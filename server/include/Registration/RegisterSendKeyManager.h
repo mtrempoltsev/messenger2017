@@ -28,7 +28,7 @@ private:
     std::string rsaEncryptPublic(RSA *pubKey, const std::string str) const;
     std::string rsaEncryptPrivate(RSA *pubKey, const std::string str) const;
 
-    RSA *createRSAWithFilename(std::string filename, bool isKeyPublic);///< temporary function for testing
+    std::string readKeyFile(std::string filename);///< temporary function for testing
     RSA *createRSAWithPublicKey(const std::string &key);
     RSA *createRSAWithPrivateKey(const std::string &key);
 

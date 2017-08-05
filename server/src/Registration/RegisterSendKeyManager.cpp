@@ -10,6 +10,9 @@
 #include <openssl/pkcs12.h>
 #include <openssl/rsa.h>
 
+#include <crypto_pki.h>
+#include <fstream>
+
 #include <memory>
 
 #define PADDING RSA_PKCS1_PADDING
@@ -47,6 +50,7 @@ HttpResponse::Code RegisterSendKeyManager::doAction(const std::string &data, std
 std::string RegisterSendKeyManager::rsaEncryptPublic(RSA *pubKey,
                                                      const std::string str) const
 {
+
     std::vector<unsigned char> result_string;
     std::vector<unsigned char> input_string;
     for (const auto &elem : str)
@@ -86,9 +90,9 @@ std::string RegisterSendKeyManager::rsaEncryptPrivate(RSA *privateKey,
     return {result_string.begin(), result_string.end()};
 }
 
-RSA *RegisterSendKeyManager::createRSAWithFilename(std::string filename, bool isKeyPublic)
+std::string RegisterSendKeyManager::readKeyFile(std::string filename)
 {
-    FILE *fp = fopen(filename.c_str(), "rb");
+    /*FILE *fp = fopen(filename.c_str(), "rb");
 
     if (fp == NULL) {
         std::cout << "Unable to open file " << filename << "\n";
@@ -100,7 +104,14 @@ RSA *RegisterSendKeyManager::createRSAWithFilename(std::string filename, bool is
     else
         PEM_read_RSAPrivateKey(fp, &rsa, NULL, NULL);
 
-    return rsa;
+    return rsa; */
+    std::ifstream file(filename);
+    std::string key;
+    std::string temp;
+    while (getline(file, temp)) {
+        key += temp +"\n";
+    }
+    return key;
 }
 
 RSA *RegisterSendKeyManager::createRSAWithPublicKey(const std::string &key)
@@ -124,22 +135,41 @@ RSA *RegisterSendKeyManager::createRSAWithPrivateKey(const std::string &key)
 std::string RegisterSendKeyManager::createResponse(const std::string &publicKey)
 {
 
-    RSA *clientPublicRSA(createRSAWithPublicKey(publicKey));
-    RSA *serverPrivateRSA(createRSAWithFilename("private_key.pem", false));
-
+//    RSA *clientPublicRSA(createRSAWithPublicKey(publicKey));
+//    RSA *serverPrivateRSA(readKeyFile("private_key.pem", false));
+//
+//    boost::uuids::uuid uuid = boost::uuids::random_generator()();
+//    std::string stringForCrypt = boost::uuids::to_string(uuid);
+//
+//    std::string clientString = rsaEncryptPublic(clientPublicRSA, stringForCrypt);
+//    std::string serverString = rsaEncryptPrivate(serverPrivateRSA, stringForCrypt + publicKey);
+//
+//    RSA_free(clientPublicRSA);
+//    RSA_free(serverPrivateRSA);
     boost::uuids::uuid uuid = boost::uuids::random_generator()();
     std::string stringForCrypt = boost::uuids::to_string(uuid);
+    std::string client_string = "";
+    std::string server_string = "";
+    auto privateKey = readKeyFile("private_key.pem");
+    std::cout << privateKey << std::endl;
+    try {
 
-    std::string clientString = rsaEncryptPublic(clientPublicRSA, stringForCrypt);
-    std::string serverString = rsaEncryptPrivate(serverPrivateRSA, stringForCrypt + publicKey);
+        auto cli_cryptor = m2::crypto::common::OpenSSL_RSA_CryptoProvider(publicKey, true);
+        auto serv_cryptor = m2::crypto::common::OpenSSL_RSA_CryptoProvider(privateKey, false);
+        client_string = cli_cryptor.encrypt(stringForCrypt);
+        server_string = serv_cryptor.encrypt(stringForCrypt + publicKey);
 
-    RSA_free(clientPublicRSA);
-    RSA_free(serverPrivateRSA);
+    }
+    catch (const m2::crypto::common::CryptoError &e) {
+
+        std::cout << e.what();
+    }
+
 
     pt::ptree tree;
     std::stringstream stream;
-    tree.put("client_string", clientString);
-    tree.put("server_string", serverString);
+    tree.put("client_string", client_string);
+    tree.put("server_string", server_string);
     boost::property_tree::write_json(stream, tree);
 
     return stream.str();
