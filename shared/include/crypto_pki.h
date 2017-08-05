@@ -1,14 +1,17 @@
 #include <string>
 #include <functional>
 #include <memory>
-#include <openssl/RSA.h>
+#include <openssl/rsa.h>
 
 #include "crypto_common.h"
 #include "crypto_hash.h"
 
-namespace m2::crypto::pki {
-
-
+namespace m2
+{
+namespace crypto
+{
+namespace common
+{
     class IAsymmetricCryptoProvider : public common::ICryptoProvider {
         virtual boost::uuids::uuid fingerprint() const = 0;
         virtual std::string str_key() const = 0;
@@ -38,5 +41,6 @@ namespace m2::crypto::pki {
 
         std::string actor_(bool encryption, const std::string &string) const;
     };
-
+}
+}
 }

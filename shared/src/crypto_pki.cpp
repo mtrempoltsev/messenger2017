@@ -9,13 +9,15 @@
 #include <cstring>
 #include <string>
 #include <sstream>
-#include <crypto_pki.h>
-#include <crypto_hash.h>
+#include "../include/crypto_pki.h"
+#include "../include/crypto_hash.h"
 
-namespace m2::crypto::pki {
-
-
-
+namespace m2
+{
+namespace crypto
+{
+namespace common
+{
     std::string OpenSSL_RSA_CryptoProvider::encrypt(const std::string &string) const {
         return actor_(true, string);
     }
@@ -89,7 +91,7 @@ namespace m2::crypto::pki {
 
     boost::uuids::uuid OpenSSL_RSA_CryptoProvider::fingerprint() const {
         // a copy from http://www.boost.org/doc/libs/1_54_0/boost/uuid/name_generator.hpp
-        std::string sha1 = hash::OpenSSL_SHA1_HashProvider().hash(str_key());
+        std::string sha1 = OpenSSL_SHA1_HashProvider().hash(str_key());
         boost::uuids::uuid u;
         for (int i=0; i<4; ++i) {
             *(u.begin() + i*4+0) = static_cast<uint8_t>((sha1[i] >> 24) & 0xFF);
@@ -126,7 +128,7 @@ namespace m2::crypto::pki {
             : key_( std::move(key) ), public_(is_public) {
 
     }
-
-
-
 }
+}
+}
+

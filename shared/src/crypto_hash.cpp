@@ -1,6 +1,11 @@
-#include <crypto_hash.h>
+#include "../include/crypto_hash.h"
 
-namespace m2::crypto::hash {
+namespace m2
+{
+namespace crypto
+{
+namespace common
+{
     std::string OpenSSL_SHA1_HashProvider::hash(const std::string &string) const {
         unsigned char buf[ HashSize ];
         SHA1((const unsigned char *)(string.c_str()),
@@ -13,4 +18,6 @@ namespace m2::crypto::hash {
     size_t OpenSSL_SHA1_HashProvider::size() const {
         return HashSize;
     }
+}
+}
 }
