@@ -1,6 +1,7 @@
 #include "handlers/FindNodeHandler.h"
 
-
+namespace m2 {
+namespace routing {
 
 FindNodeHandler::FindNodeHandler(Node * node):CommandHandler(node)
 {
@@ -18,3 +19,6 @@ Message* FindNodeHandler::handleMessage(Message message)
     //initialize reply with data
     return reply;
 }
+        
+} // namespace routing
+} // namespace m2

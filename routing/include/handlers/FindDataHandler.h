@@ -1,7 +1,10 @@
 #pragma once
 #include "CommandHandler.h"
 
-class FindDataHandler : CommandHandler
+namespace m2 {
+namespace routing {
+
+class FindDataHandler : public CommandHandler
 {
 
 
@@ -12,3 +15,5 @@ public:
 
 };
 
+} // namespace routing
+} // namespace m2
