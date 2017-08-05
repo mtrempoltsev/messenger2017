@@ -19,8 +19,6 @@ set(HEADERS
     include/guid.h
     include/message.h
     include/path_settings.h
-    include/context.h
-    include/init.h
     )
 
 set(SOURCES
@@ -30,11 +28,8 @@ set(SOURCES
     src/contact.cpp
     src/core.cpp
     src/core_dispatcher.cpp
-    src/error.cpp
     src/guid.cpp
     src/message.cpp
-    src/config.cpp
-    src/init.cpp
     )
 
 if (ENABLE_TESTS)
