@@ -1,12 +1,23 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
+import Controler.Registration 1.0
 
 
 Page {
     id: root
     implicitWidth: mainLayout.implicitWidth * 1.1
     implicitHeight: mainLayout.implicitHeight * 1.1
+
+    RegistraionControler {
+        id: registerControler
+        onStartRegister: root.state="loading"
+        onFinishRegisterFailed: {
+            root.state="error"
+        }
+        onFinishRegisterSuccessed: stackView.push("qrc:/qml/MainPage.qml")
+    }
+
     ColumnLayout {
         id:mainLayout
         antialiasing: false
@@ -89,9 +100,8 @@ Page {
                 text: qsTr("Register")
 
                 onClicked: {
-                    console.log(serverCombobox.currentText)
-                    root.state="loading"
-                    stackView.push("qrc:/qml/MainPage.qml")
+//                    console.log(serverCombobox.currentText)
+                    registerControler.registerMe(serverCombobox.currentText)
                 }
             }
         }

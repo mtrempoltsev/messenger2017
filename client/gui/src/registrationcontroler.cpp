@@ -9,8 +9,7 @@ namespace controler {
 
 void RegistrationControler::declareQML()
 {
-    qmlRegisterUncreatableMetaObject(staticMetaObject,
-                "RegistrationStates", 1, 0, "RegistartionControler", "Get back to work, slacker!");
+    qmlRegisterType<RegistrationControler>("Controler.Registration", 1, 0, "RegistraionControler");
 }
 
 RegistrationControler::RegistrationControler()
@@ -21,18 +20,19 @@ RegistrationControler::RegistrationControler()
 void RegistrationControler::registerMe(const QString &server) const
 {
     //TODO get core
-    emit changeRegistartionState(RegistrationControler::States::LOADING);
+    emit startRegister();
 }
 
 void RegistrationControler::registrationSuccessed(const std::string &guid)
 {
     GuiAdapter::getInstance().setGuid(guid);
-    emit changeRegistartionState(States::SUCCESS);
+    emit finishRegisterSuccessed();
 }
 
 void RegistrationControler::registrationFailed()
 {
-    emit changeRegistartionState(States::ERROR);
+
+    emit finishRegisterFailed("Test");
 }
 
 

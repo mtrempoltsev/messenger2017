@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
+    RegistrationControler::declareQML();
     QQmlApplicationEngine engine;
 
     engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
@@ -17,7 +18,7 @@ int main(int argc, char *argv[])
 
 
 
-    qmlRegisterType<RegistrationControler>("controler.registration", 1, 0, "RegistraionControler");
+
 
     return app.exec();
 }
