@@ -23,6 +23,7 @@ set(HEADERS
     include/loginmanager.h
     include/path_settings.h
         include/jobtype.h
+
     )
 
 set(SOURCES

@@ -18,6 +18,7 @@ set(HEADERS
     stdafx.h
     include/guiadapter.h
     include/registrationcontroler.h
+    include/QmlCppInterface.h
     )
 
 set(SOURCES

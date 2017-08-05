@@ -4,7 +4,8 @@ import QtQuick.Layouts 1.3
 
 PageWithLogo {
     id: loginPage
-
+    signal loginButtonClicked
+    signal registerButtonClicked
 
     Text {
         id: infoText
@@ -25,22 +26,25 @@ PageWithLogo {
     }
 
     Button {
+
         id: loginButton
         anchors.left: parent.left
         anchors.right: parent.right
         text: qsTr("Login")
         onClicked: {
-
+            QmlCppInterface.loginButtonClicked()
         }
     }
 
     footerButton: ToolButton {
-        anchors.fill:parent
+        anchors.fill: parent
         text: qsTr("Register new user")
         font.pointSize: parent.fontSize
-        onClicked: stackView.push("qrc:/qml/RegisterPage.qml")
+        onClicked: {
+            stackView.push("qrc:/qml/RegisterPage.qml")
+            QmlCppInterface.registerButtonClicked()
+        }
     }
-
 
     states: [
         State {

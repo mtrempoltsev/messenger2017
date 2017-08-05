@@ -12,11 +12,11 @@ ApplicationWindow {
     minimumHeight: stackView.currentItem.implicitHeight
     minimumWidth: stackView.currentItem.implicitWidth
 
-
     StackView {
         id: stackView
         anchors.fill: parent
-        initialItem: LoginPage {}
+        initialItem: LoginPage {
+        }
 
         onCurrentItemChanged: {
             window.minimumHeight = stackView.currentItem.implicitHeight
