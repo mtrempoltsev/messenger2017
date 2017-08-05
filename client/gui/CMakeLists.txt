@@ -10,15 +10,21 @@ find_package( Qt5Gui REQUIRED )
 
 set( CMAKE_AUTOMOC ON )
 
+INCLUDE_DIRECTORIES(include)
+include_directories(${Qt5Core_INCLUDE_DIRS})
+
 # -------------------------   sources   -------------------------
 set(HEADERS
     stdafx.h
+    include/guiadapter.h
+    include/registrationcontroler.h
     )
 
 set(SOURCES
     src/stdafx.cpp
-
     src/main.cpp
+    src/guiadapter.cpp
+    src/registrationcontroler.cpp
     )
 
 qt5_add_resources(RESOURCES application.qrc)
