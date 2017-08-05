@@ -33,23 +33,7 @@ public:
     HttpRequestHeader& getHeader();
     const std::string& getData();
 
-    template <typename T>
-    T getFieldValue(const std::string& fieldName)
-    {
-        using boost::lexical_cast;
-        using boost::bad_lexical_cast;
-
-        T res;
-
-        try {
-            res = lexical_cast<T>(header_.header_fields_[fieldName]);
-        }
-        catch(bad_lexical_cast &e) {
-            std::cout << "bad_lexical_cast: " << std::endl;
-        }
-
-        return res;
-    }
+    int getContentSize();
 
 private:
     HttpRequestHeader header_;

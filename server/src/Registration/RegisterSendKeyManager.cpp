@@ -1,6 +1,5 @@
 #include "Registration/RegisterSendKeyManager.h"
 
-
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -28,7 +27,7 @@ std::string RegisterSendKeyManager::deserialize(const std::string &data) {
   return publicKey;
 }
 
-int RegisterSendKeyManager::doAction(const std::string &data, std::string &response) {
+HttpResponse::Code RegisterSendKeyManager::doAction(const std::string &data, std::string &response) {
   std::string publicKey;
   try {
     publicKey = deserialize(data);
@@ -37,10 +36,10 @@ int RegisterSendKeyManager::doAction(const std::string &data, std::string &respo
   catch (const pt::ptree_error &e) {
     std::cout << e.what() << std::endl;
     response = createError("Unknown algorithm");
-    return 403;
+    return HttpResponse::Code::FORBIDEN;
   }
 
-  return 200;
+  return HttpResponse::Code::OK;
 }
 
 

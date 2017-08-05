@@ -1,7 +1,7 @@
 #include "Auth/LoginSendKeyManager.h"
 using namespace m2::server;
 
-int LoginSendKeyManager::doAction(const std::string &data, std::string &response) {
+HttpResponse::Code LoginSendKeyManager::doAction(const std::string &data, std::string &response) {
   std::string publicKey;
   try {
     publicKey = deserialize(data);
@@ -10,10 +10,10 @@ int LoginSendKeyManager::doAction(const std::string &data, std::string &response
   catch (const pt::ptree_error &e) {
     std::cout << e.what() << std::endl;
     response = createError("Unknown algorithm");
-    return 403;
+    return HttpResponse::Code::FORBIDEN;
   }
 
-  return 200;
+  return HttpResponse::Code::OK;
 }
 std::string LoginSendKeyManager::deserialize(const std::string &data) {
   pt::ptree request;
