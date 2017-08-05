@@ -2,6 +2,7 @@
 
 #include <map>
 #include <typeindex>
+#include <memory>
 namespace m2{
     class Context{
     public:

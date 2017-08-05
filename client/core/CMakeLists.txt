@@ -36,7 +36,7 @@ set(SOURCES
     src/core.cpp
     src/core_dispatcher.cpp
 #<<<<<<< store-message-history
-    src/error.cpp
+#    src/error.cpp
     src/json_builder.cpp
     #src/guid.cpp
     src/message.cpp
