@@ -36,7 +36,7 @@ struct KeyHasher
         return hash;
     }
 };
-};
+}
 
 
 #endif //M2_SERVER_STDAFX_H_H

@@ -24,11 +24,11 @@ public:
     static const ResponseType m_response_type = ResponseType::Register;
 
 private:
-    void save(const userInfo &info);
     StringsPair deserialize(const std::string &data);
 
 
-    response_result createResponse (StringsPair pair, userInfo &result);
+
+    response_result createResponse (const StringsPair &pair, userInfo &result);
 };
 }
 }
