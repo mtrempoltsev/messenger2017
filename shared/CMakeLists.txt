@@ -28,7 +28,7 @@ include_directories(
 link_directories(${m2crypto_BINARY_DIR} ${OPENSSL_ROOT_DIR})
 
 file(GLOB_RECURSE M2_CRYPTO_CPP
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/m2/crypto/*.c*"
+        "${CMAKE_CURRENT_SOURCE_DIR}/*.c*"
 )
 file(GLOB_RECURSE M2_CRYPTO_H
         "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
