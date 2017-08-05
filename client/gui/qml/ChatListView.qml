@@ -7,13 +7,13 @@ ListView{
     id: msgListView
     ContactsList{id: contacts}
 
-    property bool myMessagesDirection: false
-
-    anchors.fill: parent
-    anchors.bottomMargin: 20
+    property bool myMessagesDirection: true
 
     spacing: 10
 
+    ScrollBar.vertical: ScrollBar{
+        id: scroll
+    }
 
     delegate: ChatListDelegateItem {
         id: delegateItem

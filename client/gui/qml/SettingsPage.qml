@@ -5,7 +5,6 @@ import QtQuick.Layouts 1.3
 
 Page {
     id: root
-    anchors.fill: parent
     implicitHeight: 500
     implicitWidth: 500
 

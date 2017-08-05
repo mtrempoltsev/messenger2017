@@ -9,10 +9,6 @@ ApplicationWindow {
     id: window
     visible: true
 
-    minimumHeight: stackView.currentItem.implicitHeight
-    minimumWidth: stackView.currentItem.implicitWidth
-
-
     StackView {
         id: stackView
         anchors.fill: parent
