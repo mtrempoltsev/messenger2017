@@ -64,6 +64,7 @@ void ContactManager::LoadContactList() {
     std::ifstream stream(filename);
 	if (stream.is_open())
 	{
+		contactList_.clear(); //where should we clear the contact list?
 		try {
 			ptree pt;
 			read_json(stream, pt);
