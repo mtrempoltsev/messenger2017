@@ -20,12 +20,9 @@ set(HEADERS
     include/guid.h
 #<<<<<<< store-message-history
     include/message.h
+    include/loginmanager.h
     include/path_settings.h
-#=======
-    # include/config.h
-    include/context.h
-    include/init.h
-#>>>>>>> develop
+        include/jobtype.h
     )
 
 set(SOURCES
@@ -35,16 +32,11 @@ set(SOURCES
     src/contact.cpp
     src/core.cpp
     src/core_dispatcher.cpp
-#<<<<<<< store-message-history
     src/error.cpp
     src/json_builder.cpp
-    #src/guid.cpp
     src/message.cpp
-#=======
     src/guid.cpp
     src/config.cpp
-    src/init.cpp
-#>>>>>>> develop
     )
 
 if (ENABLE_TESTS)
