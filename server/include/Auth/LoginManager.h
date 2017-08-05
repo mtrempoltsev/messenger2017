@@ -7,7 +7,7 @@ namespace server {
 class LoginManager : public Manager {
  public:
 
-  virtual int doAction(const std::string &data, std::string &response) final;
+  virtual HttpResponse::Code doAction(const std::string &data, std::string &response) final;
 
  private:
   StringsPair deserialize(const std::string &data);

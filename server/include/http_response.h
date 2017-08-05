@@ -9,13 +9,19 @@ class HttpResponse
 {
 public:
 
+	enum Code {
+		OK = 200,
+		FORBIDEN = 403,
+		NOT_FOUND = 404
+	};
+
     HttpResponse();
 
-    void setData(const std::string& data, int code = 200);
+    void setData(const std::string& data, Code code);
     std::string toString() const;
 
 private:
-	void changeHeader(int code);
+	void changeHeader(Code code);
 
 private:
     std::string header_;

@@ -29,7 +29,6 @@ private:
     void sendResponse(responsePtr response);
     void sendResponseDone(const boost::system::error_code & error);
 private:
-    boost::asio::io_service& service_;
     boost::asio::ip::tcp::socket socket_;
     boost::asio::io_service::strand write_strand_;
 

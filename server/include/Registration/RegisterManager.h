@@ -2,13 +2,14 @@
 
 #include "Manager.h"
 
+
 namespace m2 {
 namespace server {
 
 class RegisterManager : public Manager {
  public:
 
-  virtual int doAction(const std::string &data, std::string &response) final;
+  virtual HttpResponse::Code doAction(const std::string &data, std::string &response) final;
 
  public:
   static const ResponseType m_response_type = ResponseType::Register;

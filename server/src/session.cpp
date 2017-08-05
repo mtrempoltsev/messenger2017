@@ -12,8 +12,7 @@ void LOG(const std::string& log) {
 namespace m2 {
 namespace server {
     Session::Session(boost::asio::io_service& service)
-    : service_(service)
-    , socket_(service)
+    : socket_(service)
     , write_strand_(service)
     {
     }
@@ -71,7 +70,7 @@ namespace server {
 
         std::istream stream(&in_packet_);
         auto request = std::make_shared<HttpRequest>(stream);
-        int headerSize = request->getFieldValue<int>(CONTENT_LENGTH);
+        int headerSize = request->getContentSize();
         int dataSize = request->getData().size();
         if (dataSize < headerSize) {
             readData(request);

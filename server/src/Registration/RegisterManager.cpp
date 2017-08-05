@@ -1,6 +1,7 @@
 #include "Registration/RegisterManager.h"
 #include "../Data/User/Users.h"
 
+
 using namespace m2::server;
 
 
@@ -17,7 +18,7 @@ RegisterManager::StringsPair RegisterManager::deserialize(const std::string &dat
   return info;
 }
 
-int RegisterManager::doAction(const std::string &data, std::string &response) {
+HttpResponse::Code RegisterManager::doAction(const std::string &data, std::string &response) {
   StringsPair info;
   try {
     info = deserialize(data);
@@ -26,14 +27,14 @@ int RegisterManager::doAction(const std::string &data, std::string &response) {
   } catch (const pt::ptree_error &e) {
     std::cout << e.what() << std::endl;
     response = createError("client_string and decrypted server_string");
-    return 403;
+    return HttpResponse::Code::FORBIDEN;
   }
   response = createResponse();
   //тут должен быть fingerprint
   //m2::data::user::AUsers::instance().CreateUser(id, "public_key"); //тут должен быть public_key
 
   //TODO save
-  return 200;
+  return HttpResponse::Code::OK;
 }
 std::string RegisterManager::createResponse() {
   pt::ptree tree;

@@ -19,7 +19,7 @@ namespace server {
         std::string uri = request->getHeader().uri_;
         std::string data = request->getData();
         std::string response;
-        int code = 200;
+        HttpResponse::Code code = HttpResponse::Code::OK;
 
         // http://localhost:8282/some/command1
         if (uri == "/user/register/sendKey") {
@@ -44,7 +44,7 @@ namespace server {
             code = loginManager.doAction(data, response);
         }
         else {
-            code = 403;
+            code = HttpResponse::Code::NOT_FOUND;
             response = Manager::createError("Something wrong");
         }
 

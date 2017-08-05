@@ -1,7 +1,7 @@
 #include "Auth/LoginManager.h"
 using namespace m2::server;
 
-int LoginManager::doAction(const std::string &data, std::string &response) {
+HttpResponse::Code LoginManager::doAction(const std::string &data, std::string &response) {
   StringsPair info;
   try {
     info = deserialize(data);
@@ -9,13 +9,13 @@ int LoginManager::doAction(const std::string &data, std::string &response) {
   } catch (const pt::ptree_error &e) {
     std::cout << e.what() << std::endl;
     response = createError("client_string and decrypted server_string");
-    return 403;
+    return HttpResponse::Code::FORBIDEN;
   }
   response = createResponse(info.serverString, info.clientString);
   //m2::data::user::AUsers users;
 
   //TODO save
-  return 200;
+  return HttpResponse::Code::OK;
 }
 Manager::StringsPair LoginManager::deserialize(const std::string &data) {
   pt::ptree request;
