@@ -1,5 +1,5 @@
 #include "Registration/RegisterManager.h"
-#include "../Data/User/Users.h"
+#include "Data/User/Users.h"
 
 using namespace m2::server;
 

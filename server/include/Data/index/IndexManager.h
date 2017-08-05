@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include <boost/unordered_set.hpp>
 #include <list>
-#include "../stdafx.h"
+#include "Data/stdafx.h"
 
 namespace indices {
 

@@ -60,12 +60,10 @@ set(HEADERS
     stdafx.h
 )
 
-file(GLOB DATA src/Data/*)
+file(GLOB_RECURSE HEADERS include/*.h include/*.hpp)
+file(GLOB_RECURSE SOURCES src/*.cpp)
 
-file(GLOB HEADERS include/*.h include/*/*.h)
-file(GLOB SOURCES src/*.cpp src/*/*.cpp)
-
-set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES} ${DATA})
+set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${DATA})
 

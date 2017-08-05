@@ -28,7 +28,7 @@ int N = 0;
 
 namespace fs = boost::filesystem;
 
-#include "Dialog/DialogSystem.hpp"
+#include "Data/Dialog/DialogSystem.hpp"
 
 void DataTest()
 {

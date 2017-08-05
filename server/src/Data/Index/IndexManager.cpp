@@ -1,5 +1,5 @@
 
-#include "IndexManager.h"
+#include "Data/index/IndexManager.h"
 
 using namespace indices;
 

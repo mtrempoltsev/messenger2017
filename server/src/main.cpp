@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <boost/lexical_cast.hpp>
-
+/*
 int main(int argc, char* argv[])
 {
     using namespace m2::server;
@@ -27,3 +27,8 @@ int main(int argc, char* argv[])
 
     return 0;
 }
+
+/**/
+#include "Data/Data_Test.h"
+int main() { DataTest(); }
+/**/

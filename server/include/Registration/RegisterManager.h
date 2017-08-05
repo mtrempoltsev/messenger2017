@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Manager.h"
+#include "Data/Data.hpp"
 
 namespace m2 {
 namespace server {
