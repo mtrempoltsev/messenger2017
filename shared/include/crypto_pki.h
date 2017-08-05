@@ -3,8 +3,8 @@
 #include <memory>
 #include <openssl/RSA.h>
 
-#include "common.h"
-#include "hash.h"
+#include "crypto_common.h"
+#include "crypto_hash.h"
 
 namespace m2::crypto::pki {
 

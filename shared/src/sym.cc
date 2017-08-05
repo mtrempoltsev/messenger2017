@@ -1,11 +1,11 @@
 //
 // Created by lol on 8/5/2017.
 //
-#include <m2/crypto/sym.h>
 #include <openssl/ossl_typ.h>
 #include <openssl/evp.h>
 #include <memory>
 #include <cstring>
+#include <crypto_sym.h>
 
 namespace m2::crypto::sym {
 

@@ -8,7 +8,7 @@
 #include <openssl/aes.h>
 #include <memory>
 #include <openssl/evp.h>
-#include "common.h"
+#include "crypto_common.h"
 
 namespace m2::crypto::sym {
 
