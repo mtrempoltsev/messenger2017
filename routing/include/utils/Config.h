@@ -6,7 +6,7 @@ static class Config
 {
 public:
     Config() {
-        alpha = 3;
+      setDefaultConfig();
     }
 
 public:
@@ -14,8 +14,17 @@ public:
         return alpha;
     }
 
+    static int getK(){
+      return k;
+    }
+
 private:
     static int alpha;
+    static int k;
+
+  static void setDefaultConfig(){
+    alpha = 3;
+    k = 20;
+  }
 
 };
-
