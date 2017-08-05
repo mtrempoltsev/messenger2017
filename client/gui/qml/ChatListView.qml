@@ -14,6 +14,7 @@ ListView{
 
     spacing: 10
 
+
     delegate: ChatListDelegateItem {
         id: delegateItem
     }

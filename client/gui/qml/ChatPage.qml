@@ -7,6 +7,7 @@ import QtQuick.Controls.Styles 1.4
 Page{
     id: chatPage
     anchors.fill: parent
+
     header: ToolBar {
         background: Rectangle {
                     color: "#efefef"
@@ -62,7 +63,9 @@ Page{
                 Layout.maximumWidth: 50
                 Layout.maximumHeight: 50
 
-                text: "tools"
+                text: "..."
+                font.pixelSize: 22
+                font.bold: true
             }
         }
     }
@@ -84,10 +87,6 @@ Page{
 
 
     footer: ToolBar{
-        background: Rectangle {
-                    color: "#efefef"
-                }
-
         RowLayout {
             id: bottomLayout
             anchors.fill: parent
@@ -102,7 +101,16 @@ Page{
                 Layout.maximumWidth: 50
                 Layout.maximumHeight: 50
 
-                text: "cont"
+                background: Rectangle {
+                    radius: 10
+
+                    color: parent.hovered ? "#a0dea0" : "#efefef" //"white"
+                }
+
+                contentItem: Image {
+                    id: affiximg
+                    source: "/img/affix.png"
+                }
             }
 
 
@@ -141,7 +149,16 @@ Page{
                 Layout.maximumWidth: 50
                 Layout.maximumHeight: 50
 
-                text: "send"
+                background: Rectangle {
+                    radius: 10
+
+                    color: parent.hovered ? "#a0dea0" : "#efefef" //"white"
+                }
+
+                contentItem: Image {
+                    id: sendimg
+                    source: "/img/send.png"
+                }
 
                 onClicked: {
                     messages.append({"guid": 1, "messText":chatMessageField.text, "messTime": "18:00"})
