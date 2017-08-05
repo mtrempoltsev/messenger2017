@@ -82,3 +82,21 @@ endmacro()
 add_subdirectory(${SHARED_ROOT} shared)
 add_subdirectory(core)
 add_subdirectory(gui)
+
+
+# --------------- build examples ------------------
+
+
+# ----> m2::crypto
+add_library(libm2crypto STATIC ${M2_CRYPTO_CPP} ${M2_CRYPTO_H})
+add_executable(libm2crypto_example ${SOURCE_FILES})
+add_dependencies(libm2crypto_example libm2crypto)
+
+
+target_link_libraries(libm2crypto ${OPENSSL_LIBRARIES})
+target_link_libraries(libm2crypto_example libm2crypto)
+
+if (WIN32)
+    target_link_libraries(libm2crypto ws2_32)
+endif(WIN32)
+
