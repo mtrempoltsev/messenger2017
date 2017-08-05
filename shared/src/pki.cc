@@ -8,10 +8,9 @@
 #include <openssl/err.h>
 #include <cstring>
 #include <string>
-#include <m2/crypto/pki.h>
-#include <m2/crypto/hash.h>
-#include <regex>
 #include <sstream>
+#include <crypto_pki.h>
+#include <crypto_hash.h>
 
 namespace m2::crypto::pki {
 

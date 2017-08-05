@@ -1,4 +1,4 @@
-#include <m2/crypto/hash.h>
+#include <crypto_hash.h>
 
 namespace m2::crypto::hash {
     std::string OpenSSL_SHA1_HashProvider::hash(const std::string &string) const {
