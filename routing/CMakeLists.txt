@@ -98,6 +98,7 @@ set(SOURCES
         src/kbuckets/KBucketsTools.cpp
         src/kbuckets/KBucket.cpp
         src/kbuckets/KBucketsManager.cpp
+        src/utils/Config.cpp
         src/main.cpp
         )
 

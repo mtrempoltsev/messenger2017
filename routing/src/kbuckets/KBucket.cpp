@@ -1,11 +1,12 @@
-#include "KBucket.h"
+#include "kbuckets/KBucket.h"
+#include "utils/Config.h"
 #include <stdexcept>
 
 namespace m2 {
 namespace routing {
     
 KBucket::KBucket():
-    k(16) // load from config instead
+    k(m2::routing::Config::getK())
 {}
 
 bool KBucket::insert(const m2::routing::NodeInfo& src)

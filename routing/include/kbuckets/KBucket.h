@@ -1,5 +1,6 @@
 #pragma once
-#include "../data_structures/NodeInfo.h"
+#include "data_structures/NodeInfo.h"
+#include <list>
 
 namespace m2 {
 namespace routing {
@@ -15,7 +16,7 @@ public:
     NodeInfo oldest() const;
     
     std::list<m2::routing::NodeInfo> known() const { return nodes; }
-    size_t knownCnt() const { return m_size; }
+    size_t knownCnt() const { return filled; }
 
 protected:
     std::list<m2::routing::NodeInfo> nodes;
