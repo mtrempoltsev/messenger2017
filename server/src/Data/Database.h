@@ -13,9 +13,9 @@ public:
     Database(const std::string rootDir);
     bool CreateUser(uuids::uuid Uid, const std::string&& PublicKey);
     bool CreateUser(uuids::uuid Uid, const std::string& PublicKey);
-
-
-
+    std::string getPublicServerKey();
+    std::string getPrivateClient();
+    std::string getUserPublicKey(uuids::uuid Uid);
 };
 }}
 
