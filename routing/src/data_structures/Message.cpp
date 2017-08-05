@@ -1,4 +1,4 @@
-#include "Message.h"
+#include "data_structures/Message.h"
 
 namespace m2 {
 namespace routing {

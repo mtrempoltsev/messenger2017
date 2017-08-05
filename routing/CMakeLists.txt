@@ -73,6 +73,7 @@ set(HEADERS
         stdafx.h
         include/core/Node.h
         include/data_structures/Message.h
+        include/data_structures/NodeInfo.h
         include/handlers/CommandHandler.h
         include/handlers/FindDataHandler.h
         include/handlers/FindNodeHandler.h

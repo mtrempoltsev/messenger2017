@@ -10,6 +10,7 @@ class KBucketsManager
 {
 public:
 
+    KBucketsManager();
     KBucketsManager(const NodeInfo &nodeInfo);
 
     void insert(const NodeInfo &nodeInfo);

@@ -1,5 +1,5 @@
 #pragma once
-#include "../CommandHandler.h"
+#include "handlers/CommandHandler.h"
 
 namespace m2 {
 namespace routing {
