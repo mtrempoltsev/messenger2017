@@ -1,4 +1,5 @@
 #include "handlers/CommandHandler.h"
+#include "core/Node.h"
 
 namespace m2 {
 namespace routing {
@@ -12,9 +13,9 @@ CommandHandler::~CommandHandler()
 {
 }
 
-    Message *CommandHandler::processMessage(Message message) {
-        return nullptr;
-    }
+Message *CommandHandler::handleMessage(Message message) {
+    return nullptr;
+}
 
 } // namespace routing
 } // namespace m2

@@ -19,6 +19,7 @@ namespace routing {
     KBucketsManager::KBucketsManager() {
 
     }
+
 } // namespace routing
 } // namespace m2
 
