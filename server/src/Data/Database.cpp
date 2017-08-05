@@ -1,31 +1,35 @@
+
 #include "Data/Database.h"
 
-namespace m2
-{
-namespace server
-{
+using namespace m2::server;
 
-Database::Database(const std::string rootDir)
-{
 
-}
+Database1::Database1(const std::string rootDir)
+    : Users(rootDir)
+    , Dialogs(rootDir + "Dialogs/")
+{}
 
-bool Database::CreateUser(uuids::uuid uid, const std::string &publicKey)
-{
-    bool result = users.CreateUser(uid, publicKey);
-    return result;
-}
-std::string Database::getPublicServerKey()
-{
-    return std::string();
-}
-std::string Database::getPrivateClient()
-{
-    return std::string();
-}
-std::string Database::getUserPublicKey(uuids::uuid Uid)
-{
-    return std::string();
-}
-}
-}
+bool
+Database1::CreateUser(uuids::uuid Uid, const std::string &PublicKey)
+{ return Users.CreateUser(Uid, PublicKey) ? true : false; }
+
+bool
+Database1::CreateUser(uuids::uuid Uid, std::string &&PublicKey)
+{ return Users.CreateUser(Uid, std::move(PublicKey)); }
+
+
+bool
+Database1::IsClienExists(uuids::uuid Uid)
+{ return Users[Uid]; }
+
+
+std::string
+Database1::getUserPublicKey(uuids::uuid Uid)
+{ return Users(Uid).PublicKey(); }
+
+std::string
+Database1::getPublicServerKey()
+{ return ""; }
+
+std::string Database1::getPrivateServerKey()
+{ return ""; }

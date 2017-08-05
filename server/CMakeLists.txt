@@ -35,7 +35,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${M2_BIN_DIR})
 
 #----------------------- compile options ------------------------
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wcast-align -pedantic -fstack-protector-all -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wcast-align -Wno-format -Wno-long-long -Wno-unused-function -Wno-unused-parameter")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -fpermissive -Wcast-align -pedantic -fstack-protector-all -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wcast-align -Wno-format -Wno-long-long -Wno-unused-function -Wno-unused-parameter")
 
 
 # ------------------------  3rd-parties  ------------------------
@@ -58,9 +58,11 @@ endmacro()
 
 set(HEADERS
     stdafx.h
-        src/Data/Database.cpp src/Data/Database.h include/Data/Users.h src/Data/Data.cpp include/Data/stdafx.h include/Data/Database.h include/Data/User.h src/Data/Users.cpp src/Data/User.cpp src/Data/User.h src/Data/Database.cpp)
+    include/Data2/Utiles.h
+        )
 
-file(GLOB_RECURSE HEADERS include/*.h include/*.hpp)
+file(GLOB_RECURSE HEADERS include/*.h
+                          include/*.hpp)
 file(GLOB_RECURSE SOURCES src/*.cpp)
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
