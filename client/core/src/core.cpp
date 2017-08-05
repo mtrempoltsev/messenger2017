@@ -7,15 +7,6 @@ Core::Core() {
     messageManager_ = std::make_shared<MessageManager>();
 }
 
-ContactManager::ContactList
-Core::GetContactList(const std::string& contactId) {
-    return contactManager_->GetContactList(contactId);
-}
-
-void Core::SaveContactList(const ContactManager::ContactList& contacts) {
-    contactManager_->SaveContactList(contacts);
-}
-
 MessageManager::MessageStory
 Core::GetMessageStory(const std::string& id) {
     return messageManager_->GetMessageStory(id);
