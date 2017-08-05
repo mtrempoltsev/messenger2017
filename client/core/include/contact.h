@@ -7,14 +7,17 @@
 namespace m2 {
 namespace core {
 
+    class ContactBuilder {
+    public:
+        std::string uuid;
+        std::string nickname;
+    };
+
     class Contact {
     public:
         Contact() {};
-        Contact(const std::string& uuid,
-                const std::string& nickname) {
-            uuid_ = uuid;
-            nickname_ = nickname;
-        }
+        Contact(const ContactBuilder& cb) :
+            uuid_(cb.uuid), nickname_(cb.nickname) {}
 
         std::string GetId() const {
             return uuid_;
@@ -35,8 +38,13 @@ namespace core {
     public:
         using ContactList = std::vector<Contact>;
 
-        void SaveContactList(const ContactList& contacts);
-        ContactList GetContactList(const std::string& contactId) const;
+        void LoadContactList();
+        const ContactList& GetContactList() const;
+        void AddContact(const std::string& uuid,
+                        const std::string& nickname);
+    private:
+        void SaveContactList();
+        ContactList contactList_;
     };
 
 } //core

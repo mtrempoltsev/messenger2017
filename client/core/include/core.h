@@ -24,8 +24,9 @@ namespace core {
         boost::optional<m2::Error> RegisterNewUser();
 
         // core <-> GUI
-        ContactManager::ContactList GetContactList(const std::string& contactId);
-        void SaveContactList(const ContactManager::ContactList& contacts);
+        std::shared_ptr<ContactManager> getContactManager() {
+            return contactManager_;
+        }
 
         MessageManager::MessageStory GetMessageStory(const std::string& id);
         void SaveMessageStory(const MessageManager::MessageStory& ms,
