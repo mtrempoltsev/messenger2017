@@ -1,24 +1,17 @@
 #pragma once
 #include "CommandHandler.h"
-class FindNodeHandler : CommandHandler
+class FindNodeHandler : public CommandHandler
 {
-
 
 public:
     FindNodeHandler(Node* node);
     ~FindNodeHandler();
 
 
-
-
 private:
-
-
+    Message* handleMessage(Message message);
 
 public:
-
-    virtual Message* handleMessage(Message message);
-
 
 
 

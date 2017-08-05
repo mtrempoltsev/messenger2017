@@ -35,7 +35,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${M2_BIN_DIR})
 
 
 #----------------------- compile options ------------------------
-add_compile_options(-std=c++11)
+set(CMAKE_CXX_STANDARD 14)
 
 
 # ------------------------  3rd-parties  ------------------------
@@ -76,7 +76,7 @@ set(SOURCES
     src/stdafx.cpp
 
     src/main.cpp
-    )
+    )
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 
