@@ -10,8 +10,12 @@
 #include <openssl/evp.h>
 #include "crypto_common.h"
 
-namespace m2::crypto::sym {
-
+namespace m2
+{
+namespace crypto
+{
+namespace common
+{
     class OpenSSL_AES_CryptoProvider final : public common::ICryptoProvider {
     public:
         OpenSSL_AES_CryptoProvider(size_t bit_size, const std::string &key, const std::string &salt);
@@ -26,7 +30,8 @@ namespace m2::crypto::sym {
 
         std::string act_(bool, const std::string &) const;
     };
-
+}
+}
 }
 
 #endif //M2CRYPTO_SYM_H

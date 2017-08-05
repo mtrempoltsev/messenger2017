@@ -9,8 +9,12 @@
 #include <stdexcept>
 #include <string>
 
-namespace m2::crypto::common {
-
+namespace m2
+{
+namespace crypto
+{
+namespace common
+{
     class CryptoError : public std::runtime_error {
     public:
         explicit CryptoError(const char *s);
@@ -32,7 +36,8 @@ namespace m2::crypto::common {
         virtual std::string encrypt(const std::string &) const = 0;
         virtual std::string decrypt(const std::string &) const = 0;
     };
-
+}
+}
 }
 
 

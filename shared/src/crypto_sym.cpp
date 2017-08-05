@@ -5,11 +5,14 @@
 #include <openssl/evp.h>
 #include <memory>
 #include <cstring>
-#include <crypto_sym.h>
+#include "../include/crypto_sym.h"
 
-namespace m2::crypto::sym {
-
-
+namespace m2
+{
+namespace crypto
+{
+namespace common
+{
     std::string OpenSSL_AES_CryptoProvider::encrypt(const std::string &string) const {
         return act_(true, string);
     }
@@ -84,3 +87,6 @@ namespace m2::crypto::sym {
         return bit_size_ / 8;
     }
 }
+}
+}
+

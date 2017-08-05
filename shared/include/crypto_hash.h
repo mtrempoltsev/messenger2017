@@ -8,8 +8,12 @@
 #include <string>
 #include <openssl/sha.h>
 
-namespace m2::crypto::hash {
-
+namespace m2
+{
+namespace crypto
+{
+namespace common
+{
     class IHashProvider {
     public:
         virtual size_t size() const = 0;
@@ -23,7 +27,8 @@ namespace m2::crypto::hash {
 
         size_t size() const override;
     };
-
+}
+}
 }
 
 #endif //M2CRYPTO_HASH_H
