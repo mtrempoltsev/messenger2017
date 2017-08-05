@@ -67,7 +67,7 @@ set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${DATA})
 
-include_directories(${SUBPROJECT_ROOT})
+include_directories(..)
 include_directories(include/)
 
 #-------------------------    open SSL    -----------------------
