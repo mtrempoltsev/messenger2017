@@ -4,10 +4,10 @@ import QtQuick.Layouts 1.1
 
 ListView{
     //заглушка
-    id: root
+    id: msgListView
     ContactsList{id: contacts}
 
-    property bool myMessagesDirection: true
+    property bool myMessagesDirection: false
 
     anchors.fill: parent
     anchors.bottomMargin: 20

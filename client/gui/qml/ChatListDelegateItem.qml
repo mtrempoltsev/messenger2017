@@ -4,14 +4,21 @@ import QtQuick.Layouts 1.1
 
 
 RowLayout {
-
     function getMsgAligment() {
-        return sentByMe ? Qt.AlignRight : Qt.AlignLeft
+        if (msgListView.myMessagesDirection)
+            return sentByMe ? Qt.AlignRight : Qt.AlignLeft
+        return Qt.AlignLeft
+    }
+
+    function getLayoutDirection() {
+        if (msgListView.myMessagesDirection)
+            return sentByMe ? Qt.RightToLeft : Qt.LeftToRight
+        return Qt.LeftToRight
     }
 
     id: delegateItem
     readonly property bool sentByMe: guid == 1
-    layoutDirection: sentByMe ? Qt.RightToLeft : Qt.LeftToRight
+    layoutDirection: getLayoutDirection()
     Layout.alignment: getMsgAligment()
     width: parent.width
 
@@ -49,7 +56,7 @@ RowLayout {
             text: model.messText
             wrapMode: Text.WrapAnywhere
             Layout.maximumWidth: {
-                maxLen/* > paintedWidth? paintedWidth : maxLen*/
+                maxLen
             }
             background: Rectangle {
                 id: msgLabelBackground
