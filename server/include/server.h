@@ -2,7 +2,7 @@
 
 #include <boost/asio.hpp>
 #include "session.h"
-#include "../src/Data/Database.h"
+#include "Data/Database.h"
 
 namespace m2 {
 namespace server {

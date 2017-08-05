@@ -1,5 +1,4 @@
 #include "Registration/RegisterManager.h"
-#include "Data/User/Users.h"
 
 
 using namespace m2::server;
@@ -49,7 +48,6 @@ std::string RegisterManager::createResponse()
 }
 void RegisterManager::save(const std::string &data)
 {
-    db->CreateUser(123, data);
 }
 
 RegisterManager::RegisterManager(Database *db)

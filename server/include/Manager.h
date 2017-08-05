@@ -7,7 +7,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <iostream>
-#include "../src/Data/Database.h"
+#include "Data/Database.h"
 
 namespace pt = boost::property_tree;
 

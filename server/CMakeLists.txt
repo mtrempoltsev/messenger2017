@@ -58,7 +58,7 @@ endmacro()
 
 set(HEADERS
     stdafx.h
-        src/Data/Database.cpp src/Data/Database.h)
+        src/Data/Database.cpp src/Data/Database.h include/Data/Users.h src/Data/Data.cpp include/Data/stdafx.h include/Data/Database.h include/Data/User.h src/Data/Users.cpp src/Data/User.cpp src/Data/User.h src/Data/Database.cpp)
 
 file(GLOB_RECURSE HEADERS include/*.h include/*.hpp)
 file(GLOB_RECURSE SOURCES src/*.cpp)
