@@ -50,7 +50,7 @@ include(cotire)
 
 # -------------------------    boost   --------------------------
 find_package(Boost COMPONENTS
-    REQUIRED)
+        REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
 
@@ -69,14 +69,14 @@ endmacro()
 
 # -------------------------   sources   -------------------------
 set(HEADERS
-    stdafx.h
-    )
+        stdafx.h
+        )
 
 set(SOURCES
-    src/stdafx.cpp
+        src/stdafx.cpp
 
-    src/main.cpp
-    )
+        src/main.cpp
+        )
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 
@@ -88,4 +88,4 @@ set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT s
 cotire(${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME}
-    ${Boost_LIBRARIES})
+        ${Boost_LIBRARIES})
