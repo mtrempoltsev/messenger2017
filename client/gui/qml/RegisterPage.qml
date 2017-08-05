@@ -21,24 +21,9 @@ Page {
     ColumnLayout {
         id:mainLayout
         antialiasing: false
-        scale: 1
         anchors.fill: parent
-        Rectangle {
+        RectangleLogo {
             id: logo
-            Layout.alignment: Qt.AlignTop
-            Layout.fillWidth: true
-            height: 100
-            color: 'lightblue'
-            implicitWidth: logoText.implicitWidth
-            Text {
-                id: logoText
-                anchors.fill: logo
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                text: qsTr("Messenger 2017")
-                font.bold: true
-                font.pointSize: 40
-            }
         }
 
         ColumnLayout {
@@ -100,7 +85,6 @@ Page {
                 text: qsTr("Register")
 
                 onClicked: {
-//                    console.log(serverCombobox.currentText)
                     registerControler.registerMe(serverCombobox.currentText)
                 }
             }
