@@ -22,5 +22,6 @@
         <file>qml/ChatListDelegateItem.qml</file>
         <file>qml/LoginPage.qml</file>
         <file>qml/RectangleLogo.qml</file>
+        <file>qml/PageWithLogo.qml</file>
     </qresource>
 </RCC>
