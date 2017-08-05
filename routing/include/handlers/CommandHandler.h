@@ -1,6 +1,6 @@
 #pragma once
-#include "../Node.h"
-#include "../data_structures/Message.h"
+#include "Node.h"
+#include "Message.h"
 
 namespace m2 {
 namespace routing {

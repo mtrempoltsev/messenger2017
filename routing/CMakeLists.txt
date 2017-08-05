@@ -68,7 +68,7 @@ endmacro()
 
 
 # -------------------------   sources   -------------------------
-include_directories(include/core/ include/data_structures include/handlers include/handlers/processors)
+include_directories(include/ )
 set(HEADERS
         stdafx.h
         include/core/Node.h
@@ -79,6 +79,9 @@ set(HEADERS
         include/handlers/processors/FindDataProcessor.h
         include/handlers/processors/FindNodeProcessor.h
         include/handlers/processors/FindProcessor.h
+        include/kbuckets/KBucket.h
+        include/kbuckets/KBucketsManager.h
+        include/kbuckets/KBucketsTools.h
         )
 
 set(SOURCES
@@ -91,6 +94,9 @@ set(SOURCES
         src/handlers/processors/FindDataProcessor.cpp
         src/handlers/processors/FindNodeProcessor.cpp
         src/handlers/processors/FindProcessor.cpp
+        src/kbuckets/KBucketsTools.cpp
+        src/kbuckets/KBucket.cpp
+        src/kbuckets/KBucketsManager.cpp
         src/main.cpp
         )
 
