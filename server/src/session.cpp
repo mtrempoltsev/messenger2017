@@ -11,9 +11,10 @@ void LOG(const std::string& log) {
 
 namespace m2 {
 namespace server {
-    Session::Session(boost::asio::io_service& service)
+    Session::Session(boost::asio::io_service& service, Database *database)
     : socket_(service)
     , write_strand_(service)
+    , db(database)
     {
     }
 
@@ -97,7 +98,7 @@ namespace server {
         }
         else if (error == boost::asio::error::eof)
         {
-            ManagerController manager;
+            ManagerController manager(db);
             auto response = manager.doProcess(request);
             sendResponse(response);
         }

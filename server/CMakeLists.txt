@@ -58,7 +58,7 @@ endmacro()
 
 set(HEADERS
     stdafx.h
-)
+        src/Data/Database.cpp src/Data/Database.h)
 
 file(GLOB DATA src/Data/*)
 
