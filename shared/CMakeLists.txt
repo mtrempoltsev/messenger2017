@@ -36,6 +36,8 @@ add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
 add_executable(libm2crypto_example examples/crypto_example.cpp)
 target_link_libraries( ${PROJECT_NAME} ${OPENSSL_LIBRARIES})
+target_link_libraries( libm2crypto_example ${PROJECT_NAME} ${OPENSSL_LIBRARIES})
+
 
 if (WIN32)
     target_link_libraries(libm2crypto ws2_32)
