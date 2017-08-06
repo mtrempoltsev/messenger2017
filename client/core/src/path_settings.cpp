@@ -4,14 +4,22 @@
 std::string m2::core::GetManagerPath(const std::string &managerName)
 {
     std::string managerPath;
+    std::string delim;
+    std::string userEnv;
 #ifdef _WIN32 || _WIN64
-    managerPath = ".";
+    delim = "\\";
+    userEnv = "USERPROFILE";
 #else
-    managerPath = getenv("HOME");
-    managerPath.append("/.messenger/");
-    if(!managerName.empty())
-        managerPath.append(managerName).append("/");
+    userEnv = "HOME";
+    delim = "/";
 #endif
+    managerPath = getenv(userEnv.c_str());
+#ifdef _WIN32 || _WIN64 //In Windows needed documents folder. Temp crtuch maybe
+    managerPath.append(delim).append("documents").append(delim);
+#endif
+    managerPath.append(delim).append("messenger").append(delim);
+    if(!managerName.empty())
+        managerPath.append(managerName).append(delim);
     boost::filesystem::path p(managerPath);
     if(!boost::filesystem::exists(p))
     {
