@@ -58,12 +58,22 @@ list(APPEND CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY}/cotire-1.7.10/CMake")
 list(APPEND CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY}/cmake")
 include(cotire)
 
-
 # -------------------------    boost   --------------------------
 find_package(Boost COMPONENTS
     REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
+
+find_package(CURL REQUIRED)
+include_directories(${CURL_INCLUDE_DIRS})
+
+find_package(Libevent REQUIRED)
+include_directories(${LIBEVENT_INCLUDE_DIRS})
+
+find_package(OpenSSL REQUIRED)
+include_directories(${OPENSSL_INCLUDE_DIR})
+
+find_package(Threads)
 
 # ----------------------- source groups  ------------------------
 macro(set_source_group group_name root_dir ${ARGN})
@@ -82,3 +92,4 @@ endmacro()
 add_subdirectory(${SHARED_ROOT} shared)
 add_subdirectory(core)
 add_subdirectory(gui)
+
