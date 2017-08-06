@@ -5,13 +5,14 @@
 
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
-#include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
-#include <boost/uuid/uuid.hpp>
+#include <boost/filesystem/path.hpp>
 #include <boost/noncopyable.hpp>
 
+#include <sstream>
 #include <fstream>
 #include <iomanip>
+#include <boost/functional/hash.hpp>
 
 
 
@@ -39,8 +40,37 @@
 
 namespace indices { void MakeDir(const std::string& Path);  }
 
-namespace uuids   { typedef boost::multiprecision::uint128_t uuid; }
+namespace uuids   {
 
+    typedef boost::multiprecision::uint128_t uuid;
+
+    namespace misc {
+
+        union uuid_split {
+            uuid   Uid;
+            size_t Part[2];
+        };
+    }
+
+}
+
+namespace std {
+
+    template<>
+    struct hash<uuids::uuid>
+            : public std::__hash_base<size_t, uuids::uuid> {
+        size_t
+        operator()(const uuids::uuid& __p) const noexcept {
+
+            size_t Size = 0;
+            uuids::misc::uuid_split Split = {__p};
+            boost::hash_combine(Size, Split.Part[1]);
+            boost::hash_combine(Size, Split.Part[2]);
+
+            return Size;
+        }
+    };
+}
 
 #endif //M2_SERVER_STDAFX_H_H
 

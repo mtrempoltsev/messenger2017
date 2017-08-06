@@ -1,5 +1,5 @@
-#ifndef M2_SERVER_INDEXMANAGER_H
-#define M2_SERVER_INDEXMANAGER_H
+#ifndef M2_SERVER_INDEXMANAGER_HPP
+#define M2_SERVER_INDEXMANAGER_HPP
 
 #include <unordered_set>
 #include <boost/unordered_set.hpp>
@@ -19,13 +19,14 @@ namespace indices {
      * UID3
      *
      */
-    template<typename _Tp = uuids::uuid>
-    class TIndexManager
+    template< typename _Tp = uuids::uuid
+            , typename _Hs = std::hash<_Tp>
+    >class TIndexManager
     //        : boost::noncopyable
     {
     public:
 
-        typedef std::set<_Tp> LUids;
+        typedef std::unordered_set<_Tp, _Hs> LUids;
 
     public: /***************| Construction |***************/
 
@@ -108,4 +109,4 @@ namespace indices {
     using AIndexManager = TIndexManager<>;
 }
 
-#endif //M2_SERVER_INDEXMANAGER_H
+#endif //M2_SERVER_INDEXMANAGER_HPP

@@ -1,7 +1,6 @@
 #ifndef M2_SERVER_USERS_H
 #define M2_SERVER_USERS_H
 
-#include <unordered_set>
 
 #include "Data/index/IndexManager.hpp"
 #include "Data/index/FileHandler.h"
@@ -53,8 +52,8 @@ namespace user {
 
     public: /***************| Operators |***************/
 
-        AUser operator()(const uuids::uuid& Uid);
-        bool  operator[](const uuids::uuid& Uid);
+        AUser operator()(const uuids::uuid& Uid); // as GetUser
+        bool  operator[](const uuids::uuid& Uid); // as IsExists
 
     private:
         AUsers(AUsers const&) = delete;
