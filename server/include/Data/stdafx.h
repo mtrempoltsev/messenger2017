@@ -38,7 +38,11 @@
 
 /****************************/
 
-namespace indices { void MakeDir(const std::string& Path);  }
+namespace indices {
+
+    void MakeDir(const std::string& Path);
+    
+}
 
 namespace uuids   {
 

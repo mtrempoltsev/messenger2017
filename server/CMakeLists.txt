@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.4)
 
 project(m2-server)
 
+set(SHARED_PROJECT_NAME m2-shared)
 get_filename_component(M2_ROOT "${CMAKE_SOURCE_DIR}" ABSOLUTE)
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
@@ -76,7 +77,7 @@ include_directories(include/)
 
 find_package(OpenSSL REQUIRED)
 include_directories(${OPENSSL_INCLUDE_DIR})
-target_link_libraries (${PROJECT_NAME} ${OPENSSL_LIBRARIES})
+
 
 # -------------------------    boost   --------------------------
 find_package(Boost COMPONENTS
@@ -88,10 +89,27 @@ include_directories(${Boost_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME}
     ${Boost_LIBRARIES})
 
-# ------------------------- precompiled -------------------------
 
+#----------- precompiled -----------
 list(APPEND CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY}/cotire-1.7.10/CMake")
+list(APPEND CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY}/cmake")
 include(cotire)
-set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT stdafx.h)
-cotire(${PROJECT_NAME})
 
+
+# -------------------------    boost   --------------------------
+find_package(Boost COMPONENTS
+        REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
+
+find_package(OpenSSL REQUIRED)
+include_directories(${OPENSSL_INCLUDE_DIR})
+
+find_package(Threads)
+
+# --------------------------  shared  ---------------------------
+set(SHARED_ROOT "${M2_ROOT}/../shared")
+include_directories("${SHARED_ROOT}/include")
+add_subdirectory(${SHARED_ROOT} shared)
+
+target_link_libraries (${PROJECT_NAME} ${OPENSSL_LIBRARIES} m2-shared)
+add_dependencies(${PROJECT_NAME} m2-shared)
