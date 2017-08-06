@@ -1,5 +1,5 @@
-#ifndef M2_SERVER_DATABASE_H
-#define M2_SERVER_DATABASE_H
+#ifndef M2_SERVER_DATABASE2_H
+#define M2_SERVER_DATABASE2_H
 
 #include "stdafx.h"
 
@@ -25,4 +25,4 @@ namespace server
 
 
 }}
-#endif //M2_SERVER_DATABASE_H
+#endif //M2_SERVER_DATABASE2_H

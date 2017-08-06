@@ -1,27 +1,17 @@
-
 #ifndef M2_SERVER_DATABASE_H
 #define M2_SERVER_DATABASE_H
 
 #include "Data.hpp"
 
-#include "Data2/Database.h"
-
-#include "stdafx.h"
-
-
-
-#define DATA_BASE 1
-
-
-
 namespace m2     {
 namespace server {
 
-    class Database1
+
+    class Database
     {
     public:
 
-        Database1(const std::string rootDir);
+        Database(const std::string& rootDir);
 
     public:
 
@@ -35,7 +25,7 @@ namespace server {
         std::string getUserPublicKey(uuids::uuid Uid);
 
         std::string getPublicServerKey();
-        std::string getPrivateServerKey();
+        std::string getPrivateClient();  //WTF???
 
     protected:
 
@@ -44,12 +34,6 @@ namespace server {
 
     };
 
-
-#if DATA_BASE == 2
-        typedef server::Database2   Database;
-#else
-        typedef Database1           Database;
-#endif
 
 }}
 

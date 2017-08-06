@@ -1,6 +1,6 @@
 
-#ifndef M2_SERVER_STDAFX_H_H
-#define M2_SERVER_STDAFX_H_H
+#ifndef M2_SERVER_STDAFX2_H_H
+#define M2_SERVER_STDAFX2_H_H
 
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/functional/hash.hpp>
@@ -40,4 +40,4 @@ typedef boost::multiprecision::uint128_t uint128;
 }
 
 
-#endif //M2_SERVER_STDAFX_H_H
+#endif //M2_SERVER_STDAFX2_H_H
