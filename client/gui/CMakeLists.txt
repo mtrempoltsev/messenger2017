@@ -11,13 +11,14 @@ find_package( Qt5Gui REQUIRED )
 set( CMAKE_AUTOMOC ON )
 
 INCLUDE_DIRECTORIES(include)
+INCLUDE_DIRECTORIES(include/controlers)
 include_directories(${Qt5Core_INCLUDE_DIRS})
 
 # -------------------------   sources   -------------------------
 set(HEADERS
     stdafx.h
     include/guiadapter.h
-    include/registrationcontroler.h
+    include/controlers/registrationcontroler.h
     include/chats_filter_proxy_model.h
     include/chats_model.h
     include/contacts_model.h
@@ -29,7 +30,7 @@ set(SOURCES
     src/stdafx.cpp
     src/main.cpp
     src/guiadapter.cpp
-    src/registrationcontroler.cpp
+    src/controlers/registrationcontroler.cpp
     src/chats_filter_proxy_model.cpp
     src/chats_model.cpp
     src/contacts_model.cpp
