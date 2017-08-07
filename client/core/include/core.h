@@ -5,7 +5,7 @@
 #include "error.h"
 #include "guid.h"
 #include "jobtype.h"
-#include "loginmanager.h"
+#include "login_manager.h"
 #include "message.h"
 
 #include <boost/optional.hpp>
@@ -21,14 +21,13 @@ namespace core {
 class Core {
 public:
   Core();
-  std::map<m2::Uuid, std::string> GetServersMap();
 
   // core <--> server
   boost::optional<m2::Error> StartServerConnection(const m2::Uuid &serverGuid);
   boost::optional<m2::Error> Login(const m2::Uuid &clientUuid);
   boost::optional<m2::Error> RegisterNewUser();
-  void StartLoop();
-  // core <-> GUI
+
+  // core <--> GUI (actually Core <--> CoreDispatcher) (managers)
   ContactManager::ContactList GetContactList(const std::string &contactId);
   void SaveContactList(const ContactManager::ContactList &contacts);
 
@@ -36,34 +35,32 @@ public:
   void SaveMessageStory(const MessageManager::MessageStory &ms,
                         const std::string &contactId);
 
-  LoginManager *getLoginManager();
+  std::map<m2::Uuid, std::string> GetServersMap();
+
+  std::shared_ptr<ContactManager> GetContactManager();
+  std::shared_ptr<LoginManager> GetLoginManager();
+
+  // uber-threads
   void Start();
+  void Stop();
+  void JobLoop();
+  void PushJob(JobType job);
 
-  // private:
-  // std::shared_ptr<CoreDispatcher> dispatcher_;
-
-  // core <-> GUI
-  std::shared_ptr<ContactManager> getContactManager() {
-    return contactManager_;
-  }
-
+private: // WOHOOO, I'M HERE AGAIN!!!!!!!!!!1111111
+  // servers setup
   // make list (actually, map) of availible servers
   std::map<m2::Uuid, std::string> ReadServersFile();
+
+  // managers
   std::shared_ptr<ContactManager> contactManager_;
   std::shared_ptr<LoginManager> loginManager_;
   std::shared_ptr<MessageManager> messageManager_;
 
+  // map of availible servers
   std::map<m2::Uuid, std::string> serversMap_;
-  m2::core::Config config_;
-  void JobLoop();
+  // m2::core::Config config_;
 
-  void stopCore();
-
-  std::shared_ptr<ContactManager> GetContactManager() {
-    return contactManager_;
-  }
-  void PushJob(JobType job);
-
+  // threads
   bool keepWorking_; // working flag
   std::mutex mutex_;
   std::condition_variable hasJob_;

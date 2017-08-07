@@ -28,7 +28,7 @@ public:
     lh.onComletion = [](std::string uid) {
       std::cout << "GUI GOT UID!!! " << uid << std::endl;
     };
-    dispatcher_->login(lh);
+    dispatcher_->Login(lh);
 
     qDebug() << "!!!!!!!!!!!!!!!!!!!!!! HI FROM QML LOGIN! ";
     //    std::string fileName = b[id];
@@ -38,6 +38,6 @@ public:
     RegisterHandler rh;
     rh.onCompletion = []() { std::cout << "REGISTERED OK!" << std::endl; };
     qDebug() << "!!!!!!!!!!!!!!!!!!!!!! HI FROM QML REGISTRAAAAAATION! ";
-    dispatcher_->registerUser(rh);
+    dispatcher_->RegisterUser(rh);
   }
 };

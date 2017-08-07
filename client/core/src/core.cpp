@@ -11,24 +11,11 @@ Core::Core() {
   loginManager_ = std::make_shared<LoginManager>();
 }
 
-void Core::Start() {
-  std::cout << "Start()" << std::endl;
-  keepWorking_ = true;
-  JobLoop();
+/********* MANAGERS *******/
+std::shared_ptr<ContactManager> Core::GetContactManager() {
+  return contactManager_;
 }
-
-MessageManager::MessageStory Core::GetMessageStory(const std::string &id) {
-  return messageManager_->GetMessageStory(id);
-}
-
-void Core::stopCore() {
-  std::cout << "Stop core!" << std::endl;
-  std::unique_lock<std::mutex> lock(mutex_);
-  keepWorking_ = false;
-  hasJob_.notify_one();
-}
-
-LoginManager *Core::getLoginManager() { return loginManager_.get(); }
+std::shared_ptr<LoginManager> Core::GetLoginManager() { return loginManager_; }
 
 ContactManager::ContactList Core::GetContactList(const std::string &contactId) {
   // FIXME
@@ -54,18 +41,27 @@ Core::StartServerConnection(const m2::Uuid &serverGuid) {
   return error;
 }
 
+/********* CORE <--> SERVER *********/
 boost::optional<m2::Error> Core::RegisterNewUser() {}
-
-void Core::StartLoop() {
-  keepWorking_ = true;
-  // std::thread loopThread(&Core::JobLoop, this);
-  // loopThread.detach();
-}
 
 boost::optional<m2::Error> Core::Login(const m2::Uuid &clientUuid) {
   boost::optional<m2::Error> error;
   // TODO: send user uuid to the server and try to login
   return error;
+}
+
+/********* THREADS *********/
+void Core::Start() {
+  std::cout << "Start()" << std::endl;
+  keepWorking_ = true;
+  JobLoop();
+}
+
+void Core::Stop() {
+  std::cout << "Stop core!" << std::endl;
+  std::unique_lock<std::mutex> lock(mutex_);
+  keepWorking_ = false;
+  hasJob_.notify_one();
 }
 
 void Core::JobLoop() {

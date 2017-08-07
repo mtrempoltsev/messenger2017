@@ -41,8 +41,8 @@ public:
   CoreDispatcher(CoreDispatcher &&) = delete;
   CoreDispatcher &operator=(CoreDispatcher &&) = delete;
 
-  void login(LoginHandler handler);
-  void registerUser(RegisterHandler handler);
+  void Login(LoginHandler handler);
+  void RegisterUser(RegisterHandler handler);
 
   void stopCore();
 

@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
   //  };
 
   // dispatcher.registerUser(rh);
-  // dispatcher.login(lh);
+  // dispatcher.Login(lh);
 
   // coreThread.join();
 

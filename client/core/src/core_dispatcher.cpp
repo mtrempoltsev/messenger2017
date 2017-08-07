@@ -9,19 +9,19 @@
 namespace m2 {
 namespace core {
 
-void CoreDispatcher::stopCore() { core_->stopCore(); }
-void CoreDispatcher::login(LoginHandler handler) {
+void CoreDispatcher::stopCore() { core_->Stop(); }
+void CoreDispatcher::Login(LoginHandler handler) {
   JobType job = [handler](Core &core) {
-    std::string uuid = core.getLoginManager()->login();
+    std::string uuid = core.GetLoginManager()->Login();
     handler.onComletion(uuid);
   };
   std::cout << "        push job" << std::endl;
   core_->PushJob(job);
 }
 
-void CoreDispatcher::registerUser(RegisterHandler handler) {
+void CoreDispatcher::RegisterUser(RegisterHandler handler) {
   JobType job = [handler](Core &core) {
-    int ret = core.getLoginManager()->registerUser();
+    int ret = core.GetLoginManager()->RegisterUser();
     if (ret == 0) {
       handler.onCompletion();
     } else {
@@ -33,5 +33,5 @@ void CoreDispatcher::registerUser(RegisterHandler handler) {
   core_->PushJob(job);
 }
 
-}  // core
-}  // m2
+} // core
+} // m2

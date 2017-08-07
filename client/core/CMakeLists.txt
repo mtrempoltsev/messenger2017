@@ -18,7 +18,7 @@ set(HEADERS
     include/error.h
     include/guid.h
     include/message.h
-    include/loginmanager.h
+    include/login_manager.h
     include/path_settings.h
     include/jobtype.h
     ../shared/handlers.h
