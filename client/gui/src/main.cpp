@@ -1,22 +1,28 @@
+/* standart headers */
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include "../../core/include/core.h"
-#include "../../core/include/core_dispatcher.h"
 #include <iostream>
 #include <thread>
 
-#include <registrationcontroler.h>
+/* our uber-headers */
+// gui <--> core
+#include "core.h"
+#include "core_dispatcher.h"
+#include "handlers.h"
 
-#include "../../gui/include/QmlCppInterface.h"
+// wtf (qml -> core dispatcher)
+#include "QmlCppInterface.h"
+
+#include <registrationcontroler.h>
 
 using namespace m2::gui::controler;
 
 using m2::core::Core;
 using m2::core::CoreDispatcher;
-using m2::core::LoginHandler;
-using m2::core::RegisterHandler;
+using m2::LoginHandler;
+using m2::RegisterHandler;
 
 void runcore(Core &core) {
   // std::cout << "runcore" << std::endl;

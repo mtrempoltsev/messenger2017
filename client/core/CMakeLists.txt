@@ -20,8 +20,8 @@ set(HEADERS
     include/message.h
     include/loginmanager.h
     include/path_settings.h
-
     include/jobtype.h
+    ../shared/handlers.h
     )
 
 set(SOURCES
@@ -53,6 +53,7 @@ add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
 include_directories(${SUBPROJECT_ROOT})
 include_directories(${SUBPROJECT_ROOT}/include)
+include_directories(${SUBPROJECT_ROOT}/../shared)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT stdafx.h)
 cotire(${PROJECT_NAME})
