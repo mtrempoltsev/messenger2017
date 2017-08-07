@@ -23,7 +23,7 @@ std::string LoginSendKeyManager::deserialize(const std::string &data)
     std::stringstream stream;
     stream << data;
     boost::property_tree::read_json(stream, request);
-    publicKey = request.get<std::string>("public_key");
+    publicKey = request.get<std::string>("uuid");
 
     return publicKey;
 }

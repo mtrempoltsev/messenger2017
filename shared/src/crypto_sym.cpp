@@ -26,8 +26,8 @@ namespace common
         std::unique_ptr<EVP_CIPHER_CTX, decltype(&EVP_CIPHER_CTX_free)> ctx {
                 EVP_CIPHER_CTX_new(), &EVP_CIPHER_CTX_free
         };
-        const auto buf_size = static_cast<const size_t>(2*key_size());
-        std::unique_ptr<unsigned char[]> buf { new unsigned char[buf_size] };
+        const auto buf_size = std::max(string.size(), static_cast<const size_t>(2*key_size()));
+        std::unique_ptr<unsigned char[]> buf { new unsigned char[buf_size+1] };
         int len = 0;
         std::string ciphertext;
         auto init_actor = encrypt ? EVP_EncryptInit_ex : EVP_DecryptInit_ex;
