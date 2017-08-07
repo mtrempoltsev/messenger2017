@@ -12,7 +12,8 @@ void RegistrationControler::declareQML()
     qmlRegisterType<RegistrationControler>("Controler.Registration", 1, 0, "RegistraionControler");
 }
 
-RegistrationControler::RegistrationControler()
+RegistrationControler::RegistrationControler(QObject *parent)
+    :QObject(parent)
 {
 
 }

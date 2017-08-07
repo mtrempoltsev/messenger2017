@@ -78,6 +78,7 @@ PageWithLogo {
     }
 
     footerButton: ToolButton {
+        id: toolButton
         text: qsTr("Back to login screen")
         anchors.fill: parent
         font.pointSize: parent.fontSize
@@ -121,6 +122,11 @@ PageWithLogo {
                 target: helperText
                 opacity: 1
                 visible: false
+            }
+
+            PropertyChanges {
+                target: toolButton
+                enabled: false
             }
         },
         State {
