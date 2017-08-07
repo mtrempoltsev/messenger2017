@@ -42,6 +42,11 @@ public:
         ok,
         wrong_response,
     };
+    struct userInfo
+    {
+        uuids::uuid fingerprint;
+        std::string clientPublicKey;
+    };
 public:
     Manager(Database *database);
     virtual HttpResponse::Code doAction(const std::string &data, std::string &response) = 0;

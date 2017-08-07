@@ -16,6 +16,7 @@ class RegisterManager: public Manager
         std::string clientPublicKey;
         response_result status;
     };
+
 public:
     RegisterManager(Database *db);
 
