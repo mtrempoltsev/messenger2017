@@ -2,3 +2,4 @@
 *build*
 *.pro
 *.autosave
+/server-build/

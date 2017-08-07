@@ -1,10 +1,21 @@
 #pragma once
 
+#include <atomic>
 #include <chrono>
-#include <memory>
-#include <ostream>
+#include <condition_variable>
+#include <functional>
+#include <queue>
+#include <mutex>
 #include <string>
-#include <vector>
+#include <thread>
+#include <unordered_map>
+#include <unordered_set>
+
+#include <curl/curl.h>
+
+#include <event2/event.h>
+
+#include "http_connection.h"
 
 /*
     You can use one HttpConnection for multiple requests and you must do this.
@@ -18,49 +29,104 @@
 
 namespace m2
 {
-    using Data = std::vector<char>;
-    using DataStream = std::ostream;
+    class HttpClient;
 
-    class HttpResponse final
-    {
-    public:
-        long code() const;
-        const Data& header() const;
-    };
+    using Milliseconds = long;
 
-    using HttpResponsePtr = std::unique_ptr<HttpResponse>;
-
-    struct HttpRequest final
-    {
-        std::string uri;
-        std::chrono::milliseconds timeout;
-    };
-
-    class HttpConnection final
-    {
-    public:
-        enum class Result
-        {
-            Success
-        };
-
-        using CompletionHandler = std::function<void (Result result, HttpResponsePtr&& response)>;
-        using ProgressHandler = std::function<void (uint64_t receivedBytes, uint64_t totalBytes)>;
-
-        void perform(const HttpRequest& request, DataStream& requestBody,
-            CompletionHandler completion, ProgressHandler progress = ProgressHandler());
-
-        void perform(const HttpRequest& request, Data& requestBody,
-            CompletionHandler completion, ProgressHandler progress = ProgressHandler());
-
-        void cancel();
-    };
-
-    using HttpConnectionPtr = std::unique_ptr<HttpConnection>;
+    void startNewJob(HttpClient* client);
+    void finishJob(HttpClient* client, CURL* curl, CURLcode result);
+    void checkMultiInfo(HttpClient* client);
+    void addSocket(curl_socket_t socket, CURL* curl, int action, HttpClient* client);
+    int socketCallback(CURL* curl, curl_socket_t socket, int what, void* clientPtr, void* contextPtr);
+    int timerCallback(CURLM* curlMulti, Milliseconds timeout, void* clientPtr);
+    void eventCallback(int socket, short kind, void* contextPtr);
+    void eventTimerCallback(evutil_socket_t descriptor, short flags, void* clientPtr);
+    void eventTimeoutCallback(evutil_socket_t descriptor, short flags, void* clientPtr);
+    void startTaskCallback(evutil_socket_t descriptor, short flags, void* clientPtr);
 
     class HttpClient final
     {
+        friend void startNewJob(HttpClient* client);
+        friend void finishJob(HttpClient* client, CURL* curl, CURLcode result);
+        friend void checkMultiInfo(HttpClient* client);
+        friend void addSocket(curl_socket_t socket, CURL* curl, int action, HttpClient* client);
+        friend int socketCallback(CURL* curl, curl_socket_t socket, int what, void* clientPtr, void* contextPtr);
+        friend int timerCallback(CURLM* curlMulti, Milliseconds timeout, void* clientPtr);
+        friend void eventCallback(int socket, short kind, void* contextPtr);
+        friend void eventTimerCallback(evutil_socket_t descriptor, short flags, void* clientPtr);
+        friend void eventTimeoutCallback(evutil_socket_t descriptor, short flags, void* contextPtr);
+        friend void startTaskCallback(evutil_socket_t descriptor, short flags, void* clientPtr);
+
+        friend class HttpConnection;
     public:
+        HttpClient();
+        ~HttpClient();
+
+        void stop();
+
         HttpConnectionPtr connect(const std::string& domain);
+        void close(HttpConnectionPtr connection);
+
+    private:
+        void perform(HttpConnection* connection, const std::chrono::milliseconds& timeout);
+        void cancel(HttpConnection* connection);
+
+    private:
+        static timeval makeTimeval(const std::chrono::milliseconds& value);
+        static timeval makeTimeval(Milliseconds value);
+
+        std::unordered_set<HttpConnectionPtr> connections_;
+
+        using CompletionCallback = std::function<void (CURLcode result)>;
+
+        struct Context
+        {
+            Context(const std::chrono::milliseconds& timeout, HttpClient* client, CURL* curl, const CompletionCallback& completionCallback);
+            ~Context();
+
+            void update(curl_socket_t socket, int action);
+
+            void freeEvent();
+
+            std::chrono::milliseconds timeout_;
+            event* timeoutEvent_;
+
+            HttpClient* client_;
+
+            CURL* curl_;
+
+            CompletionCallback completionCallback_;
+
+            curl_socket_t socket_;
+
+            event* event_;
+        };
+
+        CURLM* curlMulti_;
+        int running_;
+
+        event_base* eventBase_;
+        event* timerEvent_;
+        event* startTaskEvent_;
+
+        std::thread eventLoopThread_;
+        std::mutex eventLoopMutex_;
+        std::condition_variable hasEventToRun_;
+
+        std::unordered_map<CURL*, std::unique_ptr<Context>> contexts_;
+
+        struct Job
+        {
+            Job(const std::chrono::milliseconds& timeout, CURL* curl, const CompletionCallback& completionCallback);
+
+            std::chrono::milliseconds timeout_;
+            CURL* curl_;
+            CompletionCallback completionCallback_;
+        };
+
+        std::queue<Job> pendingJobs_;
+        std::mutex jobsMutex_;
+
+        std::atomic<bool> keepWorking_;
     };
 }
