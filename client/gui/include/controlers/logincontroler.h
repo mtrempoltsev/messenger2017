@@ -14,6 +14,8 @@ class LoginControler : public QObject
 public:
     explicit LoginControler(QObject *parent = nullptr);
 
+    static void declareQML();
+
     Q_INVOKABLE void login() const;
 
     void loginSuccessed(const std::string &guid);

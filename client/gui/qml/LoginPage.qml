@@ -1,10 +1,24 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
+import Controler.Login 1.0
+
 
 PageWithLogo {
     id: loginPage
 
+    controler:  LoginControler {
+        id: loginControler
+        onFinishLoginFailed: {
+            loginPage.state = "error"
+        }
+        onFinishLoginSuccessed: {
+            root.state = "base state"
+            stackView.push("qrc:/qml/MainPage.qml")
+        }
+
+        onStartLogin: loginPage.state = "loading"
+    }
 
     Text {
         id: infoText
@@ -30,11 +44,12 @@ PageWithLogo {
         anchors.right: parent.right
         text: qsTr("Login")
         onClicked: {
-
+            loginControler.login()
         }
     }
 
     footerButton: ToolButton {
+        id: toolButton
         anchors.fill:parent
         text: qsTr("Register new user")
         font.pointSize: parent.fontSize
@@ -63,7 +78,7 @@ PageWithLogo {
             }
 
             PropertyChanges {
-                target: registerButton
+                target: toolButton
                 enabled: false
             }
         },

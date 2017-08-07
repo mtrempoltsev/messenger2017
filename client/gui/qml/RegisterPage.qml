@@ -13,7 +13,10 @@ PageWithLogo {
         onFinishRegisterFailed: {
             root.state="error"
         }
-        onFinishRegisterSuccessed: stackView.push("qrc:/qml/MainPage.qml")
+        onFinishRegisterSuccessed:  {
+            root.state = "base state"
+            stackView.pop()
+        }
     }
 
     header: RectangleLogo {
