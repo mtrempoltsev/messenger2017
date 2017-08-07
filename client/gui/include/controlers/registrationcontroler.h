@@ -12,7 +12,7 @@ class RegistrationControler : public QObject
 public:
     static void declareQML();
 
-    RegistrationControler();
+    RegistrationControler(QObject *parent = nullptr);
 
     Q_INVOKABLE void registerMe(const QString &server) const;
 

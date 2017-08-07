@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <registrationcontroler.h>
+#include <logincontroler.h>
 
 using namespace m2::gui::controler;
 #include <QQmlContext>
@@ -14,6 +15,8 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     RegistrationControler::declareQML();
+    LoginControler::declareQML();
+
     QQmlApplicationEngine engine;
 
     engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));

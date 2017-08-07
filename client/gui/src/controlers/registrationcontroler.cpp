@@ -12,7 +12,8 @@ void RegistrationControler::declareQML()
     qmlRegisterType<RegistrationControler>("Controler.Registration", 1, 0, "RegistraionControler");
 }
 
-RegistrationControler::RegistrationControler()
+RegistrationControler::RegistrationControler(QObject *parent)
+    :QObject(parent)
 {
 
 }
@@ -21,6 +22,7 @@ void RegistrationControler::registerMe(const QString &server) const
 {
     //TODO get core
     emit startRegister();
+//    emit finishRegisterSuccessed();
 }
 
 void RegistrationControler::registrationSuccessed(const std::string &guid)
