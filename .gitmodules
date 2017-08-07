@@ -1,0 +1,3 @@
+[submodule "3rd-party/yal"]
+	path = 3rd-party/yal
+	url = ../../ArtecGroup/yal.git

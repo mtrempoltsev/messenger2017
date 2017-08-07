@@ -8,10 +8,10 @@
 namespace m2 {
 namespace server {
 
-   ManagerController::ManagerController(Database *database): db(database)
-   {
+    ManagerController::ManagerController(Database *database): db(database)
+    {
+    }
 
-   }
     responsePtr ManagerController::doProcess(requestPtr request)
     {
         responsePtr answer = std::make_shared<HttpResponse>();
