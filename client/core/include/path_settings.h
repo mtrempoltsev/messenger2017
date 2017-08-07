@@ -8,7 +8,6 @@ namespace core {
 
     const std::string contactListFileName = "contact-list.json";
     const std::string messageStoryFileName = "message-story.json";
-    const std::string defaultPath = "/home/sam/.messenger/";
 
 } // core
 } // m2

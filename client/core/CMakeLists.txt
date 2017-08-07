@@ -34,13 +34,12 @@ set(SOURCES
 
     src/guid.cpp
     src/message.cpp
-
     src/error.cpp
 
     src/message.cpp
     src/guid.cpp
     src/config.cpp
-
+    src/path_settings.cpp
     )
 
 if (ENABLE_TESTS)
@@ -59,4 +58,4 @@ set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT s
 cotire(${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME}
-    ${Boost_LIBRARIES})
+    ${Boost_LIBRARIES} -lboost_filesystem -lboost_system)

@@ -2,7 +2,6 @@
 #include "path_settings.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include <boost/property_tree/ptree.hpp>
 #include <exception>
 #include <fstream>
 
@@ -63,6 +62,7 @@ ContactManager::SaveContactList() {
 void ContactManager::LoadContactList() {
     std::string managerPath = GetManagerPath("contacts");
     std::string filename(managerPath + contactListFileName);
+
     std::ifstream stream(filename);
     if (stream.is_open())
     {

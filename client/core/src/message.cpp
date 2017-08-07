@@ -32,10 +32,8 @@ namespace core {
 
     void MessageManager::LoadMessageStory(/*size_t pos, size_t messageNumber*/) {
         try {
-            //std::cout << messageStoryFileName << std::endl;
             std::string managerPath = GetManagerPath("messages");
             std::string filename(managerPath + messageStoryFileName);
-            //std::cout << filename << std::endl;
             std::ifstream stream(filename);
             if (stream.is_open()) {
                 ptree pt;
