@@ -15,8 +15,6 @@ public:
 
 private:
 	Database *db;
-
-
 };
 
 

@@ -4,6 +4,7 @@
 #include "http_request.h"
 #include <boost/asio.hpp>
 #include "Data/Database.h"
+#include "manager_controller.h"
 
 
 namespace m2 {
@@ -34,7 +35,7 @@ private:
     boost::asio::io_service::strand write_strand_;
 
     boost::asio::streambuf in_packet_;
-    Database *db;
+    ManagerController manager_;
 };
 
 typedef std::shared_ptr<Session> sessionPtr;
