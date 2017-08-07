@@ -1,31 +1,32 @@
-#ifndef M2_SERVER_INDEXMANAGER_H
-#define M2_SERVER_INDEXMANAGER_H
+#ifndef M2_SERVER_INDEXMANAGER_HPP
+#define M2_SERVER_INDEXMANAGER_HPP
 
 #include <unordered_set>
 #include <boost/unordered_set.hpp>
 #include <list>
-#include "../stdafx.h"
+#include "Data/stdafx.h"
 
 namespace indices {
 
     /**
+     * Class, binding to a folder, where it storage a index
+     *
+     * >>
+     *
      * 5        - count of positions
      * UID1
      * UID2
      * UID3
-     * UID4
-     * UID5
-     *
-     *************************
      *
      */
-    template<typename _Tp = uuids::uuid>
-    class TIndexManager
+    template< typename _Tp = uuids::uuid
+            , typename _Hs = std::hash<_Tp>
+    >class TIndexManager
     //        : boost::noncopyable
     {
     public:
 
-        typedef boost::unordered_set<_Tp> LUids;
+        typedef std::unordered_set<_Tp, _Hs> LUids;
 
     public: /***************| Construction |***************/
 
@@ -52,8 +53,8 @@ namespace indices {
             int size; //TODO:: check count
             in >> size;
 
-            uuids::uuid Uid;
-            for(; in >> Uid; Uid = 0)
+            _Tp Uid;
+            for(; in >> Uid; Uid = _Tp())
                 uids.emplace(Uid);
         }
 
@@ -108,4 +109,4 @@ namespace indices {
     using AIndexManager = TIndexManager<>;
 }
 
-#endif //M2_SERVER_INDEXMANAGER_H
+#endif //M2_SERVER_INDEXMANAGER_HPP

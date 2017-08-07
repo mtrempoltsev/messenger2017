@@ -1,10 +1,9 @@
 #ifndef M2_SERVER_USERS_H
 #define M2_SERVER_USERS_H
 
-#include <unordered_set>
 
-#include "../Index/IndexManager.hpp"
-#include "../Index/FileHandler.h"
+#include "Data/index/IndexManager.hpp"
+#include "Data/index/FileHandler.h"
 #include "User.h"
 
 
@@ -15,23 +14,17 @@ namespace user {
     using namespace indices;
 
     /**
-     * .check user: if (AUsers[Uid]) //AUser have "operator bool()"
      *
      */
     class AUsers
     {
     public:
 
-        typedef AIndexManager::LUids LUsers;
+        typedef AIndexManager::LUids UserUids;
 
     public: /***************| Construction |***************/
-      static AUsers& instance()
-      {
-        // согласно стандарту, этот код ленивый и потокобезопасный
-        static AUsers s("./");
-        return s;
-      }
 
+        AUsers(const std::string& RootDir);
 
     public: /***************| Interface |***************/
 
@@ -54,16 +47,17 @@ namespace user {
     public:
 
         const std::string& RootDir() const;
-        const LUsers&      Users  () const;
+        const UserUids&    Users  () const;
 
 
     public: /***************| Operators |***************/
-      bool  operator[](const uuids::uuid& Uid);
-     private:
-      AUsers(const std::string& RootDir);
-      AUsers(AUsers const&) = delete;
-      AUsers& operator= (AUsers const&) = delete;
-      AUser operator()(const uuids::uuid& Uid);
+
+        AUser operator()(const uuids::uuid& Uid); // as GetUser
+        bool  operator[](const uuids::uuid& Uid); // as IsExists
+
+    private:
+        AUsers(AUsers const&) = delete;
+        AUsers& operator= (AUsers const&) = delete;
     };
 
 
