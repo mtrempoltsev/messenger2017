@@ -19,28 +19,33 @@ namespace m2 {
 namespace core {
 
 class Core {
- public:
+public:
   Core();
   std::map<m2::Uuid, std::string> GetServersMap();
 
   // core <--> server
-  boost::optional<m2::Error> StartServerConnection(const m2::Uuid& serverGuid);
-  boost::optional<m2::Error> Login(const m2::Uuid& clientUuid);
+  boost::optional<m2::Error> StartServerConnection(const m2::Uuid &serverGuid);
+  boost::optional<m2::Error> Login(const m2::Uuid &clientUuid);
   boost::optional<m2::Error> RegisterNewUser();
   void StartLoop();
   // core <-> GUI
-  ContactManager::ContactList GetContactList(const std::string& contactId);
-  void SaveContactList(const ContactManager::ContactList& contacts);
+  ContactManager::ContactList GetContactList(const std::string &contactId);
+  void SaveContactList(const ContactManager::ContactList &contacts);
 
-  MessageManager::MessageStory GetMessageStory(const std::string& id);
-  void SaveMessageStory(const MessageManager::MessageStory& ms,
-                        const std::string& contactId);
+  MessageManager::MessageStory GetMessageStory(const std::string &id);
+  void SaveMessageStory(const MessageManager::MessageStory &ms,
+                        const std::string &contactId);
 
-  LoginManager* getLoginManager();
+  LoginManager *getLoginManager();
   void Start();
 
   // private:
   // std::shared_ptr<CoreDispatcher> dispatcher_;
+
+  // core <-> GUI
+  std::shared_ptr<ContactManager> getContactManager() {
+    return contactManager_;
+  }
 
   // make list (actually, map) of availible servers
   std::map<m2::Uuid, std::string> ReadServersFile();
@@ -59,10 +64,10 @@ class Core {
   }
   void PushJob(JobType job);
 
-  bool keepWorking_;  // working flag
+  bool keepWorking_; // working flag
   std::mutex mutex_;
   std::condition_variable hasJob_;
   std::queue<JobType> jobQueue_;
 };
-}  // core
-}  // m2
+} // core
+} // m2

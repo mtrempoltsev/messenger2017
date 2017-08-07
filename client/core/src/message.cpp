@@ -1,25 +1,26 @@
 #include "message.h"
-#include <exception>
 #include "path_settings.h"
+#include <exception>
 
 namespace m2 {
 namespace core {
 
-std::ifstream& operator>>(std::ifstream& stream, MessageInfo& mi) {
+std::ifstream &operator>>(std::ifstream &stream, MessageInfo &mi) {
   stream >> mi.from_uid_ >> mi.to_uid_ >> mi.sendTime_ >> mi.message_;
   return stream;
 }
 
-std::ofstream& operator<<(std::ofstream& stream, const MessageInfo& mi) {
+std::ofstream &operator<<(std::ofstream &stream, const MessageInfo &mi) {
   stream << mi.from_uid_ << " " << mi.to_uid_ << " " << mi.sendTime_ << " "
          << mi.message_;
   return stream;
 }
 
-MessageManager::MessageStory MessageManager::GetMessageStory(
-    const std::string& username) const {
+MessageManager::MessageStory
+MessageManager::GetMessageStory(const std::string &username) const {
   std::string defaultPath = GetDefaultPath();
   std::ifstream reader(defaultPath + username);
+
   MessageStory ms;
   if (reader.is_open()) {
     MessageInfo mi;
@@ -31,8 +32,8 @@ MessageManager::MessageStory MessageManager::GetMessageStory(
   return ms;
 }
 
-void MessageManager::SaveMessageStory(const MessageStory& ms,
-                                      const std::string& contactName) {
+void MessageManager::SaveMessageStory(const MessageStory &ms,
+                                      const std::string &contactName) {
   std::string defaultPath = GetDefaultPath();
   std::ofstream writer(defaultPath + contactName, std::ios_base::app);
   if (writer.is_open()) {
@@ -42,5 +43,5 @@ void MessageManager::SaveMessageStory(const MessageStory& ms,
   }
 }
 
-}  // core
-}  // m2
+} // core
+} // m2

@@ -7,37 +7,41 @@
 namespace m2 {
 namespace core {
 
-    class Contact {
-    public:
-        Contact() {};
-        Contact(const std::string& uuid,
-                const std::string& nickname) {
-            uuid_ = uuid;
-            nickname_ = nickname;
-        }
+class ContactBuilder {
+public:
+  std::string uuid;
+  std::string nickname;
+};
 
-        std::string GetId() const {
-            return uuid_;
-        }
+class Contact {
+public:
+  Contact(){};
+  Contact(const ContactBuilder &cb) : uuid_(cb.uuid), nickname_(cb.nickname) {}
 
-        std::string GetNickname() const {
-            return nickname_;
-        }
+  std::string GetId() const { return uuid_; }
 
-        friend std::istream& operator >> (std::istream& stream, Contact& contact);
-        friend std::ostream& operator << (std::ostream& stream, const Contact& contact);
-    private:
-        std::string uuid_;
-        std::string nickname_;
-    };
+  std::string GetNickname() const { return nickname_; }
 
-    class ContactManager {
-    public:
-        using ContactList = std::vector<Contact>;
+  friend std::istream &operator>>(std::istream &stream, Contact &contact);
+  friend std::ostream &operator<<(std::ostream &stream, const Contact &contact);
 
-        void SaveContactList(const ContactList& contacts);
-        ContactList GetContactList(const std::string& contactId) const;
-    };
+private:
+  std::string uuid_;
+  std::string nickname_;
+};
 
-} //core
-} //m2
+class ContactManager {
+public:
+  using ContactList = std::vector<Contact>;
+
+  void LoadContactList();
+  const ContactList &GetContactList() const;
+  void AddContact(const std::string &uuid, const std::string &nickname);
+
+private:
+  void SaveContactList();
+  ContactList contactList_;
+};
+
+} // core
+} // m2
