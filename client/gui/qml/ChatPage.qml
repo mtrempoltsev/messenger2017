@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.3
 
 Page {
     id: chatPage
+    anchors.fill: parent
 
     ColumnLayout {
         anchors.fill: parent
@@ -43,9 +44,15 @@ Page {
                     Layout.maximumWidth: -1
                     Layout.maximumHeight: 50
 
+<<<<<<< HEAD
+                //заглушка
+                source: "/demo/asd.jpg"
+            }
+=======
                     text: "Eba"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
+>>>>>>> refs/remotes/Bragaman/master
 
                     renderType: Text.NativeRendering
                     font.pixelSize: 14
@@ -105,9 +112,16 @@ Page {
             anchors.bottom: footer_chat.top
         }
 
+<<<<<<< HEAD
+    Rectangle{
+        anchors.fill: parent
+        ChatListView{id: listView; model: ChatMessagesModel{id: messages}}
+    }
+=======
         Page {
             id: footer_chat
             Layout.fillWidth: true
+>>>>>>> refs/remotes/Bragaman/master
 
             RowLayout {
                 id: bottomLayout
@@ -163,7 +177,13 @@ Page {
                     Layout.maximumWidth: 40
                     Layout.maximumHeight: 40
 
+<<<<<<< HEAD
+                TextArea {
+                    id: chatMessageField
+                    selectByMouse: true
+=======
                     Layout.alignment: Qt.AlignBottom
+>>>>>>> refs/remotes/Bragaman/master
 
                     background: Rectangle {
                         radius: 10
@@ -176,6 +196,14 @@ Page {
                         source: "/img/send.png"
                     }
 
+<<<<<<< HEAD
+                text: "send"
+
+                onClicked: {
+                    messages.append({"guid": 1, "messText":chatMessageField.text, "messTime": "18:00"})
+                    listView.positionViewAtEnd()
+                    chatMessageField.clear()
+=======
                     onClicked: {
                         messages.append({
                                             guid: 1,
@@ -185,6 +213,7 @@ Page {
                         chatListView.positionViewAtEnd()
                         chatMessageField.clear()
                     }
+>>>>>>> refs/remotes/Bragaman/master
                 }
             }
         }

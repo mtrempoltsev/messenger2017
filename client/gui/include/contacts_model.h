@@ -6,7 +6,12 @@
 
 #include "include/models_elements.h"
 
-
+enum ContactDataRoles
+{
+    uuid = Qt::UserRole + 1,
+    name,
+    avatar
+};
 
 
 class ContactsModel : public QAbstractListModel
@@ -14,13 +19,6 @@ class ContactsModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    enum ContactDataRoles
-    {
-        uuid = Qt::UserRole + 1,
-        name,
-        avatar
-    };
-
     ContactsModel();
 
     Q_INVOKABLE void loadContactList(); //TODO: заглушка

@@ -22,7 +22,7 @@ struct ChatData
     ChatData(){}
     ChatData(const QString &ID, const MessageData &mess, const QString &chatName, QString chatAvatar, int chatUnreadable = 0);
 
-    void setLastMessage(MessageData mess);
+    Q_INVOKABLE setLastMessage(MessageData mess);
 
     QVariant chatID;
     QVariant name;
