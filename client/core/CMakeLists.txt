@@ -18,7 +18,10 @@ set(HEADERS
     include/error.h
     include/guid.h
     include/message.h
+    include/loginmanager.h
     include/path_settings.h
+
+    include/jobtype.h
     )
 
 set(SOURCES
@@ -28,8 +31,16 @@ set(SOURCES
     src/contact.cpp
     src/core.cpp
     src/core_dispatcher.cpp
+
     src/guid.cpp
     src/message.cpp
+
+    src/error.cpp
+
+    src/message.cpp
+    src/guid.cpp
+    src/config.cpp
+
     )
 
 if (ENABLE_TESTS)

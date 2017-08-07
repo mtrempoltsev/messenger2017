@@ -7,40 +7,43 @@
 namespace m2 {
 namespace core {
 
-    class MessageInfo {
-    public:
-        MessageInfo() {};
-        MessageInfo(//const std::string& participants,
-                    const std::string& from_uid,
-                    const std::string& to_uid,
-                    const std::string& sendTime,
-                    const std::string& message = "") {
-            //participants_ = participants;
-            from_uid_ = from_uid;
-            to_uid_ = to_uid;
-            sendTime_ = sendTime;
-            message_ = message;
-        }
+class MessageInfo {
+public:
+  MessageInfo(){};
+  MessageInfo( // const std::string& participants,
+      const std::string &from_uid, const std::string &to_uid,
+      const std::string &sendTime, const std::string &message = "") {
+    // participants_ = participants;
+    from_uid_ = from_uid;
+    to_uid_ = to_uid;
+    sendTime_ = sendTime;
+    message_ = message;
+  }
 
-        friend std::ofstream& operator << (std::ofstream& stream, const MessageInfo& mi);
-        friend std::ifstream& operator >> (std::ifstream& stream, MessageInfo& mi);
-    private:
-        //std::string participants_;
-        std::string from_uid_;
-        std::string to_uid_;
-        std::string sendTime_;
-        std::string message_;
-    };
+  friend std::ofstream &operator<<(std::ofstream &stream,
+                                   const MessageInfo &mi);
+  friend std::ifstream &operator>>(std::ifstream &stream, MessageInfo &mi);
 
-    class MessageManager {
-    public:
-        MessageManager(){};
+private:
+  // std::string participants_;
+  std::string from_uid_;
+  std::string to_uid_;
+  std::string sendTime_;
+  std::string message_;
+};
 
-        using MessageStory = std::vector<MessageInfo>;
+class MessageManager {
+public:
+  MessageManager(){};
 
-        MessageStory GetMessageStory(const std::string& id) const;
-        void SaveMessageStory(const MessageStory& ms, const std::string& contactName);
-    };
+  using MessageStory = std::vector<MessageInfo>;
 
-}// core
+  MessageStory GetMessageStory(const std::string &id) const;
+  void SaveMessageStory(const MessageStory &ms, const std::string &contactName);
+
+  // FIXME "lol.txt"
+  std::string GetDefaultPath() const { return "lol.txt"; }
+};
+
+} // core
 } // m2

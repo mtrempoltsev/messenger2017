@@ -1,30 +1,37 @@
 ﻿#include "stdafx.h"
 
-#include "core_dispatcher.h"
 #include "contact.h"
+#include "core.h"
+#include "core_dispatcher.h"
+#include "jobtype.h"
 #include "message.h"
 
 namespace m2 {
 namespace core {
-/*
-static bool IsContactAlreadyExist(std::string& contact) {
-    std::string defaultPath = GetDefaultPath();
-    std::ifstream reader(defaultPath + contactListFileName);
-    if (reader.is_open()) {
-        std::string username;
-        while (getline(reader, username)) {
-            if (username == contact) {
-                reader.close();
-                return true;
-            }
-        }
-    }
-    reader.close();
-    return false;
+
+void CoreDispatcher::stopCore() { core_->stopCore(); }
+void CoreDispatcher::login(LoginHandler handler) {
+  JobType job = [handler](Core &core) {
+    std::string uuid = core.getLoginManager()->login();
+    handler.onComletion(uuid);
+  };
+  std::cout << "        push job" << std::endl;
+  core_->PushJob(job);
 }
 
+void CoreDispatcher::registerUser(RegisterHandler handler) {
+  JobType job = [handler](Core &core) {
+    int ret = core.getLoginManager()->registerUser();
+    if (ret == 0) {
+      handler.onCompletion();
+    } else {
+      ;
+      //      hjandler.onError();
+    }
+  };
+  std::cout << "        push job" << std::endl;
+  core_->PushJob(job);
+}
 
-*/
-
-} // core
-} // m2
+}  // core
+}  // m2
