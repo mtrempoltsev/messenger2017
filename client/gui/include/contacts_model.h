@@ -6,20 +6,20 @@
 
 #include "include/models_elements.h"
 
+enum ContactDataRoles
+{
+    uuid = Qt::UserRole + 1,
+    name,
+    avatar
+};
+
 
 class ContactsModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
-    enum ContactDataRoles
-    {
-        uuid = Qt::UserRole + 1,
-        name,
-        avatar
-    };
-
-    ContactsModel(QObject* parent = 0);
+    ContactsModel();
 
     Q_INVOKABLE void loadContactList(); //TODO: заглушка
     Q_INVOKABLE const ContactData getContactByID(const QString &ID);

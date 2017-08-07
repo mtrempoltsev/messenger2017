@@ -8,23 +8,23 @@
 #include <include/models_elements.h>
 
 
+enum ChatDataRoles {
+    chatID = Qt::UserRole + 1,
+    name,
+    avatar,
+    lastMessageGuid,
+    lastMessageText,
+    lastMessageTime,
+    unreadable
+};
+
+
 class ChatsModel : public QAbstractListModel
 {
     Q_OBJECT
 
-public:    
-    enum ChatDataRoles {
-        chatID = Qt::UserRole + 1,
-        name,
-        avatar,
-        lastMessageGuid,
-        lastMessageText,
-        lastMessageTime,
-        unreadable
-    };
-
+public:
     ChatsModel(QObject *parent = 0);
-
 
     Q_INVOKABLE void addNewChat(const QString& ID, const QString &name, QString avatar = QString());
     Q_INVOKABLE void deleteChat(const QString& ID);

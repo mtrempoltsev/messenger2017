@@ -2,7 +2,7 @@
 
 
 
-MessagesModel::MessagesModel(QObject *parent) : QAbstractListModel(parent)
+MessagesModel::MessagesModel()
 {
     //TODO: заглушка
 
@@ -64,7 +64,6 @@ void MessagesModel::loadMessageHistory()
 
 int MessagesModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
     return itemList.size();
 }
 
