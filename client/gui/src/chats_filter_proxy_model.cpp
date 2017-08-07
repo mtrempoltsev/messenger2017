@@ -49,7 +49,7 @@ bool ChatsFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &s
 {
     if (!currentFilter.isEmpty())
     {
-        if (model->data(model->index(sourceRow, 0, sourceParent), ChatDataRoles::name).toString().startsWith(currentFilter, Qt::CaseInsensitive))
+        if (model->data(model->index(sourceRow, 0, sourceParent), ChatsModel::ChatDataRoles::name).toString().startsWith(currentFilter, Qt::CaseInsensitive))
             return true;
     }
     else
@@ -61,7 +61,7 @@ bool ChatsFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &s
 
 bool ChatsFilterProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
-    if (model->data(left, ChatDataRoles::lastMessageTime).toString() > model->data(right, ChatDataRoles::lastMessageTime).toString())
+    if (model->data(left, ChatsModel::ChatDataRoles::lastMessageTime).toString() > model->data(right, ChatsModel::ChatDataRoles::lastMessageTime).toString())
         return true;
 
     return false;

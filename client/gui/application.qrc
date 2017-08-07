@@ -15,8 +15,6 @@
         <file>qml/ContactsList.qml</file>
         <file>demo/asd.jpg</file>
         <file>demo/dsa.jpg</file>
-<<<<<<< HEAD
-=======
         <file>qml/ContactWidget.qml</file>
         <file>qml/ContactWidgetModel.qml</file>
         <file>img/affix.png</file>
@@ -25,6 +23,5 @@
         <file>qml/LoginPage.qml</file>
         <file>qml/RectangleLogo.qml</file>
         <file>qml/PageWithLogo.qml</file>
->>>>>>> refs/remotes/Bragaman/master
     </qresource>
 </RCC>

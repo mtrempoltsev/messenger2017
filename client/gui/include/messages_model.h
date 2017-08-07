@@ -5,18 +5,17 @@
 #include <include/models_elements.h>
 
 
-enum MessageDataRole {
-    fromUuid = Qt::UserRole + 1,
-    chatUuid,
-    messText,
-    messTime
-};
-
-
 class MessagesModel : public QAbstractListModel
 {
 public:
-    MessagesModel();
+    MessagesModel(QObject* parent = 0);
+
+    enum MessageDataRole {
+        fromUuid = Qt::UserRole + 1,
+        chatUuid,
+        messText,
+        messTime
+    };
 
     Q_INVOKABLE void addMessage(MessageData mess);
     Q_INVOKABLE void loadMessageHistory();  //TODO: заглушка

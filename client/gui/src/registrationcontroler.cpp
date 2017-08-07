@@ -1,13 +1,15 @@
-#include "include/registrationcontroler.h"
-#include "include/guiadapter.h"
+#include "registrationcontroler.h"
+#include "guiadapter.h"
+#include <QtQml>
+
 
 namespace m2 {
 namespace gui {
-
+namespace controler {
 
 void RegistrationControler::declareQML()
 {
-    //qmlRegisterType<StyleClass>("RegistrationStates", 1, 0, "RegistartionControler");
+    qmlRegisterType<RegistrationControler>("Controler.Registration", 1, 0, "RegistraionControler");
 }
 
 RegistrationControler::RegistrationControler()
@@ -18,20 +20,22 @@ RegistrationControler::RegistrationControler()
 void RegistrationControler::registerMe(const QString &server) const
 {
     //TODO get core
-    //emit changeRegistartionState(States::LOADING);
+    emit startRegister();
 }
 
 void RegistrationControler::registrationSuccessed(const std::string &guid)
 {
-    //GuiAdapter::setGuid(guid);
-    //emit changeRegistartionState(States::SUCCESS);
+    GuiAdapter::getInstance().setGuid(guid);
+    emit finishRegisterSuccessed();
 }
 
 void RegistrationControler::registrationFailed()
 {
-    //emit changeRegistartionState(States::ERROR);
+
+    emit finishRegisterFailed("Error");
 }
 
 
+}
 }
 }

@@ -5,7 +5,7 @@
 
 namespace m2 {
 namespace gui {
-
+namespace controler {
 
 class GuiAdapter
 {
@@ -22,8 +22,7 @@ public:
     void setGuid(const std::string &value);
 };
 
+}
+}
+}
 #endif // GUIADAPTER_H
-
-
-}
-}

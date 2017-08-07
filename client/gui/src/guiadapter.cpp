@@ -1,8 +1,8 @@
-#include "include/guiadapter.h"
+#include "guiadapter.h"
 
 namespace m2 {
 namespace gui {
-
+namespace controler {
 
 GuiAdapter GuiAdapter::instance;
 
@@ -26,5 +26,6 @@ GuiAdapter GuiAdapter::getInstance()
     return instance;
 }
 
+}
 }
 }

@@ -1,5 +1,5 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick 2.7
+import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 
 Page {
@@ -44,15 +44,9 @@ Page {
                     Layout.maximumWidth: -1
                     Layout.maximumHeight: 50
 
-<<<<<<< HEAD
-                //заглушка
-                source: "/demo/asd.jpg"
-            }
-=======
                     text: "Eba"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
->>>>>>> refs/remotes/Bragaman/master
 
                     renderType: Text.NativeRendering
                     font.pixelSize: 14
@@ -87,20 +81,7 @@ Page {
             }
         }
 
-        //////////////////////////////////////////////////////////////////////
-
-        ChatListView {
-            id: chatListView
-
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            displayMarginBeginning: 40
-            displayMarginEnd: 40
-
-            model: ChatMessagesModel {
-                id: messages
-            }
-        }
+        /////////////////////////////////////////////////////////////////////
 
         //////////////////////////////////////////////////////////////////////
 
@@ -112,16 +93,15 @@ Page {
             anchors.bottom: footer_chat.top
         }
 
-<<<<<<< HEAD
-    Rectangle{
-        anchors.fill: parent
-        ChatListView{id: listView; model: ChatMessagesModel{id: messages}}
-    }
-=======
+
+        Rectangle{
+            anchors.fill: parent
+            ChatListView{id: listView; model: ChatMessagesModel{id: messages}}
+        }
+
         Page {
             id: footer_chat
             Layout.fillWidth: true
->>>>>>> refs/remotes/Bragaman/master
 
             RowLayout {
                 id: bottomLayout
@@ -157,16 +137,25 @@ Page {
                     Layout.maximumWidth: -1
                     Layout.maximumHeight: (chatPage.height - header_chat.height) / 3
 
-                    TextArea {
-                        id: chatMessageField
-                        selectByMouse: true
 
-                        wrapMode: TextEdit.Wrap
-                        renderType: Text.NativeRendering
-                        placeholderText: qsTr("Напишите сообщение...")
+
+
+                TextArea {
+                    id: chatMessageField
+                    selectByMouse: true
+
+                    wrapMode: TextEdit.Wrap
+                    renderType: Text.NativeRendering
+                    Layout.alignment: Qt.AlignBottom
+                    placeholderText: qsTr("Напишите сообщение...")
+
+                    background: Rectangle {
+                        radius: 10
+
+                        color: parent.hovered ? "#a0dea0" : "white"
                     }
                 }
-
+                }
                 Button {
                     id: chatSend
 
@@ -177,45 +166,21 @@ Page {
                     Layout.maximumWidth: 40
                     Layout.maximumHeight: 40
 
-<<<<<<< HEAD
-                TextArea {
-                    id: chatMessageField
-                    selectByMouse: true
-=======
-                    Layout.alignment: Qt.AlignBottom
->>>>>>> refs/remotes/Bragaman/master
-
-                    background: Rectangle {
-                        radius: 10
-
-                        color: parent.hovered ? "#a0dea0" : "white"
-                    }
-
                     contentItem: Image {
                         id: sendimg
                         source: "/img/send.png"
                     }
 
-<<<<<<< HEAD
-                text: "send"
+                    text: "send"
 
-                onClicked: {
-                    messages.append({"guid": 1, "messText":chatMessageField.text, "messTime": "18:00"})
-                    listView.positionViewAtEnd()
-                    chatMessageField.clear()
-=======
                     onClicked: {
-                        messages.append({
-                                            guid: 1,
-                                            messText: chatMessageField.text,
-                                            messTime: "18:00"
-                                        })
-                        chatListView.positionViewAtEnd()
+                        messages.append({"guid": 1, "messText":chatMessageField.text, "messTime": "18:00"})
+                        listView.positionViewAtEnd()
                         chatMessageField.clear()
                     }
->>>>>>> refs/remotes/Bragaman/master
                 }
             }
         }
     }
 }
+
