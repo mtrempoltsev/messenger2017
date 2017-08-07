@@ -33,7 +33,11 @@ void HttpRequest::addData(std::istream& stream)
 
 int HttpRequest::getContentSize()
 {
-    return std::stoi(header_.header_fields_[CONTENT_LENGTH]);
+    if (header_.header_fields_.count(CONTENT_LENGTH) > 0) {
+        return std::stoi(header_.header_fields_.at(CONTENT_LENGTH));
+    }
+
+    return 0;
 }
 
 HttpRequestHeader& HttpRequest::getHeader()

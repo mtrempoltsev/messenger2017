@@ -1,7 +1,7 @@
 
 #include <iomanip>
 
-#include "Dialogs.h"
+#include "Data/Dialog/Dialogs.h"
 
 
 using namespace m2::data::dialog;
@@ -13,7 +13,7 @@ ADialogs::ADialogs(const std::string&  Root)
 
 /****************************|  |****************************/
 
-ADialogs::MPtr
+std::shared_ptr<AUserDialogs>
 ADialogs::Get(const uuids::uuid& User) {
 
     // from cash
@@ -26,7 +26,7 @@ ADialogs::Get(const uuids::uuid& User) {
     return cash.Add(root + User.str() + "/", User);
 }
 
-ADialogs::CPtr
+const std::shared_ptr<AUserDialogs>
 ADialogs::Get(const uuids::uuid& User) const {
     checkR(index[User]) nullptr;
 
@@ -40,22 +40,22 @@ ADialogs::Get(const uuids::uuid& User) const {
 
 /****************************|  |****************************/
 
-ADialogs::MPtr
+std::shared_ptr<AUserDialogs>
 ADialogs::create_dialogs(uuids::uuid Uid) {
     AUserDialogs tmp(root  + Uid.str() + "/", Uid);
           index.Add(Uid);
     return cash.Add(tmp);
 }
 
-ADialogs::MPPtr
+std::shared_ptr<ADialog>
 ADialogs::Get(const uuids::uuid& Sender, const uuids::uuid& Sendee) {
     auto user_dialog = Get(Sender);
     checkR(user_dialog) nullptr;
     return (*user_dialog)(Sendee);
 }
 
-ADialogs::CPPtr
-ADialogs::Get(const uuids::uuid& Sender, const uuids::uuid& Sendee) const {
+const std::shared_ptr<ADialog>
+ADialogs::Get(const uuids::uuid &Sender, const uuids::uuid &Sendee) const {
     auto user_dialog = Get(Sender);
     checkR(user_dialog) nullptr;
     return (*user_dialog)(Sendee);
