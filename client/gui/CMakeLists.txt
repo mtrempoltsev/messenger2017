@@ -18,6 +18,11 @@ set(HEADERS
     stdafx.h
     include/guiadapter.h
     include/registrationcontroler.h
+    include/chats_filter_proxy_model.h
+    include/chats_model.h
+    include/contacts_model.h
+    include/messages_model.h
+    include/models_elements.h
     )
 
 set(SOURCES
@@ -25,6 +30,11 @@ set(SOURCES
     src/main.cpp
     src/guiadapter.cpp
     src/registrationcontroler.cpp
+    src/chats_filter_proxy_model.cpp
+    src/chats_model.cpp
+    src/contacts_model.cpp
+    src/messages_model.cpp
+    src/models_elements.cpp
     )
 
 qt5_add_resources(RESOURCES application.qrc)
