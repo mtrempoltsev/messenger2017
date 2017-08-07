@@ -10,10 +10,9 @@ class RegistrationControler : public QObject
 {
     Q_OBJECT
 public:
+    explicit RegistrationControler(QObject* parent = nullptr);
+
     static void declareQML();
-
-    explicit RegistrationControler(QObject *parent = nullptr);
-
     Q_INVOKABLE void registerMe(const QString &server) const;
 
     void registrationSuccessed(const std::string &guid);

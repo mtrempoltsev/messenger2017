@@ -7,7 +7,8 @@ namespace gui {
 namespace controler {
 
 
-LoginControler::LoginControler(QObject *parent) : QObject(parent)
+LoginControler::LoginControler(QObject *parent)
+    :QObject(parent)
 {
 
 }

@@ -26,7 +26,6 @@ signals:
     void finishLoginSuccessed() const;
     void finishLoginFailed(const QString &msg) const;
 
-public slots:
 };
 
 }
