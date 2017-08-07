@@ -2,15 +2,13 @@
 
 using namespace m2::data::message;
 
-
+/*
 AMessage::AMessage(const std::string& Dir
-                 , const std::string& Author
-                 , const std::string& Time
+                 , const uuids::uuid& ID
                  , const std::string& Text
 )   : bChanged(true)
     , dir   (Dir)
-    , author(Author)
-    , time  (Time)
+    , id    (ID)
     , text  (Text)
 {}
 
@@ -26,8 +24,7 @@ AMessage::AMessage(const std::string& Dir
                  , const std::string& Time
 )   : bChanged(false)
     , dir   (Dir)
-    , author(Author)
-    , time  (Time)
+    , id    (Id)
 { load_text(path()); }
 
 AMessage::~AMessage()
@@ -47,7 +44,7 @@ void AMessage::Storage() {
 void AMessage::Remove()
 { std::remove(path().c_str()); }
 
-/**********************************************************/
+//**********************************************************/
 
 void AMessage::SetAuthor(const std::string& New)
 { on_meta_change(); author = New; }
@@ -58,7 +55,7 @@ void AMessage::SetTime(const std::string& New)
 void AMessage::SetText(const std::string& New)
 { on_text_chande(); text   = New; }
 
-/**********************************************************/
+//**********************************************************/
 
 void AMessage::SetAuthor(std::string&& New)
 { on_meta_change(); author = std::move(New); }
@@ -69,7 +66,7 @@ void AMessage::SetTime(std::string&& New)
 void AMessage::SetText(std::string&& New)
 { on_text_chande(); text   = std::move(New); }
 
-/**********************************************************/
+//**********************************************************/
 
 void AMessage::init_meta(const std::string& FileName) {
     auto begin  = FileName.find_first_of('/');
@@ -87,7 +84,7 @@ void AMessage::load_text(const std::string& FileName) {
     in >> text;
 }
 
-/**********************************************************/
+//**********************************************************/
 
 void AMessage::on_meta_change()
 { bChanged = true; std::remove(path().c_str()); }
@@ -95,7 +92,7 @@ void AMessage::on_meta_change()
 void AMessage::on_text_chande()
 { bChanged = true; }
 
-/**********************************************************/
+//**********************************************************/
 
 std::string AMessage::path()
 { return dir + time + '^' + author; }
@@ -106,3 +103,4 @@ bool AMessage::operator==(const AMessage& rs) const {
         &&   time == rs.time
         &&   text == rs.text;
 }
+*/

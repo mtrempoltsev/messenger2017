@@ -2,6 +2,7 @@
 #define M2_SERVER_DATABASE_H
 
 #include "Data.hpp"
+#include "session.h"
 
 namespace m2     {
 namespace server {
@@ -25,12 +26,18 @@ namespace server {
         std::string getUserPublicKey(uuids::uuid Uid);
 
         std::string getPublicServerKey();
-        std::string getPrivateServerKey();  //WTF???
+        std::string getPrivateServerKey();
+
+    public:
+
+        sessionPtr
 
     protected:
 
         data::AUsers   Users;
         data::ADialogs Dialogs;
+
+        //std::unordered_map<uuids::
 
     };
 

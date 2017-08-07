@@ -38,5 +38,6 @@ private:
 };
 
 typedef std::shared_ptr<Session> sessionPtr;
+typedef std::weak_ptr  <Session> sessionWPtr;
 
 }} // m2::server

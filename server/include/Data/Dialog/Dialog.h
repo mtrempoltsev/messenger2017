@@ -75,7 +75,7 @@ namespace dialog {
      * create a 2-lvl index system
      */
     class ADialog
-            : public TDialogSystem<AMessage, std::string>
+            : public TDialogSystem<AMessage>
     {
     public:
 
@@ -92,24 +92,24 @@ namespace dialog {
          * @return pointer on message
          */
         std::shared_ptr<AMessage>
-        AddMessage(const std::string& time, const std::string& text);
+        AddMessage(uuids::uuid Id, const std::string& text);
 
         /**
          * Delete a message both from a cash and a disk
          * @param time - time of the message (as key)
          */
-        void DeleteMessage(const std::string& time);
+        void DeleteMessage(uuids::uuid Id);
 
         /**
          * @param time - time of the message (as key)
          * @return pointer on the message or nullptr
          */
         std::shared_ptr<AMessage>
-        Get(const std::string& time)       override;
+        Get(uuids::uuid Id)       override;
 
         const
         std::shared_ptr<AMessage>
-        Get(const std::string& time) const override;
+        Get(uuids::uuid Id) const override;
 
     public: /***************| operators |***************/
 
