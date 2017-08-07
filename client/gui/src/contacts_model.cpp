@@ -1,7 +1,7 @@
 #include "include/contacts_model.h"
 
 
-ContactsModel::ContactsModel()
+ContactsModel::ContactsModel(QObject *parent) : QAbstractListModel(parent)
 {
 
 }

@@ -7,8 +7,6 @@
 #include "include/models_elements.h"
 
 
-
-
 class ContactsModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -21,7 +19,7 @@ public:
         avatar
     };
 
-    ContactsModel();
+    ContactsModel(QObject* parent = 0);
 
     Q_INVOKABLE void loadContactList(); //TODO: заглушка
     Q_INVOKABLE const ContactData getContactByID(const QString &ID);
