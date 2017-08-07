@@ -62,7 +62,10 @@ namespace std {
 
     template<>
     struct hash<uuids::uuid>
-            : public std::__hash_base<size_t, uuids::uuid> {
+    {
+        typedef size_t      result_type;
+        typedef uuids::uuid argument_type;
+
         size_t
         operator()(const uuids::uuid& __p) const noexcept {
 
