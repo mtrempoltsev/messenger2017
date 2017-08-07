@@ -10,11 +10,7 @@ namespace server
 
 class RegisterManager: public Manager
 {
-    struct userInfo
-    {
-        uuids::uuid fingerprint;
-        std::string clientPublicKey;
-    };
+
 public:
     RegisterManager(Database *db);
 
