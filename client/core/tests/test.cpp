@@ -10,7 +10,7 @@ int main() {
         using namespace core;
 
         Core core;
-        auto contactDispatcher = core.getContactManager();
+        /*auto contactDispatcher = core.getContactManager();
         contactDispatcher->LoadContactList();
         contactDispatcher->GetContactList();
 
@@ -22,6 +22,14 @@ int main() {
         contactDispatcher->LoadContactList();
 
         for (auto& i : contactDispatcher->GetContactList()) {
+            std::cout << i << std::endl;
+        }*/
+
+        auto messageDispatcher = core.getMessageManager();
+        messageDispatcher->LoadMessageStory();
+        messageDispatcher->GetMessageStory(1);
+
+        for (auto& i : messageDispatcher->GetMessageStory(1)) {
             std::cout << i << std::endl;
         }
 

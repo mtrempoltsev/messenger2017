@@ -34,6 +34,7 @@ void Core::SaveMessageStory(const MessageManager::MessageStory &ms,
   messageManager_->SaveMessageStory(ms, contactId);
 }
 
+
 boost::optional<m2::Error>
 Core::StartServerConnection(const m2::Uuid &serverGuid) {
   boost::optional<m2::Error> error;

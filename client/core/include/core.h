@@ -46,10 +46,9 @@ public:
   void JobLoop();
   void PushJob(JobType job);
 
-private: // WOHOOO, I'M HERE AGAIN!!!!!!!!!!1111111
-  // servers setup
-  // make list (actually, map) of availible servers
-  std::map<m2::Uuid, std::string> ReadServersFile();
+    std::shared_ptr<MessageManager> getMessageManager() {
+        return messageManager_;
+    }
 
   // managers
   std::shared_ptr<ContactManager> contactManager_;
