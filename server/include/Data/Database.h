@@ -25,7 +25,7 @@ namespace server {
         std::string getUserPublicKey(uuids::uuid Uid);
 
         std::string getPublicServerKey();
-        std::string getPrivateClient();  //WTF???
+        std::string getPrivateServerKey();  //WTF???
 
     protected:
 

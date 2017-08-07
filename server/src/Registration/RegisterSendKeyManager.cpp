@@ -45,7 +45,7 @@ std::string RegisterSendKeyManager::createResponse(const std::string &publicKey)
 
     std::string server_string;
     std::string client_string;
-    auto privateKey = db->getPrivateClient ();
+    auto privateKey = db->getPrivateServerKey();
     try {
 
         auto cli_cryptor = m2::crypto::common::OpenSSL_RSA_CryptoProvider(publicKey, true);
