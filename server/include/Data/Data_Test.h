@@ -1,20 +1,22 @@
 #ifndef M2_SERVER_DATA_TEST_H
 #define M2_SERVER_DATA_TEST_H
 
+#include <istream>
 
 #include <boost/preprocessor/repetition/repeat.hpp>
 
 #include "Data.hpp"
 
-using namespace m2::data;
 
-/*****************/
+
+
+///*****************
 
 int N = 0;
 
 #define Set(n) N = n
 
-/*****************/
+///*****************
 
 #define USR_CREATE(z, n, data) Users.CreateUser(n, "__PUBLIC_KEY" );
 
@@ -27,23 +29,26 @@ int N = 0;
 #define BLOCK(n, txt) out << nof(n) << OK << txt << end
 
 namespace fs = boost::filesystem;
+using namespace m2::data;
 
-#include "Dialog/DialogSystem.hpp"
 
 void DataTest()
 {
     Set(4);
 
     // test folder
-    std::string Root = "/home/kvilt/CLionProjects/messenger2017/server/Test/";
+    std::string Root = "/home/kvilt/CppProjects/messenger2017/server/Test/";
     boost::filesystem::remove_all(Root);
 
     {   // create Users
         AUsers Users(Root);
-        BOOST_PP_REPEAT(15, USR_CREATE,);
+        //BOOST_PP_REPEAT(15, USR_CREATE,);
+        Users.CreateUser(0, "__PUBLIC_KEY" );
+        Users.CreateUser(1, "__PUBLIC_KEY" );
+        Users.CreateUser(2, "__PUBLIC_KEY" );
 
         // added 15. Check it
-        assert(Users.Users().size() == 15);
+        //assert(Users.Users().size() == 3);
 
         // unknown user
         assert(!Users[156]);
@@ -55,11 +60,12 @@ void DataTest()
         AUsers Users(Root);
 
         // all, we added, must be here
-        for (auto i = 0; i < 15; ++i)
+        for (auto i = 0; i < 3; ++i)
             assert(Users[i]);
 
+
         // must be 15. Check it
-        assert(Users.Users().size() == 15);
+        assert(Users.Users().size() == 3);
 
     } BLOCK(2, "second creation");
 
@@ -71,7 +77,7 @@ void DataTest()
         auto Alice = users(1);
         auto Bob   = users(2);
 
-        /***************/
+        ///***************
 
         // create user_dialogs for new user
         assert(!dialogs[Alice]);
@@ -81,7 +87,7 @@ void DataTest()
         // check, we have a right user
         assert(*user_dialog == Alice);
 
-        /***************/
+        ///***************
 
         // create dialog with a new talker
         assert(!(*user_dialog)[Bob]);
@@ -91,7 +97,7 @@ void DataTest()
         // check, we have a right dialog
         assert(*dialog == Bob);
 
-        /***************/
+        ///***************
         //                         ss.mm.hh dd.mm.yyyy
         const std::string data1 = "01.36.15 03.08.2017";
         const std::string data2 = "56.36.15 03.08.2017";
@@ -117,7 +123,7 @@ void DataTest()
         auto Alice = users(1);
         auto Bob   = users(2);
 
-        /***************/
+        ///***************
 
         auto dialog = dialogs.Get(Alice, Bob);
         assert(dialog);
