@@ -19,6 +19,7 @@ set(HEADERS
     include/guiadapter.h
     include/registrationcontroler.h
     include/QmlCppInterface.h
+    ../shared/handlers.h
     )
 
 set(SOURCES
@@ -35,6 +36,9 @@ set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${RESOURCES})
 
 include_directories(${SUBPROJECT_ROOT})
+include_directories(${SUBPROJECT_ROOT}/include)
+include_directories(${SUBPROJECT_ROOT}/../core/include)
+include_directories(${SUBPROJECT_ROOT}/../shared)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT stdafx.h)
 cotire(${PROJECT_NAME})

@@ -3,13 +3,14 @@
 #include <QDebug>
 #include <QObject>
 
-#include "../../core/include/core.h"
-#include "../../core/include/core_dispatcher.h"
+#include "core.h"
+#include "core_dispatcher.h"
+#include "handlers.h"
 
 using m2::core::Core;
 using m2::core::CoreDispatcher;
-using m2::core::LoginHandler;
-using m2::core::RegisterHandler;
+using m2::LoginHandler;
+using m2::RegisterHandler;
 
 class QmlCppInterface : public QObject {
   Q_OBJECT
