@@ -63,10 +63,9 @@ RowLayout {
             }
 
             Label {
-                property real maxLen: delegateItem.width - itemIcon.width - delegateItem.spacing - 2
+                property real maxLen: delegateItem.width - itemIcon.width - delegateItem.spacing - itemTime.width - 4
                 id: msgLabel
                 text: model.messText
-                wrapMode: Text.WrapAnywhere
                 Layout.maximumWidth: {
                     maxLen
                 }

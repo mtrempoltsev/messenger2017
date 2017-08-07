@@ -13,10 +13,6 @@ Page {
             Layout.fillWidth: true
             z: 2
 
-            background: Rectangle {
-                color: "white"
-            }
-
             RowLayout {
                 id: topLayout
                 anchors.fill: parent
@@ -100,12 +96,19 @@ Page {
         }
 
         //////////////////////////////////////////////////////////////////////
+
+        Rectangle {
+            id: split_footer_chat
+            color: "lightGray"
+            height: 1
+            Layout.fillWidth: true
+            anchors.bottom: footer_chat.top
+        }
+
         Page {
             id: footer_chat
-            background: Rectangle {
-                color: "#efefef"
-            }
             Layout.fillWidth: true
+
             RowLayout {
                 id: bottomLayout
                 anchors.fill: parent
@@ -115,15 +118,16 @@ Page {
 
                     Layout.fillWidth: true
                     Layout.margins: 5
-                    Layout.minimumHeight: 50
-                    Layout.minimumWidth: 50
-                    Layout.maximumWidth: 50
-                    Layout.maximumHeight: 50
+                    Layout.minimumHeight: 40
+                    Layout.minimumWidth: 40
+                    Layout.maximumWidth: 40
+                    Layout.maximumHeight: 40
+                    Layout.alignment: Qt.AlignBottom
 
                     background: Rectangle {
                         radius: 10
 
-                        color: parent.hovered ? "#a0dea0" : "#efefef" //"white"
+                        color: parent.hovered ? "#a0dea0" : "white"
                     }
 
                     contentItem: Image {
@@ -134,10 +138,8 @@ Page {
 
                 ScrollView {
                     Layout.fillWidth: true
-                    Layout.topMargin: 5
-                    Layout.bottomMargin: 5
-                    Layout.minimumHeight: 50
-                    Layout.minimumWidth: 50
+                    Layout.minimumHeight: 30
+                    Layout.minimumWidth: 30
                     Layout.maximumWidth: -1
                     Layout.maximumHeight: (chatPage.height - header_chat.height) / 3
 
@@ -147,11 +149,7 @@ Page {
 
                         wrapMode: TextEdit.Wrap
                         renderType: Text.NativeRendering
-                        textMargin: 3
-
-                        background: Rectangle {
-                            color: "white"
-                        }
+                        placeholderText: qsTr("Напишите сообщение...")
                     }
                 }
 
@@ -160,15 +158,17 @@ Page {
 
                     Layout.fillWidth: true
                     Layout.margins: 5
-                    Layout.minimumHeight: 50
-                    Layout.minimumWidth: 50
-                    Layout.maximumWidth: 50
-                    Layout.maximumHeight: 50
+                    Layout.minimumHeight: 40
+                    Layout.minimumWidth: 40
+                    Layout.maximumWidth: 40
+                    Layout.maximumHeight: 40
+
+                    Layout.alignment: Qt.AlignBottom
 
                     background: Rectangle {
                         radius: 10
 
-                        color: parent.hovered ? "#a0dea0" : "#efefef" //"white"
+                        color: parent.hovered ? "#a0dea0" : "white"
                     }
 
                     contentItem: Image {
