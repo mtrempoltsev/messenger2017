@@ -19,8 +19,8 @@ namespace indices {
      * UID3
      *
      */
-    template< typename _Tp = uuids::uuid
-            , typename _Hs = std::hash<_Tp>
+    template< typename _Tp = uuids::uuid    // indexing type
+            , typename _Hs = std::hash<_Tp> // hash function
     >class TIndexManager
     //        : boost::noncopyable
     {
@@ -50,7 +50,7 @@ namespace indices {
             checkR(in.is_open())
                 StoreOnDisk();
 
-            int size; //TODO:: check count
+            int size;
             in >> size;
 
             _Tp Uid;
@@ -91,12 +91,15 @@ namespace indices {
         std::string root;
         std::string path;
 
-        LUids uids;
+        uuids::uuid flag;
+        LUids       uids;
 
     public:
 
         std::string  Path() const { return path; }
         const LUids& Uids() const { return uids; }
+        uuids::uuid& Flag()       { return flag; }
+        uuids::uuid  Flag() const { return flag; }
 
     protected:
 

@@ -11,7 +11,8 @@ ADialog::ADialog(const std::string& Root, uuids::uuid Uid)
 /**********************************************************/
 
 ADialog::MPtr
-ADialog::AddMessage(const uuids::uuid& Id, const std::string& text) {
+ADialog::AddMessage(const std::string& text) {
+    auto& Id = ++index.Flag();
     auto tmp = AMessage(root, Id, text);
     index.Add(Id);
     return cash.Add(tmp);

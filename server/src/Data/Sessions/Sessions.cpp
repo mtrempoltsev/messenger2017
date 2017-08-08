@@ -3,15 +3,15 @@
 using namespace m2::data::sessions;
 
 
-sessionWPtr
+Session*
 ASessions::GetSession(const uuids::uuid& Uid) {
     if (sessions.count(Uid))
         return sessions.at(Uid);
-    return sessionWPtr();
+    return nullptr;
 }
 
 bool
-ASessions::AddSession(const uuids::uuid& Uid, sessionWPtr ptr) {
+ASessions::AddSession(const uuids::uuid& Uid, Session* ptr) {
     if (sessions.count(Uid))
         return false;
     sessions[Uid] = ptr;
