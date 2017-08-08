@@ -15,16 +15,16 @@ namespace sessions{
 
     class ASessions
     {
-        using LSessions = std::unordered_map<uuids::uuid, sessionWPtr>;
+        using LSessions = std::unordered_map<uuids::uuid, Session*>;
 
     public:
         ASessions() = default;
 
     public: /***************| Interface |***************/
 
-        sessionWPtr GetSession(const uuids::uuid& Uid);
-        bool        AddSession(const uuids::uuid& Uid, sessionWPtr ptr);
-        void     DeleteSession(const uuids::uuid& Uid);
+        Session* GetSession(const uuids::uuid& Uid);
+        bool     AddSession(const uuids::uuid& Uid, Session* ptr);
+        void  DeleteSession(const uuids::uuid& Uid);
 
     protected: /************| Members |***************/
 

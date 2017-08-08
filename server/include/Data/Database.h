@@ -14,25 +14,39 @@ namespace server {
 
         Database(const std::string& rootDir);
 
-    public:
+    public: /****************| Users |****************/
 
         bool CreateUser(uuids::uuid Uid, const std::string&  PublicKey);
         bool CreateUser(uuids::uuid Uid,       std::string&& PublicKey);
 
         bool IsClienExists(uuids::uuid Uid);
 
-    public:
+    public: /****************| Keys |****************/
 
         std::string getUserPublicKey(uuids::uuid Uid);
 
         std::string getPublicServerKey();
         std::string getPrivateServerKey();
 
-    public:
+    public: /****************| Sessions |****************/
 
-        sessionWPtr GetSession(const uuids::uuid& Uid);
-        bool        AddSession(const uuids::uuid& Uid, sessionWPtr ptr);
-        void     DeleteSession(const uuids::uuid& Uid);
+        Session* GetSession(const uuids::uuid& Uid);
+        bool     AddSession(const uuids::uuid& Uid, Session* ptr);
+        void  DeleteSession(const uuids::uuid& Uid);
+
+    public: /****************| Messages |*****************/
+
+        data::DialogPtr
+        GetDialog(const uuids::uuid& User
+                , const uuids::uuid& Addressee);
+
+        data::UserDialogsPtr
+        GetUserDialog(const uuids::uuid& User);
+
+        const uuids::uuid&
+        StoreMessage(const uuids::uuid& Sender
+                   , const uuids::uuid& Addressee
+                   , const std::string& Text);
 
     protected:
 

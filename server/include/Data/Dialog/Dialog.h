@@ -86,13 +86,11 @@ namespace dialog {
         //void Serialize    (std::ostream& os, std::string since);
 
         /**
-         * Add a message to cash
-         * @param time - time of the message
          * @param text - text of the message
          * @return pointer on message
          */
         std::shared_ptr<AMessage>
-        AddMessage(const uuids::uuid& Id, const std::string& text);
+        AddMessage(const std::string& text);
 
         /**
          * Delete a message both from a cash and a disk
@@ -116,7 +114,8 @@ namespace dialog {
         //std::ostream& operator<<(std::ostream& os);
     };
 
-
+    using DialogPtr  = std::shared_ptr<ADialog>;
+    using DialogWPtr = std::weak_ptr  <ADialog>;
 
 }}}
 

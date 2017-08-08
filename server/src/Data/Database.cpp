@@ -1,6 +1,7 @@
 
 #include "Data/Database.h"
 
+using namespace m2;
 using namespace m2::server;
 
 
@@ -8,6 +9,8 @@ Database::Database(const std::string& rootDir)
     : Users(rootDir)
     , Dialogs(rootDir + "Dialogs/")
 {}
+
+/**********************************************************/
 
 bool
 Database::CreateUser(uuids::uuid Uid, const std::string &PublicKey)
@@ -17,11 +20,11 @@ bool
 Database::CreateUser(uuids::uuid Uid, std::string &&PublicKey)
 { return Users.CreateUser(Uid, std::move(PublicKey)); }
 
-
 bool
 Database::IsClienExists(uuids::uuid Uid)
 { return Users[Uid]; }
 
+/**********************************************************/
 
 std::string
 Database::getUserPublicKey(uuids::uuid Uid)
@@ -39,7 +42,8 @@ Database::getPublicServerKey()
         "pwIDAQAB\n"
         "-----END PUBLIC KEY-----"; }
 
-std::string Database::getPrivateServerKey()
+std::string
+Database::getPrivateServerKey()
 { return "-----BEGIN RSA PRIVATE KEY-----\n"
         "MIIEowIBAAKCAQEA7hXrrlg3N9Uelmd8X3uTYyrunZwnBqb/RJ0srNxPd+PMe5Da\n"
         "sw39W6TMDcS7WYgeFIsdlIAfPzWeONKvdCnGINRIJClOHKQOPejAjfISKaCRrdiC\n"
@@ -68,14 +72,35 @@ std::string Database::getPrivateServerKey()
         "/BEVBHlcyCajRYqioVIIPz7yx4SyNoyiPe5BUcvBR0m6ZzuAtMsz\n"
         "-----END RSA PRIVATE KEY-----"; }
 
-sessionWPtr
+/**********************************************************/
+
+Session*
 Database::GetSession(const uuids::uuid& Uid)
 { return Sessions.GetSession(Uid); }
 
 bool
-Database::AddSession(const uuids::uuid& Uid, sessionWPtr ptr)
+Database::AddSession(const uuids::uuid& Uid, Session* ptr)
 { return Sessions.AddSession(Uid, ptr); }
 
 void
 Database::DeleteSession(const uuids::uuid& Uid)
 { return Sessions.DeleteSession(Uid); }
+
+/**********************************************************/
+data::DialogPtr
+Database::GetDialog(const uuids::uuid& User
+                  , const uuids::uuid& Addressee)
+{ return Dialogs.Get(User, Addressee); }
+
+data::UserDialogsPtr
+Database::GetUserDialog(const uuids::uuid& User)
+{ return Dialogs.Get(User); }
+
+const uuids::uuid&
+Database::StoreMessage(const uuids::uuid& Sender
+                     , const uuids::uuid& Addressee
+                     , const std::string& Text
+){
+    auto   dialog = GetDialog(Sender, Addressee);
+    return dialog->AddMessage(Text)->Id();
+}
