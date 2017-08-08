@@ -4,7 +4,6 @@ import QtQuick.Controls 2.2
 Page {
     id: mainpage
     //todod need remake
-    anchors.fill: parent
     implicitHeight: 500
     implicitWidth: leftside.implicitWidth + rightside.implicitWidth + 2
     Page {
@@ -68,7 +67,6 @@ Page {
                 }
 
             }
-
 
         pushEnter: Transition {
                 XAnimator {

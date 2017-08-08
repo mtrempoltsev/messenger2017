@@ -1,11 +1,24 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
+import Controler.Login 1.0
+
 
 PageWithLogo {
     id: loginPage
-    signal loginButtonClicked
-    signal registerButtonClicked
+
+    controler:  LoginControler {
+        id: loginControler
+        onFinishLoginFailed: {
+            loginPage.state = "error"
+        }
+        onFinishLoginSuccessed: {
+            root.state = "base state"
+            stackView.push("qrc:/qml/MainPage.qml")
+        }
+
+        onStartLogin: loginPage.state = "loading"
+    }
 
     Text {
         id: infoText
@@ -26,25 +39,23 @@ PageWithLogo {
     }
 
     Button {
-
         id: loginButton
         anchors.left: parent.left
         anchors.right: parent.right
         text: qsTr("Login")
         onClicked: {
-            QmlCppInterface.loginButtonClicked()
+            loginControler.login()
         }
     }
 
     footerButton: ToolButton {
-        anchors.fill: parent
+        id: toolButton
+        anchors.fill:parent
         text: qsTr("Register new user")
         font.pointSize: parent.fontSize
-        onClicked: {
-            stackView.push("qrc:/qml/RegisterPage.qml")
-            QmlCppInterface.registerButtonClicked()
-        }
+        onClicked: stackView.push("qrc:/qml/RegisterPage.qml")
     }
+
 
     states: [
         State {
@@ -67,7 +78,7 @@ PageWithLogo {
             }
 
             PropertyChanges {
-                target: registerButton
+                target: toolButton
                 enabled: false
             }
         },

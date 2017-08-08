@@ -20,12 +20,6 @@ Rectangle {
             x: 5
             y: 5
 
-//            style: TextFieldStyle {
-//                background: Rectangle {
-//                    border.width: 0
-//                    color: "white"
-//                }
-//            }
             placeholderText: qsTr("Поиск")
         }
 
@@ -56,7 +50,6 @@ Rectangle {
             }
 
             onClicked: {
-                //rightside.push(["qrc:/qml/Info.qml"])
                 adding.state = "Visible"
             }
         }
@@ -82,7 +75,7 @@ Rectangle {
                     id: itemRect
 
                     width: contactItem.width
-                    height: contactItem.height
+                    height: contactItem.height-1
 
                     Image {
                         id: itemIcon
@@ -108,6 +101,11 @@ Rectangle {
 
                         text: name
                     }
+                }
+                Rectangle {
+                    color: "lightGray"
+                    height: 1
+                    width: contactItem.width
                 }
             }
 
@@ -160,7 +158,6 @@ Rectangle {
                 onClicked: {
                     rightside.pop()
                     rightside.pushNoAnimation(["qrc:/qml/ChatPage.qml"])
-//                    listView.model = ChatListView;
                     listView.currentIndex = index
                 }
             }
