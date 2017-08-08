@@ -16,7 +16,8 @@ namespace m2 {
                 ClientGuid,
                 ServerGuid,
 				FilesFolderPath,
-				KeysFilePath
+				KeysFilePath,
+				HistoryFolderPath
             };
 
             Config();
@@ -28,6 +29,7 @@ namespace m2 {
             Uuid GetServerGuid() const;
 			std::string GetFilesFolderPath() const;
 			std::string GetKeysFilePath() const;
+			std::string GetHistoryFolderPath() const;
             std::string GetProperty(const PropertyName & property) const;
 
             //setters
@@ -35,6 +37,7 @@ namespace m2 {
             bool SetServerGuid(const Uuid & uuid);
 			bool SetFilesFolderPath(const std::string & filesFolderPath);
 			bool SetKeysFilePath(const std::string & keysFilePath);
+			bool SetHistoryFolderPath(const std::string & historyFolderPath);
             bool SetDataByKey(const PropertyName & property, const std::string & data);
             //others methods
             bool HasChanges() { return hasChanges_; }

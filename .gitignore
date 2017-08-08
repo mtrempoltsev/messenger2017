@@ -1,5 +1,8 @@
+/server-build/
 *CMakeLists.txt.user
 *build*
+
+*.cbp
+*.qrc.depends
 *.pro
 *.autosave
-/server-build/

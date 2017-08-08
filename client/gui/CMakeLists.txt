@@ -47,11 +47,19 @@ set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${RESOURCES})
 
 include_directories(${SUBPROJECT_ROOT})
+include_directories(${SUBPROJECT_ROOT}/include)
+include_directories(${SUBPROJECT_ROOT}/../core/include)
+include_directories(${SUBPROJECT_ROOT}/../shared)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT stdafx.h)
 cotire(${PROJECT_NAME})
 
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+find_package( Threads REQUIRED)
+set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-pthread")
+
 target_link_libraries(${PROJECT_NAME}
+  ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
     ${CORE_PROJECT_NAME}
         Qt5::Core
