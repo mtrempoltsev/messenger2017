@@ -12,7 +12,7 @@ namespace server {
     Session::Session(boost::asio::io_service& service, Database *database)
     : socket_(service)
     , write_strand_(service)
-    , manager_(database)
+    , manager_(database, this)
     {
     }
 

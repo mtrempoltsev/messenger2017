@@ -7,7 +7,9 @@
 namespace m2 {
 namespace server {
 
-    ManagerController::ManagerController(Database *database): db(database)
+    ManagerController::ManagerController(Database *database, Session* session)
+    : db(database)
+    , session_(session)
     {
     }
 
