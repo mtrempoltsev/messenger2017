@@ -9,6 +9,7 @@ namespace server {
 
     class Database;
     class Session;
+    class Manager;
 
     class ManagerController
     {
@@ -18,11 +19,16 @@ namespace server {
 
         responsePtr doProcess(requestPtr request);
 
+        Database* getDB() {return db;}
+        uuids::uuid& getUuid() {return userUid;}
+
     private:
         Database* db;
         Session* session_;
 
         uuids::uuid userUid;
+
+        std::map<std::string, Manager*> managerProcessor;
     };
 
 

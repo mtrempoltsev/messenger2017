@@ -12,7 +12,7 @@ class RegisterManager: public Manager
 {
 
 public:
-    RegisterManager(Database *db);
+    RegisterManager(ManagerController* controller);
 
     virtual HttpResponse::Code doAction(const std::string &data, std::string &response) final;
 

@@ -12,9 +12,10 @@
 using namespace m2::server;
 
 
-HttpResponse::Code LoginSendKeyManager::doAction(const std::string &data, std::string &response, uuids::uuid &uuidKey)
+HttpResponse::Code LoginSendKeyManager::doAction(const std::string &data, std::string &response)
 {
     try {
+        uuids::uuid& uuidKey = controller->getUuid();
         uuidKey = deserialize(data);
         response = createResponse(uuidKey);
         if (!db->IsClienExists(uuidKey))
@@ -83,8 +84,8 @@ std::string LoginSendKeyManager::createResponse(const uuids::uuid &in_uuid)
 
 }
 
-LoginSendKeyManager::LoginSendKeyManager(Database *database)
-    : Manager(database)
+LoginSendKeyManager::LoginSendKeyManager(ManagerController* controller)
+    : Manager(controller)
 {
 
 }
