@@ -15,7 +15,7 @@ public:
 private:
     StringsPair deserialize(const std::string &data);
 
-    response_result createResponse(const StringsPair &pair, userInfo &result);
+    std::string createResponse(const StringsPair &pair, userInfo &result);
 };
 }
 }

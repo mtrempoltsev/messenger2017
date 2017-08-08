@@ -10,12 +10,6 @@ namespace server
 
 class RegisterManager: public Manager
 {
-    struct userInfo
-    {
-        boost::uuids::uuid  fingerprint;
-        std::string clientPublicKey;
-        response_result status;
-    };
 
 public:
     RegisterManager(Database *db);
