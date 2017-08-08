@@ -13,7 +13,10 @@ PageWithLogo {
         onFinishRegisterFailed: {
             root.state="error"
         }
-        onFinishRegisterSuccessed: stackView.push("qrc:/qml/MainPage.qml")
+        onFinishRegisterSuccessed:  {
+            root.state = "base state"
+            stackView.pop()
+        }
     }
 
     header: RectangleLogo {
@@ -78,6 +81,7 @@ PageWithLogo {
     }
 
     footerButton: ToolButton {
+        id: toolButton
         text: qsTr("Back to login screen")
         anchors.fill: parent
         font.pointSize: parent.fontSize
@@ -121,6 +125,11 @@ PageWithLogo {
                 target: helperText
                 opacity: 1
                 visible: false
+            }
+
+            PropertyChanges {
+                target: toolButton
+                enabled: false
             }
         },
         State {

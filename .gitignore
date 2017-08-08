@@ -4,3 +4,5 @@
 
 *.cbp
 *.qrc.depends
+*.pro
+*.autosave
