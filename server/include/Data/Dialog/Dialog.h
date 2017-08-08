@@ -89,7 +89,7 @@ namespace dialog {
          * @param text - text of the message
          * @return pointer on message
          */
-        std::shared_ptr<AMessage>
+        uuids::uuid
         AddMessage(const std::string& text);
 
         /**

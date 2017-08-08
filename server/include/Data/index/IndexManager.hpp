@@ -33,11 +33,13 @@ namespace indices {
         TIndexManager(const std::string& Path)
             : root(separate_root(Path))
             , path(Path)
+            , flag(0)
         { LoadFromDisk(); }
 
         TIndexManager(std::string&& Path)
                 : root(separate_root(Path))
                 , path(std::move(Path))
+                , flag(0)
         { LoadFromDisk(); }
 
         ~TIndexManager()
@@ -50,8 +52,7 @@ namespace indices {
             checkR(in.is_open())
                 StoreOnDisk();
 
-            int size;
-            in >> size;
+            in >> flag;
 
             _Tp Uid;
             for(; in >> Uid; Uid = _Tp())
@@ -64,7 +65,7 @@ namespace indices {
             checkR(os.is_open());
             // send error
 
-            os << uids.size();
+            os << flag;
             os << "\n";
 
             for (auto& i : uids) {
@@ -110,7 +111,6 @@ namespace indices {
 
         bool operator[](const _Tp& Uid) const
         { return IsContains(Uid); }
-
     };
 
     using AIndexManager = TIndexManager<>;
