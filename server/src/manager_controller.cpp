@@ -3,7 +3,6 @@
 #include "Registration/RegisterSendKeyManager.h"
 #include "Auth/LoginManager.h"
 #include "Auth/LoginSendKeyManager.h"
-#include "iostream"
 
 namespace m2 {
 namespace server {

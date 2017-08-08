@@ -12,9 +12,11 @@ class RegisterManager: public Manager
 {
     struct userInfo
     {
-        uuids::uuid fingerprint;
+        boost::uuids::uuid  fingerprint;
         std::string clientPublicKey;
+        response_result status;
     };
+
 public:
     RegisterManager(Database *db);
 
@@ -27,8 +29,7 @@ private:
     StringsPair deserialize(const std::string &data);
 
 
-
-    response_result createResponse (const StringsPair &pair, userInfo &result);
+    std::string createResponse (const StringsPair &pair, userInfo &result);
 };
 }
 }

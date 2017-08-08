@@ -25,13 +25,6 @@ protected:
 private:
     std::string createResponse(const std::string &publicKey);
 
-    std::string rsaEncryptPublic(RSA *pubKey, const std::string str) const;
-    std::string rsaEncryptPrivate(RSA *pubKey, const std::string str) const;
-
-    std::string readKeyFile(std::string filename);///< temporary function for testing
-    RSA *createRSAWithPublicKey(const std::string &key);
-    RSA *createRSAWithPrivateKey(const std::string &key);
-
 };
 }
 }

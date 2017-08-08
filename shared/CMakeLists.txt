@@ -11,6 +11,7 @@ set(SOURCES
         src/crypto_hash.cpp
         src/crypto_pki.cpp
         src/crypto_sym.cpp
+        src/base64.cc
         )
 
 set(HEADERS

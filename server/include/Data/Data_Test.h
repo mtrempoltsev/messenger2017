@@ -40,12 +40,12 @@ void DataTest()
     {   // create Users
         AUsers Users(Root);
         //BOOST_PP_REPEAT(15, USR_CREATE,);
-        Users.CreateUser(0, "__PUBLIC_KEY" );
-        Users.CreateUser(1, "__PUBLIC_KEY" );
-        Users.CreateUser(2, "__PUBLIC_KEY" );
+        Users.CreateUser(1, "__PUBLIC_KEY 1" );
+        Users.CreateUser(2, "__PUBLIC_KEY 2" );
+        Users.CreateUser(3, "__PUBLIC_KEY 3" );
 
         // added 15. Check it
-        //assert(Users.Users().size() == 3);
+        assert(Users.Size() == 3);
 
         // unknown user
         assert(!Users[156]);
@@ -57,7 +57,7 @@ void DataTest()
         AUsers Users(Root);
 
         // all, we added, must be here
-        for (auto i = 0; i < 3; ++i)
+        for (auto i = 1; i < 4; ++i)
             assert(Users[i]);
 
         // must be 15. Check it

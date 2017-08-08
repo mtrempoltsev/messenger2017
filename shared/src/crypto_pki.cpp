@@ -64,7 +64,7 @@ namespace common
         do {
             auto bytes_done = actor(static_cast<int>(std::min(string.size(), rsa_size/2)),
                     (const unsigned char *)(string.c_str()+total_bytes_done), buf.get(),
-                                    key_.get(), RSA_PKCS1_PADDING);
+                                    key_.get(), public_ ? RSA_PKCS1_OAEP_PADDING : RSA_PKCS1_PADDING);
 
             if (bytes_done == -1) {
                 throw common::OpenSSL_CryptoError("Error during public key encryption: ");

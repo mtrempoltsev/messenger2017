@@ -13,6 +13,7 @@
 #include <fstream>
 #include <iomanip>
 #include <boost/functional/hash.hpp>
+#include <boost/uuid/uuid.hpp>
 
 
 
@@ -47,6 +48,9 @@ namespace indices {
 namespace uuids   {
 
     using uuid = boost::multiprecision::uint128_t ;
+
+    uuid to_uuid(const boost::uuids::uuid &a);
+
 
     namespace misc {
 
