@@ -17,15 +17,21 @@ HttpResponse::Code LoginSendKeyManager::doAction(const std::string &data, std::s
     uuids::uuid uuid;
     try {
         uuid = deserialize(data);
+        response = createResponse(uuid);
         if (!db->IsClienExists(uuid))
             return HttpResponse::Code::FORBIDEN;
-        response = createResponse(uuid);
     }
     catch (const pt::ptree_error &e) {
         std::cout << e.what() << std::endl;
         response = createError("Unknown algorithm");
         return HttpResponse::Code::FORBIDEN;
     }
+    catch (const std::runtime_error &e) {
+        std::cout << e.what() << std::endl;
+        response = createError("error decode uuid");
+        return HttpResponse::Code::FORBIDEN;
+    }
+
 
     return HttpResponse::Code::OK;
 }
@@ -38,7 +44,8 @@ uuids::uuid LoginSendKeyManager::deserialize(const std::string &data)
     stream << data;
     boost::property_tree::read_json(stream, request);
     std::string uuidString = request.get<std::string>("uuid"); //ВОЗМОЖНО, тут будет base64
-    uuid.assign(uuidString);
+    std::cout<<uuidString<<"__UUID__"<<std::endl;
+    uuid.assign(123);
 
     return uuid;
 }

@@ -44,8 +44,9 @@ public:
     };
     struct userInfo
     {
-        uuids::uuid fingerprint;
+        boost::uuids::uuid  fingerprint;
         std::string clientPublicKey;
+        response_result status = response_result::ok;
     };
 public:
     Manager(Database *database);
