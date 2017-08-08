@@ -3,12 +3,13 @@
 namespace m2 {
 namespace server {
     Server::Server()
-    : acceptor_(io_service_)
+    : acceptor_(io_service_),
+      db(new Database("./"))
     {}
 
     void Server::start(uint16_t port)
     {
-        auto session = std::make_shared<Session>(io_service_);
+        auto session = std::make_shared<Session>(io_service_, db);
 
         // set up the acceptor to listen on the tcp port
         using boost::asio::ip::tcp;
@@ -32,7 +33,7 @@ namespace server {
 
         session->start();
 
-        auto new_session = std::make_shared<Session>(io_service_);
+        auto new_session = std::make_shared<Session>(io_service_, db);
 
         acceptor_.async_accept( new_session->socket(), [=](auto ec)
             {

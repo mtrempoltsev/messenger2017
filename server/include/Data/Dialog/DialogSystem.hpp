@@ -3,10 +3,10 @@
 
 #include <string>
 
-#include "../stdafx.h"
+#include "Data/stdafx.h"
 
-#include "../Index/CashManager.hpp"
-#include "../Index/IndexManager.hpp"
+#include "Data/index/CashManager.hpp"
+#include "Data/index/IndexManager.hpp"
 
 
 namespace m2     {
@@ -46,21 +46,17 @@ namespace dialog {
 
     public: /************| Interface |***************/
 
-        void Add(const Uuid_t& key) {
-
-        }
-
-        virtual MPtr Get(const Huid_t& key)       = 0; // How Does It Work????
-        virtual CPtr Get(const Huid_t& key) const = 0; // It's a template!!!
+        virtual MPtr Get(const Huid_t& key)       = 0;
+        virtual CPtr Get(const Huid_t& key) const = 0;
 
         virtual bool IsContains(const Huid_t& key) const
         { return index[key]; }
 
     protected: /*********| Memebers |***************/
 
-                Uuid_t  uid;
                 Str_t   root;
                 Index_t index;
+                Uuid_t  uid;
         mutable Cash_t  cash;
 
     public:
