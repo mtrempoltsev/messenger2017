@@ -22,7 +22,7 @@ namespace server {
         Database* db;
         Session* session_;
 
-        uuids::uuid userUid {0};
+        uuids::uuid userUid;
     };
 
 
