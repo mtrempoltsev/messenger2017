@@ -2,7 +2,7 @@
 
 #include "http_request.h"
 #include "http_response.h"
-
+#include "Data/stdafx.h"
 
 namespace m2     {
 namespace server {
@@ -22,7 +22,7 @@ namespace server {
         Database* db;
         Session* session_;
 
-        uuids::uuid userUid {0};
+        uuids::uuid userUid;
     };
 
 
