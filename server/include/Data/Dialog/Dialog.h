@@ -3,10 +3,10 @@
 
 #include <list>
 
-#include "../stdafx.h"
-#include "../Message/Message.h"
-#include "../Index/IndexManager.hpp"
-#include "../Index/CashManager.hpp"
+#include "Data/stdafx.h"
+#include "Data/Message/Message.h"
+#include "Data/index/IndexManager.hpp"
+#include "Data/index/CashManager.hpp"
 #include "DialogSystem.hpp"
 
 
@@ -82,20 +82,38 @@ namespace dialog {
         ADialog(const std::string&  Root, uuids::uuid Uid);
 
     public: /***************| Interface |***************/
-        // main function
-        void Serialize    (std::ostream& os, std::string since);
 
-        MPtr AddMessage   (std::istream& is);
-        MPtr AddMessage   (const std::string& time, const std::string& text);
+        //void Serialize    (std::ostream& os, std::string since);
+
+        /**
+         * Add a message to cash
+         * @param time - time of the message
+         * @param text - text of the message
+         * @return pointer on message
+         */
+        std::shared_ptr<AMessage>
+        AddMessage(const std::string& time, const std::string& text);
+
+        /**
+         * Delete a message both from a cash and a disk
+         * @param time - time of the message (as key)
+         */
         void DeleteMessage(const std::string& time);
 
-        MPtr Get(const std::string& time)       override;
-        CPtr Get(const std::string& time) const override;
+        /**
+         * @param time - time of the message (as key)
+         * @return pointer on the message or nullptr
+         */
+        std::shared_ptr<AMessage>
+        Get(const std::string& time)       override;
+
+        const
+        std::shared_ptr<AMessage>
+        Get(const std::string& time) const override;
 
     public: /***************| operators |***************/
 
-        // send ALL messages
-        std::ostream& operator<<(std::ostream& os);
+        //std::ostream& operator<<(std::ostream& os);
     };
 
 

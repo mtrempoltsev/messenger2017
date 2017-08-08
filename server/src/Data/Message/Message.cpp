@@ -1,4 +1,4 @@
-#include "Message.h"
+#include "Data/Message/Message.h"
 
 using namespace m2::data::message;
 

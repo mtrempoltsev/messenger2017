@@ -1,14 +1,17 @@
 #include <string>
 #include <functional>
 #include <memory>
-#include <openssl/RSA.h>
+#include <openssl/rsa.h>
 
 #include "crypto_common.h"
 #include "crypto_hash.h"
 
-namespace m2::crypto::pki {
-
-
+namespace m2
+{
+namespace crypto
+{
+namespace common
+{
     class IAsymmetricCryptoProvider : public common::ICryptoProvider {
         virtual boost::uuids::uuid fingerprint() const = 0;
         virtual std::string str_key() const = 0;
@@ -24,9 +27,20 @@ namespace m2::crypto::pki {
 
         std::string encrypt(const std::string &string) const override;
         std::string decrypt(const std::string &string) const override;
+        std::string encrypt_to_b64(const std::string &string) const override;
+        std::string decrypt_from_b64(const std::string &string) const override;
+
+
+        std::unique_ptr<OpenSSL_RSA_CryptoProvider> get_public();
+
+        bool is_public() const;
+        bool is_private() const;
+
 
         static KeyContainer from_string(const std::string &key, bool is_public);
-        static std::pair<OpenSSL_RSA_CryptoProvider, OpenSSL_RSA_CryptoProvider> make(int bit_size);
+        static std::pair<std::unique_ptr<OpenSSL_RSA_CryptoProvider>, std::unique_ptr<OpenSSL_RSA_CryptoProvider>>
+        make(int bit_size);
+        static std::unique_ptr<OpenSSL_RSA_CryptoProvider> make_private(int bit_size);
 
         boost::uuids::uuid fingerprint() const override;
 
@@ -37,6 +51,9 @@ namespace m2::crypto::pki {
         bool public_;
 
         std::string actor_(bool encryption, const std::string &string) const;
-    };
 
+        int get_padding(bool encryption) const;
+    };
+}
+}
 }

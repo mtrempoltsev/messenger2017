@@ -2,7 +2,7 @@
 #define M2_SERVER_USERDIALOGS_H
 
 
-#include "../User/User.h"
+#include "Data/User/User.h"
 #include "Dialog.h"
 
 
@@ -25,8 +25,19 @@ namespace dialog {
 
     public:
 
-        MPtr Get(const uuids::uuid& Uid)       override;
-        CPtr Get(const uuids::uuid& Uid) const override;
+        /**
+         * @param Uid - uid of chat (usually uid of contact)
+         * @return - pointer on a Dialog
+         */
+        std::shared_ptr<ADialog>
+        Get(const uuids::uuid& Uid)       override;
+
+        /**
+         * @return - pointer on a Dialog or nullptr
+         */
+        const
+        std::shared_ptr<ADialog>
+        Get(const uuids::uuid& Uid) const override;
 
     protected:
 

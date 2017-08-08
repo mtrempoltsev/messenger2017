@@ -1,5 +1,5 @@
 
-#include "Users.h"
+#include "Data/User/Users.h"
 
 using namespace m2::data::user;
 
@@ -48,7 +48,7 @@ AUser AUsers::CreateUser(uuids::uuid Uid, const std::string&& PublicKey
 const std::string& AUsers::RootDir() const
 { return root; }
 
-const AUsers::LUsers& AUsers::Users() const
+const AUsers::UserUids& AUsers::Users() const
 { return users.Uids(); }
 
 bool AUsers::operator[](const uuids::uuid& Uid)

@@ -1,4 +1,4 @@
-#include "Dialog.h"
+#include "Data/Dialog/Dialog.h"
 
 using namespace m2::data::dialog;
 

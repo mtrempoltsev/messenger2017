@@ -4,8 +4,12 @@
 #include <crypto_common.h>
 #include <openssl/err.h>
 
-namespace m2::crypto::common {
-
+namespace m2
+{
+namespace crypto
+{
+namespace common
+{
     CryptoError::CryptoError(const char *s) : std::runtime_error(s) {}
     CryptoError::CryptoError(const std::string &s) : std::runtime_error(s) {}
 
@@ -27,4 +31,6 @@ namespace m2::crypto::common {
         ERR_error_string(code, buf);
         return err + buf;
     }
+}
+}
 }
