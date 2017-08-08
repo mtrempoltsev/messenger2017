@@ -53,10 +53,13 @@ namespace m2
         using CompletionHandler = std::function<void (PerformResult result, HttpResponsePtr&& response)>;
         using ProgressHandler = std::function<void (uint64_t receivedBytes, uint64_t totalBytes)>;
 
-        void perform(const HttpRequest& request, DataStream& requestBody,
+        void perform(const HttpRequest& request, DataStream& responseData,
             CompletionHandler completion, ProgressHandler progress = ProgressHandler());
 
-        void perform(const HttpRequest& request, Data& requestBody,
+        void perform(const HttpRequest& request, Data& responseData,
+            CompletionHandler completion, ProgressHandler progress = ProgressHandler());
+
+        void perform(const HttpRequest& request, const Data& requestData, Data& responseData,
             CompletionHandler completion, ProgressHandler progress = ProgressHandler());
 
         void cancel();
@@ -84,6 +87,8 @@ namespace m2
         WriteFunction writeFunction_;
 
         Data header_;
+
+        struct curl_httppost* curlPost_;
     };
 
     using HttpConnectionPtr = std::shared_ptr<HttpConnection>;
