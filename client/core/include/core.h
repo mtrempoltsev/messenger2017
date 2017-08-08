@@ -27,14 +27,6 @@ class Core {
   boost::optional<m2::Error> Login(const m2::Uuid &clientUuid);
   boost::optional<m2::Error> RegisterNewUser();
 
-  // core <--> GUI (actually Core <--> CoreDispatcher) (managers)
-  ContactManager::ContactList GetContactList(const std::string &contactId);
-  void SaveContactList(const ContactManager::ContactList &contacts);
-
-  MessageManager::MessageStory GetMessageStory(const std::string &id);
-  void SaveMessageStory(const MessageManager::MessageStory &ms,
-                        const std::string &contactId);
-
   std::map<m2::Uuid, std::string> GetServersMap();
 
   std::shared_ptr<ContactManager> GetContactManager();
@@ -50,7 +42,8 @@ class Core {
  private:  // WOHOOO, I'M HERE AGAIN!!!!!!!!!!1111111
   // servers setup
   // make list (actually, map) of availible servers
-  std::map<m2::Uuid, std::string> ReadServersFile();
+//  std::map<m2::Uuid, std::string> ReadServersFile();
+
 
   // managers
   std::shared_ptr<ContactManager> contactManager_;

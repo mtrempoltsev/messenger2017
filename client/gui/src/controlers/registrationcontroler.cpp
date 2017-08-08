@@ -6,11 +6,10 @@ namespace m2 {
 namespace gui {
 namespace controler {
 
-// RegistrationControler::RegistrationControler(QObject* parent)
-//    :QObject(parent)
-//{
+RegistrationControler::RegistrationControler()
+{
 
-//}
+}
 
 void RegistrationControler::declareQML() {
   qmlRegisterType<RegistrationControler>("Controler.Registration", 1, 0,

@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+
 #include <logincontroler.h>
 #include <registrationcontroler.h>
 
@@ -11,8 +12,6 @@
 #include <iostream>
 #include <thread>
 
-/* our uber-headers */
-// gui <--> core
 #include "core.h"
 #include "core_dispatcher.h"
 #include "handlers.h"
@@ -32,6 +31,8 @@ int main(int argc, char *argv[]) {
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
   QGuiApplication app(argc, argv);
 
+  QQmlApplicationEngine engine;
+
   LoginControler::declareQML();
   RegistrationControler::declareQML();
 
@@ -40,8 +41,9 @@ int main(int argc, char *argv[]) {
   m2::core::CoreDispatcher dispatcher;
   dispatcher.core_ = std::shared_ptr<Core>(&core);
 
-  //   QmlCppInterface obj(&dispatcher);
-  //   engine.rootContext()->setContextProperty("QmlCppInterface", &obj);
+  engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
+  if (engine.rootObjects().isEmpty())
+    return -1;
 
   std::thread coreThread(runcore, std::ref(core));
   //  RegisterHandler rh;
@@ -57,22 +59,14 @@ int main(int argc, char *argv[]) {
 
   // coreThread.join();
 
-  // int res = app.exec();
-  // dispatcher.stopCore();
+  //dispatcher.stopCore();
+    ChatsFilterProxyModel chats;
+    MessagesModel messages;
+    ContactsModel contacts;
 
-  QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("chatModel", &chats);
+    engine.rootContext()->setContextProperty("messagesModel", &messages);
+    engine.rootContext()->setContextProperty("contactsModel", &contacts);
 
-  engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
-  if (engine.rootObjects().isEmpty())
-    return -1;
-
-  ChatsFilterProxyModel chats;
-  MessagesModel messages;
-  ContactsModel contacts;
-
-  engine.rootContext()->setContextProperty("chatModel", &chats);
-  engine.rootContext()->setContextProperty("messagesModel", &messages);
-  engine.rootContext()->setContextProperty("contactsModel", &contacts);
-
-  return app.exec();
+    return app.exec();
 }
