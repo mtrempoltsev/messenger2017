@@ -15,23 +15,12 @@ Core::Core() {
 std::shared_ptr<ContactManager> Core::GetContactManager() {
   return contactManager_;
 }
-std::shared_ptr<LoginManager> Core::GetLoginManager() { return loginManager_; }
-
-ContactManager::ContactList Core::GetContactList(const std::string &contactId) {
-  // FIXME
-  // return contactManager_->GetContactList(contactId);
-  return contactManager_->GetContactList();
+std::shared_ptr<LoginManager> Core::GetLoginManager() {
+    return loginManager_;
 }
 
-void Core::SaveContactList(const ContactManager::ContactList &contacts) {
-  // FIXME
-  // contactManager_->SaveContactList(contacts);
-  // contactManager_->SaveContactList();
-}
-
-void Core::SaveMessageStory(const MessageManager::MessageStory &ms,
-                            const std::string &contactId) {
-  messageManager_->SaveMessageStory(ms, contactId);
+std::shared_ptr<MessageManager> Core::GetMessageManager() {
+  return messageManager_;
 }
 
 boost::optional<m2::Error>
