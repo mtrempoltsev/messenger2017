@@ -1,3 +1,25 @@
+/**********************************
+Creation:
+	SafeLog logger() - creation without running
+	SafeLog logger("/logs/connection.log") - creation with running
+	
+Reset:
+	logger.reset("/logs/otherlog.log") - use this method when you need to change a logfile or to running logger if you have used default constructor
+	
+Write a message without labels:
+	logger << "some message"
+	
+Write an error message:
+	logger(SL_ERROR) << "some error"
+	
+Write a warning message:
+	logger(SL_WARNING) << "some warning message"
+	
+Write a debug message:
+	logger(SL_DEBUG) << "some debug message"
+	
+***********************************/
+
 #pragma once
 
 #include <fstream>
@@ -29,7 +51,8 @@ namespace safelog {
       WARNING,
       DEBUG
     };
-
+    
+    SafeLog();
     SafeLog(const std::string & filePath);
     ~SafeLog();
 
@@ -43,6 +66,7 @@ namespace safelog {
     class InnerSafeLog
     {
     public:
+      InnerSafeLog();
       InnerSafeLog(const std::string & filePath);
 
       void reset(const std::string & filePath);

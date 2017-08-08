@@ -13,6 +13,12 @@ static std::map<SafeLog::MessageType, std::string> labelNameMap =
   { SafeLog::MessageType::DEBUG, "[Debug]: " },
 };
 
+SafeLog::InnerSafeLog::InnerSafeLog() :
+  isRunning_(false)
+{
+  
+}
+
 SafeLog::InnerSafeLog::InnerSafeLog(const std::string & filePath) :
   isRunning_(false)
 {
@@ -53,6 +59,11 @@ void SafeLog::InnerSafeLog::mainLoop()
   }
   logFile_.close();
   delete this;
+}
+
+SafeLog::SafeLog()
+{
+  innerLog_ = new InnerSafeLog();
 }
 
 SafeLog::SafeLog(const std::string & filePath)
