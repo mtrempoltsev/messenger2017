@@ -1,12 +1,12 @@
-#include <logincontroler.h>
-#include <registrationcontroler.h>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <logincontroler.h>
+#include <registrationcontroler.h>
 
+#include <QQmlContext>
 #include <include/chats_filter_proxy_model.h>
 #include <include/contacts_model.h>
 #include <include/messages_model.h>
-#include <QQmlContext>
 
 #include <iostream>
 #include <thread>
@@ -63,7 +63,8 @@ int main(int argc, char *argv[]) {
   QQmlApplicationEngine engine;
 
   engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
-  if (engine.rootObjects().isEmpty()) return -1;
+  if (engine.rootObjects().isEmpty())
+    return -1;
 
   ChatsFilterProxyModel chats;
   MessagesModel messages;
