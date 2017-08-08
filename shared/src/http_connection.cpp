@@ -47,25 +47,44 @@ namespace m2
 }
 
 void m2::HttpConnection::perform(
-    const HttpRequest& request, DataStream& requestBody, CompletionHandler completion, ProgressHandler progress)
+    const HttpRequest& request, DataStream& responseData, CompletionHandler completion, ProgressHandler progress)
 {
     auto writeFunction =
-        [&requestBody](char* data, size_t size)
+        [&responseData](char* data, size_t size)
         {
-            requestBody.write(data, size);
+            responseData.write(data, size);
         };
     perform(request, writeFunction, completion, progress);
 }
 
 void m2::HttpConnection::perform(
-    const HttpRequest& request, Data& requestBody, CompletionHandler completion, ProgressHandler progress)
+    const HttpRequest& request, Data& responseData, CompletionHandler completion, ProgressHandler progress)
 {
     auto writeFunction =
-        [&requestBody](char* data, size_t size)
+        [&responseData](char* data, size_t size)
         {
-            requestBody.insert(requestBody.end(), data, data + size);
+            responseData.insert(responseData.end(), data, data + size);
         };
     perform(request, writeFunction, completion, progress);
+}
+
+void m2::HttpConnection::perform(const HttpRequest& request, const Data& requestData, Data& responseData,
+    CompletionHandler completion, ProgressHandler progress)
+{
+    const char* sectionName = "data";
+
+    assert(curlPost_ == nullptr);
+
+    struct curl_httppost* last = nullptr;
+
+    curl_formadd(&curlPost_, &last,
+        CURLFORM_PTRNAME, sectionName,
+        CURLFORM_PTRCONTENTS, requestData.data(),
+        CURLFORM_CONTENTSLENGTH, requestData.size(), CURLFORM_END);
+
+    curl_easy_setopt(curl_, CURLOPT_HTTPPOST, curlPost_);
+
+    perform(request, responseData, completion, progress);
 }
 
 void m2::HttpConnection::perform(
@@ -86,6 +105,12 @@ void m2::HttpConnection::perform(
 
 void m2::HttpConnection::onPerformComplete(CURLcode result)
 {
+    if (curlPost_)
+    {
+        curl_formfree(curlPost_);
+        curlPost_ = nullptr;
+    }
+
     if (completion_)
     {
         auto response = std::make_unique<HttpResponse>();
@@ -116,6 +141,7 @@ m2::HttpConnection::HttpConnection(const std::string& domain, CURL* curl, HttpCl
     : domain_(std::move(domain))
     , curl_(curl)
     , parent_(parent)
+    , curlPost_(nullptr)
 {
     assert(!domain_.empty());
     assert(curl_);
