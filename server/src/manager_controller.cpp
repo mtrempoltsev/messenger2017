@@ -39,32 +39,6 @@ namespace server {
         
         std::cout << "RESPONSE: " << response << std::endl;
 
-        // http://localhost:8282/some/command1
-        // if (uri == "/user/register/sendKey") {
-
-        //     RegisterSendKeyManager sendKeyManager(db);
-        //     code = sendKeyManager.doAction(data, response);
-        // }
-        // else if (uri == "/user/register") {
-
-        //     RegisterManager registerManager(db);
-        //     code = registerManager.doAction(data, response);
-        // }
-        // else if (uri == "/user/auth/sendUuid") {
-
-        //     LoginSendKeyManager sendKeyManager(db);
-        //     code = sendKeyManager.doAction(data, response, &userUid);
-        // }
-        // else if (uri == "/user/auth") {
-
-        //     LoginManager loginManager(db);
-        //     code = loginManager.doAction(data, response);
-        // }
-        // else {
-        //     code = HttpResponse::Code::NOT_FOUND;
-        //     response = Manager::createError("Something wrong");
-        // }
-
         answer->setData(response, code);
 
         return answer;

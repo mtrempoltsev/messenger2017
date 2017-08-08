@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
     using namespace m2::server;
     using boost::lexical_cast;
     using boost::bad_lexical_cast;
-    DataTest();
+
     uint16_t port = 8283;
     if (argc > 1) {
         try {
