@@ -14,12 +14,15 @@ namespace server {
     {
     public:
         ManagerController(Database* database, Session* session);
+        ~ManagerController();
 
         responsePtr doProcess(requestPtr request);
 
     private:
         Database* db;
         Session* session_;
+
+        uuids::uuid userUid {0};
     };
 
 

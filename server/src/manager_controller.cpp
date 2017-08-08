@@ -27,7 +27,7 @@ namespace server {
 
             RegisterSendKeyManager sendKeyManager(db);
             code = sendKeyManager.doAction(data, response);
-            std::cout<<"REQUEST: "<<response<<std::endl;
+            std::cout<<"RESPONSE: "<<response<<std::endl;
         }
         else if (uri == "/user/register") {
 
@@ -52,6 +52,11 @@ namespace server {
         answer->setData(response, code);
 
         return answer;
+    }
+
+    ManagerController::~ManagerController()
+    {
+        db->DeleteSession(userUid);
     }
 
 }} // m2::server
