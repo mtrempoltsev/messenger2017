@@ -8,9 +8,9 @@ namespace m2 {
 namespace core {
 
 class MessageInfo {
-public:
+ public:
   MessageInfo(){};
-  MessageInfo( // const std::string& participants,
+  MessageInfo(  // const std::string& participants,
       const std::string &from_uid, const std::string &to_uid,
       const std::string &sendTime, const std::string &message = "") {
     // participants_ = participants;
@@ -24,7 +24,7 @@ public:
                                    const MessageInfo &mi);
   friend std::ifstream &operator>>(std::ifstream &stream, MessageInfo &mi);
 
-private:
+ private:
   // std::string participants_;
   std::string from_uid_;
   std::string to_uid_;
@@ -33,8 +33,8 @@ private:
 };
 
 class MessageManager {
-public:
-  MessageManager(){};
+ public:
+  MessageManager() {}
 
   using MessageStory = std::vector<MessageInfo>;
 
@@ -45,5 +45,5 @@ public:
   std::string GetDefaultPath() const { return "lol.txt"; }
 };
 
-} // core
-} // m2
+}  // core
+}  // m2

@@ -6,6 +6,8 @@
 #include "jobtype.h"
 #include "message.h"
 
+#include <vector>
+
 namespace m2 {
 namespace core {
 
@@ -45,6 +47,15 @@ void CoreDispatcher::GetServerSet(ServerSetHandler handler) {
   };
   std::cout << "        push job get server list" << std::endl;
   core_->PushJob(job);
+}
+
+void CoreDispatcher::GetMessageStory(const std::string &id,
+                                     MessageStoryHandler handler) {
+  // some uber-thread stuff (begin)
+  std::vector<MessageInfo> story =
+      core_->GetMessageManager()->GetMessageStory(id);
+  handler.onCompletion(std::move(story));
+  // some uber-thread stuff  (end)
 }
 }  // core
 }  // m2

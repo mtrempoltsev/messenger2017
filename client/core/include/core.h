@@ -19,7 +19,7 @@ namespace m2 {
 namespace core {
 
 class Core {
-public:
+ public:
   Core();
 
   // core <--> server
@@ -39,6 +39,7 @@ public:
 
   std::shared_ptr<ContactManager> GetContactManager();
   std::shared_ptr<LoginManager> GetLoginManager();
+  std::shared_ptr<MessageManager> GetMessageManager();
 
   // uber-threads
   void Start();
@@ -46,7 +47,7 @@ public:
   void JobLoop();
   void PushJob(JobType job);
 
-private: // WOHOOO, I'M HERE AGAIN!!!!!!!!!!1111111
+ private:  // WOHOOO, I'M HERE AGAIN!!!!!!!!!!1111111
   // servers setup
   // make list (actually, map) of availible servers
   std::map<m2::Uuid, std::string> ReadServersFile();
@@ -61,10 +62,10 @@ private: // WOHOOO, I'M HERE AGAIN!!!!!!!!!!1111111
   // m2::core::Config config_;
 
   // threads
-  bool keepWorking_; // working flag
+  bool keepWorking_;  // working flag
   std::mutex mutex_;
   std::condition_variable hasJob_;
   std::queue<JobType> jobQueue_;
 };
-} // core
-} // m2
+}  // core
+}  // m2

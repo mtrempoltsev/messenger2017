@@ -1,6 +1,8 @@
 #pragma once
 
-//#include <list>
+#include <list>
+
+#include "message.h"
 
 /*
   Привет из кора!
@@ -47,6 +49,26 @@ struct LoginHandler final {
 
 struct RegisterHandler final {
   using CompletionHandler = std::function<void()>;
+  using ErrorHandler = std::function<void(Error &&error)>;
+
+  CompletionHandler onCompletion;
+  ErrorHandler onError;
+};
+
+/*
+dispatcher.GetMessageStory(userId, MessageStoryHandler)
+
+MessageInfo
+  std::string from_uid_;
+  std::string to_uid_;
+  std::string sendTime_;
+  std::string message_;
+
+*/
+struct MessageStoryHandler final {
+  using MessageStory = std::vector<m2::core::MessageInfo>;
+
+  using CompletionHandler = std::function<void(MessageStory &&)>;
   using ErrorHandler = std::function<void(Error &&error)>;
 
   CompletionHandler onCompletion;

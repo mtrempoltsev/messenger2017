@@ -41,9 +41,13 @@ class CoreDispatcher final {
   CoreDispatcher(CoreDispatcher &&) = delete;
   CoreDispatcher &operator=(CoreDispatcher &&) = delete;
 
+  // login_manager
   void Login(LoginHandler handler);
   void RegisterUser(RegisterHandler handler);
   void GetServerSet(ServerSetHandler handler);
+
+  // messages
+  void GetMessageStory(const std::string &id, MessageStoryHandler handler);
 
   void stopCore();
 

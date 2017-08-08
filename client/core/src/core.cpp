@@ -17,6 +17,10 @@ std::shared_ptr<ContactManager> Core::GetContactManager() {
 }
 std::shared_ptr<LoginManager> Core::GetLoginManager() { return loginManager_; }
 
+std::shared_ptr<MessageManager> Core::GetMessageManager() {
+  return messageManager_;
+}
+
 ContactManager::ContactList Core::GetContactList(const std::string &contactId) {
   // FIXME
   // return contactManager_->GetContactList(contactId);
@@ -34,8 +38,8 @@ void Core::SaveMessageStory(const MessageManager::MessageStory &ms,
   messageManager_->SaveMessageStory(ms, contactId);
 }
 
-boost::optional<m2::Error>
-Core::StartServerConnection(const m2::Uuid &serverGuid) {
+boost::optional<m2::Error> Core::StartServerConnection(
+    const m2::Uuid &serverGuid) {
   boost::optional<m2::Error> error;
 
   return error;
@@ -73,8 +77,7 @@ void Core::JobLoop() {
       while (jobQueue_.empty()) {
         std::cout << "jobs empty" << std::endl;
         hasJob_.wait(lock);
-        if (!keepWorking_)
-          return;
+        if (!keepWorking_) return;
       }
 
       job = jobQueue_.front();
