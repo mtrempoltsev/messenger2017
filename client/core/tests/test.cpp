@@ -25,7 +25,7 @@ int main() {
             std::cout << i << std::endl;
         }*/
 
-        auto messageDispatcher = core.getMessageManager();
+        auto messageDispatcher = core.GetMessageManager();
         messageDispatcher->LoadMessageStory();
         messageDispatcher->GetMessageStory(1);
 
