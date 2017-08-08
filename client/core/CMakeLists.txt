@@ -36,7 +36,7 @@ set(SOURCES
     src/message.cpp
 
     src/error.cpp
-
+    src/login_manager.cpp
     src/message.cpp
     src/guid.cpp
     src/config.cpp

@@ -33,7 +33,7 @@ namespace m2 {
 
 namespace core {
 class CoreDispatcher final {
-public:
+ public:
   CoreDispatcher() = default;
   CoreDispatcher(CoreDispatcher &) = delete;
   CoreDispatcher &operator=(CoreDispatcher &) = delete;
@@ -43,11 +43,12 @@ public:
 
   void Login(LoginHandler handler);
   void RegisterUser(RegisterHandler handler);
+  void GetServerSet(ServerSetHandler handler);
 
   void stopCore();
 
   std::shared_ptr<Core> core_;
 };
 
-} // core
-} // m2
+}  // core
+}  // m2

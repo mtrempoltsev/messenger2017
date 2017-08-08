@@ -13,7 +13,7 @@ void CoreDispatcher::stopCore() { core_->Stop(); }
 void CoreDispatcher::Login(LoginHandler handler) {
   JobType job = [handler](Core &core) {
     std::string uuid = core.GetLoginManager()->Login();
-    handler.onComletion(uuid);
+    handler.onCompletion(uuid);
   };
   std::cout << "        push job" << std::endl;
   core_->PushJob(job);
@@ -26,12 +26,25 @@ void CoreDispatcher::RegisterUser(RegisterHandler handler) {
       handler.onCompletion();
     } else {
       ;
-      //      hjandler.onError();
+      //      handler.onError();
     }
   };
   std::cout << "        push job" << std::endl;
   core_->PushJob(job);
 }
 
-} // core
-} // m2
+void CoreDispatcher::GetServerSet(ServerSetHandler handler) {
+  JobType job = [handler](Core &core) {
+    std::set<std::string> servers = core.GetLoginManager()->GetServerSet();
+    if (servers.empty()) {
+      handler.onCompletion(servers);
+    } else {
+      ;
+      //      handler.onError();
+    }
+  };
+  std::cout << "        push job get server list" << std::endl;
+  core_->PushJob(job);
+}
+}  // core
+}  // m2
