@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.4)
 
 project(m2)
 
+find_package( Threads REQUIRED)
+set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-pthread")
+
 set(CORE_PROJECT_NAME m2-core)
 set(GUI_PROJECT_NAME m2-gui)
 set(SHARED_PROJECT_NAME m2-shared)
@@ -93,3 +96,5 @@ add_subdirectory(${SHARED_ROOT} shared)
 add_subdirectory(core)
 add_subdirectory(gui)
 
+#find_package( Threads )
+#---target_link_libraries( ${CMAKE_THREAD_LIBS_INIT} )
