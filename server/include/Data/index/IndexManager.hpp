@@ -79,8 +79,12 @@ namespace indices {
         void Remove    (const _Tp& Uid)
         { uids.erase (Uid); }
 
-        bool IsContains(const _Tp& Uid) const
-        { return uids.find(Uid) != uids.end(); }
+        bool IsContains(const _Tp& Uid) const {
+            for (auto& i : uids)
+                if (i == Uid)
+                    return true;
+            return false;
+        }
 
     protected: /************| Members |***************/
 

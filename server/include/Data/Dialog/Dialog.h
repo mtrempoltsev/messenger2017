@@ -92,24 +92,24 @@ namespace dialog {
          * @return pointer on message
          */
         std::shared_ptr<AMessage>
-        AddMessage(uuids::uuid Id, const std::string& text);
+        AddMessage(const uuids::uuid& Id, const std::string& text);
 
         /**
          * Delete a message both from a cash and a disk
          * @param time - time of the message (as key)
          */
-        void DeleteMessage(uuids::uuid Id);
+        void DeleteMessage(const uuids::uuid& Id);
 
         /**
          * @param time - time of the message (as key)
          * @return pointer on the message or nullptr
          */
         std::shared_ptr<AMessage>
-        Get(uuids::uuid Id)       override;
+        Get(const uuids::uuid& Id)       override;
 
         const
         std::shared_ptr<AMessage>
-        Get(uuids::uuid Id) const override;
+        Get(const uuids::uuid& Id) const override;
 
     public: /***************| operators |***************/
 

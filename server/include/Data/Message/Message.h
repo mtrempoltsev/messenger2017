@@ -23,13 +23,13 @@ namespace message {
         // new message
         AMessage(std::istream& is);
         AMessage( const std::string& Dir
-                , const uuids::uuid& ID
+                , const uuids::uuid& Id
                 , const std::string& Text);
 
         // open existing message
-        AMessage(const std::string&  FileName);
+        AMessage( const std::string& FileName);
         AMessage( const std::string& Dir
-                , const uuids::uuid& ID);
+                , const uuids::uuid& Id);
 
         ~AMessage();
 

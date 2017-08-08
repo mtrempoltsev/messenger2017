@@ -46,7 +46,7 @@ namespace indices {
 
 namespace uuids   {
 
-    typedef boost::multiprecision::uint128_t uuid;
+    using uuid = boost::multiprecision::uint128_t ;
 
     namespace misc {
 

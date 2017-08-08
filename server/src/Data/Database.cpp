@@ -67,3 +67,15 @@ std::string Database::getPrivateServerKey()
         "xP/7f7OE6j9kqHpB/rsJCSb5GIqyXdPaTjAyZQuJavbiFwUEZ9z9pl0Iii63swPi"
         "/BEVBHlcyCajRYqioVIIPz7yx4SyNoyiPe5BUcvBR0m6ZzuAtMsz"
         "-----END RSA PRIVATE KEY-----"; }
+
+sessionWPtr
+Database::GetSession(const uuids::uuid& Uid)
+{ return Sessions.GetSession(Uid); }
+
+bool
+Database::AddSession(const uuids::uuid& Uid, sessionWPtr ptr)
+{ return Sessions.AddSession(Uid, ptr); }
+
+void
+Database::DeleteSession(const uuids::uuid& Uid)
+{ return Sessions.DeleteSession(Uid); }

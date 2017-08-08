@@ -2,7 +2,7 @@
 #define M2_SERVER_DATABASE_H
 
 #include "Data.hpp"
-#include "session.h"
+
 
 namespace m2     {
 namespace server {
@@ -30,14 +30,15 @@ namespace server {
 
     public:
 
-        sessionPtr
+        sessionWPtr GetSession(const uuids::uuid& Uid);
+        bool        AddSession(const uuids::uuid& Uid, sessionWPtr ptr);
+        void     DeleteSession(const uuids::uuid& Uid);
 
     protected:
 
-        data::AUsers   Users;
-        data::ADialogs Dialogs;
-
-        //std::unordered_map<uuids::
+        data::AUsers    Users;
+        data::ADialogs  Dialogs;
+        data::ASessions Sessions;
 
     };
 
