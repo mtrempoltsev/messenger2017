@@ -12,13 +12,12 @@
 using namespace m2::server;
 
 
-HttpResponse::Code LoginSendKeyManager::doAction(const std::string &data, std::string &response)
+HttpResponse::Code LoginSendKeyManager::doAction(const std::string &data, std::string &response, uuids::uuid &uuidKey)
 {
-    uuids::uuid uuid;
     try {
-        uuid = deserialize(data);
-        response = createResponse(uuid);
-        if (!db->IsClienExists(uuid))
+        uuidKey = deserialize(data);
+        response = createResponse(uuidKey);
+        if (!db->IsClienExists(uuidKey))
             return HttpResponse::Code::FORBIDEN;
     }
     catch (const pt::ptree_error &e) {
@@ -44,7 +43,7 @@ uuids::uuid LoginSendKeyManager::deserialize(const std::string &data)
     stream << data;
     boost::property_tree::read_json(stream, request);
     std::string uuidString = request.get<std::string>("uuid"); //ВОЗМОЖНО, тут будет base64
-    std::cout<<uuidString<<"__UUID__"<<std::endl;
+    std::cout << uuidString << "__UUID__" << std::endl;
     uuid.assign(123);
 
     return uuid;
@@ -63,7 +62,7 @@ std::string LoginSendKeyManager::createResponse(const uuids::uuid &in_uuid)
         //криптор публик кея
         auto cli_cryptor = m2::crypto::common::OpenSSL_RSA_CryptoProvider(publicKey, true);
         //криптор сервер кея
-        auto serv_cryptor = m2::crypto::common::OpenSSL_AES_CryptoProvider (256, "123", "byaka-salt");
+        auto serv_cryptor = m2::crypto::common::OpenSSL_AES_CryptoProvider(256, "123", "byaka-salt");
         client_string = cli_cryptor.encrypt(stringForCrypt);
         server_string = serv_cryptor.encrypt(stringForCrypt + publicKey);
 

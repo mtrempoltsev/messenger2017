@@ -9,8 +9,8 @@ class LoginSendKeyManager: public Manager
 {
 public:
     LoginSendKeyManager(Database *database);
-    virtual HttpResponse::Code doAction(const std::string &data, std::string &response) final;
-
+    HttpResponse::Code doAction(const std::string &data, std::string &response, uuids::uuid &uuidKey);
+    virtual HttpResponse::Code doAction(const std::string &data, std::string &response) final {}
 protected:
     uuids::uuid deserialize(const std::string &data);
 

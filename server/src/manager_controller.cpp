@@ -37,7 +37,7 @@ namespace server {
         else if (uri == "/user/auth/sendUuid") {
 
             LoginSendKeyManager sendKeyManager(db);
-            code = sendKeyManager.doAction(data, response);
+            code = sendKeyManager.doAction(data, response, userUid);
         }
         else if (uri == "/user/auth") {
 
