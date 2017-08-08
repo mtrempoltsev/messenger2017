@@ -45,9 +45,6 @@ int main(int argc, char *argv[]) {
   m2::core::CoreDispatcher dispatcher;
   dispatcher.core_ = std::shared_ptr<Core>(&core);
 
-  QmlCppInterface obj(&dispatcher);
-  engine.rootContext()->setContextProperty("QmlCppInterface", &obj);
-
   engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
   if (engine.rootObjects().isEmpty())
     return -1;

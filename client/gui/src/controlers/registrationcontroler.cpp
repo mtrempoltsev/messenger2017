@@ -7,8 +7,7 @@ namespace gui {
 namespace controler {
 
 
-RegistrationControler::RegistrationControler(QObject* parent)
-    :QObject(parent)
+RegistrationControler::RegistrationControler()
 {
 
 }
