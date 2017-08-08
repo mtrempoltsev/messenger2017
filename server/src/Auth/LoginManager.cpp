@@ -78,7 +78,12 @@ std::string LoginManager::createResponse(const StringsPair &pair, userInfo &resu
     }
     else {
         result.status = response_result::ok;
-        return std::string();
+        pt::ptree tree;
+        std::stringstream stream;
+        tree.put("reason", base64_encode("hello", 5));
+        boost::property_tree::write_json(stream, tree);
+        //return std::string();
+        return stream.str();
     }
 }
 

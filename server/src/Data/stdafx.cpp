@@ -17,7 +17,7 @@ uuids::uuid uuids::to_uuid(const boost::uuids::uuid &a)
 {
     uuids::uuid b;
     for (size_t i = 0; i < a.size(); ++i)
-        b |= (uuids::uuid(*(a.begin() + i)) << 8 * i);
+        b |= (uuids::uuid(*(a.begin() + i)) << 8 * (a.size()-1-i));
     return b;
 }
 

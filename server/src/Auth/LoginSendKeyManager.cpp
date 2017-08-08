@@ -17,8 +17,9 @@ HttpResponse::Code LoginSendKeyManager::doAction(const std::string &data, std::s
     try {
         uuidKey = deserialize(data);
         response = createResponse(uuidKey);
-        if (!db->IsClienExists(uuidKey))
+        if (!db->IsClienExists(uuidKey)) {
             return HttpResponse::Code::FORBIDEN;
+        }
     }
     catch (const pt::ptree_error &e) {
         std::cout << e.what() << std::endl;
@@ -44,9 +45,9 @@ uuids::uuid LoginSendKeyManager::deserialize(const std::string &data)
     boost::property_tree::read_json(stream, request);
     std::string uuidString = request.get<std::string>("uuid"); //ВОЗМОЖНО, тут будет base64
     std::cout << uuidString << "__UUID__" << std::endl;
-    uuid.assign(123);
+    boost::uuids::uuid temp = boost::uuids::string_generator()(uuidString);
 
-    return uuid;
+    return uuids::to_uuid(temp);
 }
 
 std::string LoginSendKeyManager::createResponse(const uuids::uuid &in_uuid)
@@ -72,14 +73,7 @@ std::string LoginSendKeyManager::createResponse(const uuids::uuid &in_uuid)
         std::cout << e.what();
     }
 
-
-    pt::ptree tree;
-    std::stringstream stream;
-    tree.put("client_string", base64_encode(client_string.c_str(), client_string.size()));
-    tree.put("server_string", base64_encode(server_string.c_str(), server_string.size()));
-    boost::property_tree::write_json(stream, tree);
-
-    return stream.str();
+    return std::string();
 
 }
 
