@@ -32,7 +32,7 @@ namespace server {
             RegisterManager registerManager(db);
             code = registerManager.doAction(data, response);
         }
-        else if (uri == "/user/auth/sendKey") {
+        else if (uri == "/user/auth/sendUuid") {
 
             LoginSendKeyManager sendKeyManager(db);
             code = sendKeyManager.doAction(data, response);
