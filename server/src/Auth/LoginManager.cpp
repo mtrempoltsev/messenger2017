@@ -87,8 +87,8 @@ std::string LoginManager::createResponse(const StringsPair &pair, userInfo &resu
     }
 }
 
-LoginManager::LoginManager(Database *database)
-    : Manager(database)
+LoginManager::LoginManager(ManagerController* controller)
+    : Manager(controller)
 {
 
 }

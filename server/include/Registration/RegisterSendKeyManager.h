@@ -13,7 +13,7 @@ namespace server
 class RegisterSendKeyManager: public Manager
 {
 public:
-    RegisterSendKeyManager(Database *database);
+    RegisterSendKeyManager(ManagerController* controller);
     virtual HttpResponse::Code doAction(const std::string &data, std::string &response) final;
 
 public:

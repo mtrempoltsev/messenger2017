@@ -46,8 +46,8 @@ HttpResponse::Code RegisterManager::doAction (const std::string &data, std::stri
 }
 
 
-RegisterManager::RegisterManager (Database *db)
-        : Manager (db) {
+RegisterManager::RegisterManager (ManagerController* controller)
+        : Manager (controller) {
 
 }
 

@@ -102,5 +102,5 @@ Database::StoreMessage(const uuids::uuid& Sender
                      , const std::string& Text
 ){
     auto   dialog = GetDialog(Sender, Addressee);
-    return dialog->AddMessage(Text)->Id();
+    return dialog->AddMessage(Text);
 }

@@ -72,8 +72,8 @@ std::string RegisterSendKeyManager::createResponse(const std::string &publicKey)
     return stream.str();
 }
 
-RegisterSendKeyManager::RegisterSendKeyManager(Database *database)
-    : Manager(database)
+RegisterSendKeyManager::RegisterSendKeyManager(ManagerController* controller)
+    : Manager(controller)
 {
 
 }

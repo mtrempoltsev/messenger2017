@@ -95,20 +95,17 @@ void DataTest()
 
         ///***************
 
-        const uuids::uuid data1 = 159;
-        const uuids::uuid data2 = 256;
-
         // add 2 messages to Alice's chat
-        dialog->AddMessage(data2, "__TEST_TEXT");
-        dialog->AddMessage(data1, "__TEST_TEXT");
+        auto Id1 = dialog->AddMessage("__TEST_TEXT 1");
+        auto Id2 = dialog->AddMessage("__TEST_TEXT 2");
 
         // were they added?
-        assert(fs::exists(dialog->Root() + data1.str()));
-        assert(fs::exists(dialog->Root() + data2.str()));
+        assert(fs::exists(dialog->Root() + Id1.str()));
+        assert(fs::exists(dialog->Root() + Id2.str()));
 
         // remove first message
-        dialog->DeleteMessage(data1);
-        assert(!fs::exists(dialog->Root() + data1.str()));
+        dialog->DeleteMessage(Id1);
+        assert(!fs::exists(dialog->Root() + Id1.str()));
 
     } BLOCK(3, "static message test");
 
@@ -125,7 +122,7 @@ void DataTest()
         assert(dialog);
 
 
-    } BLOCK(4, "forward dialog taking");
+    } BLOCK(4, "existing dialog taking");
 }
 
 
