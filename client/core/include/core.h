@@ -37,10 +37,10 @@ public:
   std::shared_ptr<LoginManager> GetLoginManager();
   std::shared_ptr<MessageManager> GetMessageManager();
 
-  //choosed server interfase
-  bool HasChoosedServer() { return !choosedServer_.empty(); }
-  void SetChoosedServer(const std::string & serverDomain);
-  void GetChoosedServer() { return choosedServer_; }
+  //chosen server interfase
+  bool HasChosenServer() { return !chosenServer_.empty(); }
+  void SetChosenServer(const std::string & serverDomain);
+  void GetChosenServer() { return chosenServer_; }
 
   //http interface
   HttpClient & GetHttpClient() { return httpClient; }
@@ -61,7 +61,7 @@ public:
 
   // map of availible servers
   std::map<m2::Uuid, std::string> serversMap_;
-  std::string choosedServer_;
+  std::string chosenServer_;
   // m2::core::Config config_;
 
   // threads
