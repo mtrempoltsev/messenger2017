@@ -66,15 +66,16 @@ void LoginManager::CheckKey(PerformResult result, HttpResponsePtr &&response)
       result_ = false;
       inProcess_ = false;
     }
-    if(result)
+    if(result == PerformResult::Success)
     {
-        if(!pt.find("server_string") || !pt.find("client_string") || !pt.find("encr_public_key"))
-        {
-          if(!pt.find("server_list"))
+        if(pt.find("server_string") == pt.not_found() ||
+           pt.find("client_string") == pt.not_found() ||
+           pt.find("encr_public_key") == pt.not_found()) {
+          if(pt.find("server_list") == pt.not_found())
             logger_(SL_ERROR) << "Bad server_string JSON in CheckKey";
-          if(!pt.find("client_string"))
+          if(pt.find("client_string") == pt.not_found())
             logger_(SL_ERROR) << "Bad client_string JSON in CheckKey";
-          if(!pt.find("encr_public_key"))
+          if(pt.find("encr_public_key") == pt.not_found())
             logger_(SL_ERROR) << "Bad encr_public_key JSON in CheckKey";
           result_ = false;
           inProcess_ = false;
