@@ -115,12 +115,12 @@ void m2::HttpConnection::onPerformComplete(CURLcode result)
     {
         auto response = std::make_unique<HttpResponse>();
 
-        response->code_ = 0;
+        response->code = 0;
 
         if (result == CURLE_OK)
         {
-            curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, &response->code_);
-            response->header_.swap(header_);
+            curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, &response->code);
+            response->header.swap(header_);
         }
         else
         {

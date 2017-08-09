@@ -389,7 +389,7 @@ std::future<void> download(m2::HttpConnectionPtr connection, const std::string& 
             if (response)
             {
                 std::cout << buffer->size() << std::endl;
-                std::cout << response->code_ << std::endl;
+                std::cout << response->code << std::endl;
             }
             promise->set_value();
         },
