@@ -8,6 +8,10 @@
 #include "login_manager.h"
 #include "message.h"
 
+#include "../../../shared/include/http_client.h"
+#include "../../../shared/include/http_connection.h"
+#include "../../../shared/include/safe_log.h"
+
 #include <boost/optional.hpp>
 #include <condition_variable>
 #include <map>
@@ -33,6 +37,17 @@ public:
   std::shared_ptr<LoginManager> GetLoginManager();
   std::shared_ptr<MessageManager> GetMessageManager();
 
+  //chosen server interfase
+  bool HasChosenServer() { return !chosenServer_.empty(); }
+  void SetChosenServer(const std::string & serverDomain);
+  void GetChosenServer() { return chosenServer_; }
+
+  //http interface
+  HttpClient & GetHttpClient() { return httpClient; }
+  HttpConnectionPtr GetHttpConnection() { return httpConnection; }
+  void SetHttpConnetion(HttpConnectionPtr httpCon) { httpConnection = httpCon; }
+  bool InitHttpConnection(const std::stirng & serverDomain = std::string());
+
   // uber-threads
   void Start();
   void Stop();
@@ -47,6 +62,7 @@ public:
 
   // map of availible servers
   std::map<m2::Uuid, std::string> serversMap_;
+  std::string chosenServer_;
   // m2::core::Config config_;
 
   // threads
@@ -54,6 +70,13 @@ public:
   std::mutex mutex_;
   std::condition_variable hasJob_;
   std::queue<JobType> jobQueue_;
+
+  //http
+  HttpClient httpClient;
+  HttpConnectionPtr httpConnection;
+
+  //logger
+  safelog::SafeLog logger_;
 };
 } // core
 } // m2

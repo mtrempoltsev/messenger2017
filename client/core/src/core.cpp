@@ -1,14 +1,26 @@
 #include "core.h"
 
 #include <iostream>
+#include <fstream>
 //#include <thread>
 
 using namespace m2::core;
 
-Core::Core() {
+const std::string chosenFilePath = "chosen_server.txt";
+
+Core::Core() : logger_("logs/core.log") {
   contactManager_ = std::make_shared<ContactManager>();
   messageManager_ = std::make_shared<MessageManager>();
   loginManager_ = std::make_shared<LoginManager>();
+
+  std::ifstream serverFileStream(chosenFilePath);
+  if (chosenFilePath.is_open()) {
+    serverFileStream >> chosenServer_;
+    logger_(SL_DEBUG) << "get the server domain from the file";
+  }
+  else {
+    logger_(SL_DEBUG) << "the file does not open! the chosenServer_ is empty";
+  }
 }
 
 /********* MANAGERS *******/
@@ -79,4 +91,30 @@ void Core::PushJob(JobType job) {
   std::unique_lock<std::mutex> lock(mutex_);
   jobQueue_.push(job);
   hasJob_.notify_one();
+}
+
+/***********SERVER DOMAIN*****************/
+void Core::SetChosenServer(const std::string & serverDomain) {
+  chosenServer_ = serverDomain;
+  std::ofstream serveFileStream(chosenFilePath);
+  if (serveFileStream.is_open()) {
+    serveFileStream << chosenServer_;
+  }
+  else {
+    logger_(SL_ERROR) << "the file does not open! the chosen server was not saved!";
+  }
+}
+
+/**********HTTP INTERFACE*****************/
+bool Core::InitHttpConnection(const std::stirng & serverDomain) {
+  std::string validServerDomain = serverDomain.empty() ? chosenServer_ : serverDomain;
+  if (httpConnection == nullptr)
+    httpConnection = httpClient.connect(validServerDomain);
+  if (httpConnection != nullptr) {
+    chosenServer_ = serverDomain;
+  }
+  else {
+    core.logger_(SL_ERROR) << "The Connection does not exist!";
+  }
+  return httpConnection != nullptr;
 }
