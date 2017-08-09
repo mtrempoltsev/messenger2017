@@ -1,5 +1,16 @@
 /build/
 /bin/
+/shared
+/core/cotire
+/gui/cotire
+
+##### CMake
+CMakeCache.txt
 CMakeLists.txt.user
-**CMakeFiles/
-*CMakeFiles/
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+*.cmake
+install_manifest.txt
+compile_commands.json
