@@ -21,7 +21,7 @@ set(HEADERS
     include/login_manager.h
     include/path_settings.h
     include/jobtype.h
-    ../shared/handlers.h
+    ../shared_client/handlers.h
     )
 
 set(SOURCES
@@ -34,13 +34,12 @@ set(SOURCES
 
     src/guid.cpp
     src/message.cpp
-
     src/error.cpp
     src/login_manager.cpp
     src/message.cpp
     src/guid.cpp
     src/config.cpp
-
+    src/path_settings.cpp
     )
 
 if (ENABLE_TESTS)
@@ -53,10 +52,10 @@ add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
 include_directories(${SUBPROJECT_ROOT})
 include_directories(${SUBPROJECT_ROOT}/include)
-include_directories(${SUBPROJECT_ROOT}/../shared)
+include_directories(${SUBPROJECT_ROOT}/../shared_client)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT stdafx.h)
 cotire(${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME}
-    ${Boost_LIBRARIES})
+    ${Boost_LIBRARIES} -lboost_filesystem -lboost_system)

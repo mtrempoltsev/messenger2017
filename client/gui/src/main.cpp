@@ -1,7 +1,8 @@
-#include <logincontroler.h>
-#include <registrationcontroler.h>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+
+#include <logincontroler.h>
+#include <registrationcontroler.h>
 
 #include <include/chats_filter_proxy_model.h>
 #include <include/contacts_model.h>
@@ -11,8 +12,6 @@
 #include <iostream>
 #include <thread>
 
-/* our uber-headers */
-// gui <--> core
 #include "core.h"
 #include "core_dispatcher.h"
 #include "handlers.h"
@@ -24,54 +23,56 @@ using m2::LoginHandler;
 using m2::RegisterHandler;
 
 void runcore(Core &core) {
-  // std::cout << "runcore" << std::endl;
-  core.Start();
+    // std::cout << "runcore" << std::endl;
+    core.Start();
 }
 
 int main(int argc, char *argv[]) {
-  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-  QGuiApplication app(argc, argv);
+    /* GUI MAGIC */
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QGuiApplication app(argc, argv);
 
-  LoginControler::declareQML();
-  RegistrationControler::declareQML();
+    QQmlApplicationEngine engine;
 
-  std::cout << "start core" << std::endl;
-  m2::core::Core core;
-  m2::core::CoreDispatcher dispatcher;
-  dispatcher.core_ = std::shared_ptr<Core>(&core);
+    LoginControler::declareQML();
+    RegistrationControler::declareQML();
 
-  //   QmlCppInterface obj(&dispatcher);
-  //   engine.rootContext()->setContextProperty("QmlCppInterface", &obj);
+    engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
+    if (engine.rootObjects().isEmpty()) return -1;
 
-  std::thread coreThread(runcore, std::ref(core));
-  //  RegisterHandler rh;
-  //  rh.onCompletion = []() { std::cout << "REGISTERED OK!" << std::endl; };
+    ChatsFilterProxyModel chats;
+    MessagesModel messages;
+    ContactsModel contacts;
 
-  //  LoginHandler lh;
-  //  lh.onComletion = [](std::string uid) {
-  //    std::cout << "GUI GOT UID!!! " << uid << std::endl;
-  //  };
+    engine.rootContext()->setContextProperty("chatModel", &chats);
+    engine.rootContext()->setContextProperty("messagesModel", &messages);
+    engine.rootContext()->setContextProperty("contactsModel", &contacts);
 
-  // dispatcher.registerUser(rh);
-  // dispatcher.Login(lh);
+    /* START CORE */
+    std::cout << "start core" << std::endl;
+    m2::core::Core core;
+    m2::core::CoreDispatcher dispatcher;
+    dispatcher.core_ = std::shared_ptr<Core>(&core);
+    std::thread coreThread(runcore, std::ref(core));
 
-  // coreThread.join();
+    // coreThread.join();
+    // dispatcher.stopCore();
 
-  // int res = app.exec();
-  // dispatcher.stopCore();
+    /* GUI <--> CORE MESSAGE STORY TEST */
+    const std::string userId = "1";
+    m2::MessageStoryHandler handler;
+    using MessageStory = std::vector<m2::core::Message>;
+    handler.onCompletion = [](const MessageStory &story) {
+        std::cout << "Hurrray! We got messages story!" << std::endl;
+        for (auto &i : story) {
+            std::cout << i << std::endl;
+        }
+        // тут всякие emmit'ы
+    };
+    handler.onError = []() { std::cout << "You're a loser."; };
 
-  QQmlApplicationEngine engine;
+    // вызов кора выдать стори
+    dispatcher.GetMessageStory(userId, handler);
 
-  engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
-  if (engine.rootObjects().isEmpty()) return -1;
-
-  ChatsFilterProxyModel chats;
-  MessagesModel messages;
-  ContactsModel contacts;
-
-  engine.rootContext()->setContextProperty("chatModel", &chats);
-  engine.rootContext()->setContextProperty("messagesModel", &messages);
-  engine.rootContext()->setContextProperty("contactsModel", &contacts);
-
-  return app.exec();
+    return app.exec();
 }

@@ -13,8 +13,7 @@ set( CMAKE_AUTOMOC ON )
 INCLUDE_DIRECTORIES(include)
 INCLUDE_DIRECTORIES(include/controlers)
 INCLUDE_DIRECTORIES(../core/include)
-INCLUDE_DIRECTORIES(../shared)
-
+INCLUDE_DIRECTORIES(../shared_client)
 include_directories(${Qt5Core_INCLUDE_DIRS})
 
 # -------------------------   sources   -------------------------

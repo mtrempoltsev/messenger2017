@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ctime>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -7,43 +8,51 @@
 namespace m2 {
 namespace core {
 
-class MessageInfo {
-public:
-  MessageInfo(){};
-  MessageInfo( // const std::string& participants,
-      const std::string &from_uid, const std::string &to_uid,
-      const std::string &sendTime, const std::string &message = "") {
-    // participants_ = participants;
-    from_uid_ = from_uid;
-    to_uid_ = to_uid;
-    sendTime_ = sendTime;
-    message_ = message;
-  }
+    class MessageBuilder {
+    public:
+        size_t chat_id;
+        std::string from_uuid;
+        std::time_t sendTime;
+        std::string text;
+    };
 
-  friend std::ofstream &operator<<(std::ofstream &stream,
-                                   const MessageInfo &mi);
-  friend std::ifstream &operator>>(std::ifstream &stream, MessageInfo &mi);
+    class Message {
+    public:
+        Message() {}
+        Message(const MessageBuilder& mb)
+            : chat_id_(mb.chat_id),
+              from_uuid_(mb.from_uuid),
+              sendTime_(mb.sendTime),
+              text_(mb.text) {}
 
-private:
-  // std::string participants_;
-  std::string from_uid_;
-  std::string to_uid_;
-  std::string sendTime_;
-  std::string message_;
-};
+        size_t GetChatId() const { return chat_id_; }
+        std::string GetFrom() const { return from_uuid_; }
+        std::time_t GetSendTime() const { return sendTime_; }
+        std::string GetText() const { return text_; }
 
-class MessageManager {
-public:
-  MessageManager(){};
+        friend std::ostream& operator<<(std::ostream& stream, const Message& message);
+        friend std::istream& operator>>(std::istream& stream, Message& message);
 
-  using MessageStory = std::vector<MessageInfo>;
+    private:
+        size_t chat_id_;
+        std::string from_uuid_;
+        std::time_t sendTime_;  // unix-time
+        std::string text_;
+    };
 
-  MessageStory GetMessageStory(const std::string &id) const;
-  void SaveMessageStory(const MessageStory &ms, const std::string &contactName);
+    class MessageManager {
+    public:
+        MessageManager() { LoadMessageStory(); }
 
-  // FIXME "lol.txt"
-  std::string GetDefaultPath() const { return "lol.txt"; }
-};
+        using MessageStory = std::vector<Message>;
 
-} // core
-} // m2
+        const MessageStory& GetMessageStory(const size_t chat_id) const;
+        void LoadMessageStory();
+        void SaveMessageStory();
+
+    private:
+        MessageStory messageStory_;
+    };
+
+}  // core
+}  // m2
