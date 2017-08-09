@@ -83,7 +83,7 @@ namespace safelog {
 
       void mainLoop();
     }  *innerLog_;
-
+    std::string getTimeAsString();
   };
 
 }
