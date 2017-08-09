@@ -37,17 +37,18 @@ void CoreDispatcher::Login(LoginHandler handler) {
 
 void CoreDispatcher::RegisterUser(const std::string & serverDomain, RegisterHandler handler) {
     JobType job = [serverDomain, handler](Core &core) {
-      if (core.InitHttpConnection(serverDomain)) {
+      if (!core.InitHttpConnection(serverDomain)) {
         Error error;
         handler.onError(error);
         return;
       }
-      int ret = core.GetLoginManager()->RegisterUser(core.GetHttpConnection());
-      if (ret == 0) {
+      bool ret = core.GetLoginManager()->RegisterUser(core.GetHttpConnection());
+      if (ret) {
         handler.onCompletion();
       }
       else {
-        handler.onError();
+        Error error;
+        handler.onError(error);
       }
     };
     std::cout << "        push job" << std::endl;

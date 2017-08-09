@@ -15,7 +15,7 @@ public:
 
 class Contact {
 public:
-  Contact(){};
+  Contact(){}
   Contact(const ContactBuilder &cb) : uuid_(cb.uuid), nickname_(cb.nickname) {}
 
   std::string GetId() const { return uuid_; }

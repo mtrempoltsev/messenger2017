@@ -9,12 +9,12 @@ using namespace m2::core;
 const std::string chosenFilePath = "chosen_server.txt";
 
 Core::Core() : logger_("logs/core.log") {
-  contactManager_ = std::make_shared<ContactManager>();
-  messageManager_ = std::make_shared<MessageManager>();
-  loginManager_ = std::make_shared<LoginManager>();
+  contactManager_ = std::make_shared<ContactManager>(new ContactManager());
+  messageManager_ = std::make_shared<MessageManager>(new MessageManager());
+  loginManager_ = std::make_shared<LoginManager>(new LoginManager());
 
   std::ifstream serverFileStream(chosenFilePath);
-  if (chosenFilePath.is_open()) {
+  if (serverFileStream.is_open()) {
     serverFileStream >> chosenServer_;
     logger_(SL_DEBUG) << "get the server domain from the file";
   }
@@ -106,7 +106,7 @@ void Core::SetChosenServer(const std::string & serverDomain) {
 }
 
 /**********HTTP INTERFACE*****************/
-bool Core::InitHttpConnection(const std::stirng & serverDomain) {
+bool Core::InitHttpConnection(const std::string &serverDomain) {
   std::string validServerDomain = serverDomain.empty() ? chosenServer_ : serverDomain;
   if (httpConnection == nullptr)
     httpConnection = httpClient.connect(validServerDomain);
@@ -114,7 +114,7 @@ bool Core::InitHttpConnection(const std::stirng & serverDomain) {
     chosenServer_ = serverDomain;
   }
   else {
-    core.logger_(SL_ERROR) << "The Connection does not exist!";
+    logger_(SL_ERROR) << "The Connection does not exist!";
   }
   return httpConnection != nullptr;
 }

@@ -14,21 +14,26 @@ class LoginManager {
 public:
   LoginManager();
   using AsyncRegisterUserHandler = std::function<void(int)>;
-  std::string Login() { return "123e4567-e89b-12d3-a456-426655440000"; }
-  bool RegisterUser();
-  void SetHttpClient ();
+  std::string Login(const HttpConnectionPtr & connection);
+  bool RegisterUser(const HttpConnectionPtr & connection);
+  void SetHttpClient (HttpClient);
+  std::string GetChosenServerDomain();
+  std::string GetChosenServerUuid();
+
   std::list<std::string> GetServerList();
 private:
   void CheckKey(PerformResult result, HttpResponsePtr && response);
-  //std::unique_ptr<crypto::common::OpenSSL_RSA_CryptoProvider> publicKey_;
-  //std::unique_ptr<crypto::common::OpenSSL_RSA_CryptoProvider> privateKey_;
+  void FilnalRegistration(PerformResult result, HttpResponsePtr &&response);
+  std::unique_ptr<crypto::common::OpenSSL_RSA_CryptoProvider> publicKey_;
+  std::unique_ptr<crypto::common::OpenSSL_RSA_CryptoProvider> privateKey_;
   //std::pair<crypto::common::OpenSSL_RSA_CryptoProvider, crypto::common::OpenSSL_RSA_CryptoProvider> crypto_;
   std::vector<char> httpBuffer_;
 
   safelog::SafeLog logger_;
   bool result_;
   bool inProcess_;
-  std::shared_ptr<HttpConnection> currentConnection_;
+  HttpConnectionPtr currentConnection_;
+  std::string userUuid_;
 };
 } // core
 } // m2
