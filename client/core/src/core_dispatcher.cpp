@@ -6,32 +6,59 @@
 #include "jobtype.h"
 #include "message.h"
 
+#include <vector>
+
 namespace m2 {
 namespace core {
 
-void CoreDispatcher::stopCore() { core_->Stop(); }
-void CoreDispatcher::Login(LoginHandler handler) {
-  JobType job = [handler](Core &core) {
-    std::string uuid = core.GetLoginManager()->Login();
-    handler.onComletion(uuid);
-  };
-  std::cout << "        push job" << std::endl;
-  core_->PushJob(job);
-}
-
-void CoreDispatcher::RegisterUser(RegisterHandler handler) {
-  JobType job = [handler](Core &core) {
-    int ret = core.GetLoginManager()->RegisterUser();
-    if (ret == 0) {
-      handler.onCompletion();
-    } else {
-      ;
-      //      hjandler.onError();
+    void CoreDispatcher::stopCore() { core_->Stop(); }
+    void CoreDispatcher::Login(LoginHandler handler) {
+        JobType job = [handler](Core &core) {
+            std::string uuid = core.GetLoginManager()->Login();
+            handler.onCompletion(uuid);
+        };
+        std::cout << "        push job" << std::endl;
+        core_->PushJob(job);
     }
-  };
-  std::cout << "        push job" << std::endl;
-  core_->PushJob(job);
-}
 
-} // core
-} // m2
+    void CoreDispatcher::RegisterUser(RegisterHandler handler) {
+        JobType job = [handler](Core &core) {
+            int ret = core.GetLoginManager()->RegisterUser();
+            if (ret == 0) {
+                handler.onCompletion();
+            } else {
+                ;
+                //      handler.onError();
+            }
+        };
+        std::cout << "        push job" << std::endl;
+        core_->PushJob(job);
+    }
+
+    void CoreDispatcher::GetServerSet(ServerSetHandler handler) {
+        JobType job = [handler](Core &core) {
+            // std::set<std::string> servers = core.GetLoginManager()->GetServerSet();
+            std::set<std::string> servers /* = core.GetLoginManager()->GetServerSet()*/;
+            if (servers.empty()) {
+                handler.onCompletion(servers);
+            } else {
+                ;
+                //      handler.onError();
+            }
+        };
+        std::cout << "        push job get server list" << std::endl;
+        core_->PushJob(job);
+    }
+
+    void CoreDispatcher::GetMessageStory(const std::string &idStr, MessageStoryHandler handler) {
+        // some uber-thread stuff (begin)
+
+        // size_t id =
+        // FIXME: int instead of size_t! we need string --> size_t conversion
+        int id = std::stoi(idStr);
+        std::vector<Message> story = core_->GetMessageManager()->GetMessageStory(id);
+        handler.onCompletion(std::move(story));
+        // some uber-thread stuff  (end)
+    }
+}  // core
+}  // m2

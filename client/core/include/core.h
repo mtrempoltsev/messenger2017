@@ -19,7 +19,7 @@ namespace m2 {
 namespace core {
 
 class Core {
-public:
+ public:
   Core();
 
   // core <--> server
@@ -39,6 +39,11 @@ public:
   void JobLoop();
   void PushJob(JobType job);
 
+ private:  // WOHOOO, I'M HERE AGAIN!!!!!!!!!!1111111
+  // servers setup
+  // make list (actually, map) of availible servers
+//  std::map<m2::Uuid, std::string> ReadServersFile();
+
 
   // managers
   std::shared_ptr<ContactManager> contactManager_;
@@ -50,10 +55,10 @@ public:
   // m2::core::Config config_;
 
   // threads
-  bool keepWorking_; // working flag
+  bool keepWorking_;  // working flag
   std::mutex mutex_;
   std::condition_variable hasJob_;
   std::queue<JobType> jobQueue_;
 };
-} // core
-} // m2
+}  // core
+}  // m2

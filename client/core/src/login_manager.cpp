@@ -1,3 +1,4 @@
+
 #include "../include/login_manager.h"
 
 #include <functional>
@@ -107,4 +108,3 @@ std::list<std::string> LoginManager::GetServerList()
   }
   return serverList;
 }
-

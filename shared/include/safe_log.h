@@ -1,5 +1,6 @@
 /**********************************
 Creation:
+
 	SafeLog logger() - creation without running
 	SafeLog logger("/logs/connection.log") - creation with running
 	
@@ -22,15 +23,18 @@ Write a debug message:
 
 #pragma once
 
+
 #include <fstream>
 #include <queue>
 #include <mutex>
 #include <condition_variable>
+
 namespace m2 {
 namespace safelog {
 
 #ifndef SL_ERROR
 #define SL_ERROR SafeLog::MessageType::ERROR
+
 #endif //SL_ERROR
 
 #ifndef SL_WARNING

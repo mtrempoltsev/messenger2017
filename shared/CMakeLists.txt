@@ -15,6 +15,7 @@ set(SOURCES
     src/safe_log.cpp
 )
 
+
 set(HEADERS
     include/http_client.h
     include/http_connection.h
@@ -27,6 +28,7 @@ set(HEADERS
 
     include/safe_log.h
 )
+
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 

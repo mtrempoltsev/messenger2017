@@ -1,5 +1,6 @@
 #pragma once
 
+#include <set>
 #include <string>
 #include <functional>
 #include <memory>
@@ -11,10 +12,11 @@
 namespace m2 {
 namespace core {
 class LoginManager {
+
 public:
   LoginManager();
   using AsyncRegisterUserHandler = std::function<void(int)>;
-  std::string Login() { return "123e4567-e89b-12d3-a456-426655440000"; }
+ std::string Login() { return "123e4567-e89b-12d3-a456-426655440000"; }
   bool RegisterUser();
   void SetHttpClient ();
   std::list<std::string> GetServerList();
@@ -29,6 +31,7 @@ private:
   bool result_;
   bool inProcess_;
   std::shared_ptr<HttpConnection> currentConnection_;
+
 };
-} // core
-} // m2
+}  // core
+}  // m2

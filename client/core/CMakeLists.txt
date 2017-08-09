@@ -21,8 +21,9 @@ set(HEADERS
     include/login_manager.h
     include/path_settings.h
     include/jobtype.h
-    ../shared/handlers.h
+    ../shared_client/handlers.h
     ../../shared/include/safe_log.h
+
     )
 
 set(SOURCES
@@ -36,7 +37,7 @@ set(SOURCES
     src/guid.cpp
     src/message.cpp
     src/error.cpp
-
+    src/login_manager.cpp
     src/message.cpp
     src/guid.cpp
     src/config.cpp
@@ -55,7 +56,7 @@ add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
 include_directories(${SUBPROJECT_ROOT})
 include_directories(${SUBPROJECT_ROOT}/include)
-include_directories(${SUBPROJECT_ROOT}/../shared)
+include_directories(${SUBPROJECT_ROOT}/../shared_client)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT stdafx.h)
 cotire(${PROJECT_NAME})
