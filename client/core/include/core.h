@@ -46,6 +46,7 @@ public:
   HttpClient & GetHttpClient() { return httpClient; }
   HttpConnectionPtr GetHttpConnection() { return httpConnection; }
   void SetHttpConnetion(HttpConnectionPtr httpCon) { httpConnection = httpCon; }
+  bool InitHttpConnection(const std::stirng & serverDomain = std::string());
 
   // uber-threads
   void Start();

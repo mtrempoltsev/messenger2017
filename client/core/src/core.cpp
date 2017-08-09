@@ -93,6 +93,7 @@ void Core::PushJob(JobType job) {
   hasJob_.notify_one();
 }
 
+/***********SERVER DOMAIN*****************/
 void Core::SetChosenServer(const std::string & serverDomain) {
   chosenServer_ = serverDomain;
   std::ofstream serveFileStream(chosenFilePath);
@@ -101,5 +102,19 @@ void Core::SetChosenServer(const std::string & serverDomain) {
   }
   else {
     logger_(SL_ERROR) << "the file does not open! the chosen server was not saved!";
+  }
+}
+
+/**********HTTP INTERFACE*****************/
+bool Core::InitHttpConnection(const std::stirng & serverDomain) {
+  std::string validServerDomain = serverDomain.empty() ? chosenServer_ : serverDomain;
+  httpConnection = loginManager_->SetConnection(validServerDomain, httpClient);
+  if (httpConnection != nullptr) {
+    core.logger_(SL_ERROR) << "The Connection does not exist!";
+    return false;
+  }
+  else {
+    chosenServer_ = serverDomain;
+    return true;
   }
 }

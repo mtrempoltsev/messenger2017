@@ -14,15 +14,12 @@ using namespace safelog;
 void CoreDispatcher::stopCore() { core_->Stop(); }
 void CoreDispatcher::Login(LoginHandler handler) {
     JobType job = [handler](Core &core) {
-      if (core.GetHttpConnection() == nullptr) {
-        auto httpConnection = core.GetLoginManager()->SetConnection(core.GetChoosedServer(), core.GetHttpClietn());
-        if (httpConnection == nullptr) {
-          core.logger_(SL_ERROR) << "The Connection does not exist!";
+      if (!core.GetHttpConnection() == nullptr) {
+        if (core.InitHttpConnection()) {
           Error error;
           handler.onError(error);
           return;
         }
-        core.SetHttpConnetion(httpConnection);
       }
       auto uuid = core.GetLoginManager()->Login(core.GetHttpConnection());
       if (!uuid.empty()) {
@@ -40,14 +37,11 @@ void CoreDispatcher::Login(LoginHandler handler) {
 
 void CoreDispatcher::RegisterUser(const std::string & serverDomain, RegisterHandler handler) {
     JobType job = [serverDomain, handler](Core &core) {
-      auto httpConnection = core.GetLoginManager()->SetConnection(core.GetChoosedServer(), core.GetHttpClietn());
-      if (httpConnection == nullptr) {
-        core.logger_(SL_ERROR) << "The Connection does not exist!";
+      if (core.InitHttpConnection(serverDomain)) {
         Error error;
         handler.onError(error);
         return;
       }
-      core.SetHttpConnetion(httpConnection);
       int ret = core.GetLoginManager()->RegisterUser(core.GetHttpConnection());
       if (ret == 0) {
         handler.onCompletion();
