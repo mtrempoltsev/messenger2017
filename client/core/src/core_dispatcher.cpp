@@ -38,7 +38,7 @@ void CoreDispatcher::Login(LoginHandler handler) {
     core_->PushJob(job);
 }
 
-void CoreDispatcher::RegisterUser(RegisterHandler handler) {
+void CoreDispatcher::RegisterUser(const std::string & serverDomain, RegisterHandler handler) {
     JobType job = [serverDomain, handler](Core &core) {
       auto httpConnection = core.GetLoginManager()->SetConnection(core.GetChoosedServer(), core.GetHttpClietn());
       if (httpConnection == nullptr) {
