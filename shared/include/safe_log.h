@@ -25,7 +25,7 @@ Write a debug message:
 #include <fstream>
 #include <queue>
 #include <mutex>
-
+#include <condition_variable>
 namespace m2 {
 namespace safelog {
 

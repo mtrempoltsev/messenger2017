@@ -46,6 +46,7 @@ void LoginManager::CheckKey(PerformResult result, HttpResponsePtr &&response)
     {
         logger_(SL_ERROR) << "Network Error in CheckKey";
         result_ = false;
+        inProcess_ = false;
         return;
     }
     if(response->code != 200)
@@ -63,15 +64,23 @@ void LoginManager::CheckKey(PerformResult result, HttpResponsePtr &&response)
     catch (json_parser_error & ex) {
       logger_(SL_ERROR) << ex.what();
       result_ = false;
+      inProcess_ = false;
     }
     if(result)
     {
-        if(!pt.find("server_list") || !pt.find("client_string") || !pt.find("encr_public_key"))
+        if(!pt.find("server_string") || !pt.find("client_string") || !pt.find("encr_public_key"))
         {
-           logger_(SL_ERROR) << "Bad server JSON in CheckKey";
-           result_ = false;
-           return;
+          if(!pt.find("server_list"))
+            logger_(SL_ERROR) << "Bad server_string JSON in CheckKey";
+          if(!pt.find("client_string"))
+            logger_(SL_ERROR) << "Bad client_string JSON in CheckKey";
+          if(!pt.find("encr_public_key"))
+            logger_(SL_ERROR) << "Bad encr_public_key JSON in CheckKey";
+          result_ = false;
+          inProcess_ = false;
+          return;
         }
+        //pt.put() //decrypt client string with privateKey_ and put into tree
         //pt.put() //put our publicKey_
         //
     }
@@ -80,7 +89,7 @@ void LoginManager::CheckKey(PerformResult result, HttpResponsePtr &&response)
 std::list<std::string> LoginManager::GetServerList()
 {
   std::list<std::string> serverList;
-  std::ifstream serverListStream("/server_list.json");
+  std::ifstream serverListStream(GetManagerPath().append("server_list.json"));
   if (serverListStream.is_open()) {
       ptree pt;
       try {
