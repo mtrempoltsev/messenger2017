@@ -5,7 +5,7 @@
 
 using namespace m2::core;
 
-Core::Core() {
+Core::Core() : logger_("logs/core.log") {
   contactManager_ = std::make_shared<ContactManager>();
   messageManager_ = std::make_shared<MessageManager>();
   loginManager_ = std::make_shared<LoginManager>();
