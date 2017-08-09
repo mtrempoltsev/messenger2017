@@ -40,47 +40,64 @@
 namespace m2 {
 
 struct LoginHandler final {
-  using CompletionHandler = std::function<void(std::string uuid)>;
-  using ErrorHandler = std::function<void(Error &&error)>;
+    using CompletionHandler = std::function<void(std::string uuid)>;
+    using ErrorHandler = std::function<void(Error &&error)>;
 
-  CompletionHandler onCompletion;
-  ErrorHandler onError;
+    CompletionHandler onCompletion;
+    ErrorHandler onError;
 };
 
 struct RegisterHandler final {
-  using CompletionHandler = std::function<void()>;
-  using ErrorHandler = std::function<void(Error &&error)>;
+    using CompletionHandler = std::function<void()>;
+    using ErrorHandler = std::function<void(Error &&error)>;
 
-  CompletionHandler onCompletion;
-  ErrorHandler onError;
+    CompletionHandler onCompletion;
+    ErrorHandler onError;
 };
 
-/*
-dispatcher.GetMessageStory(userId, MessageStoryHandler)
+/********* MESSAGES *********
+Если вдруг очень хочется потестить, то мессенджы хрянятся:
+  на юниксе в ~/.messenger/message-story.json
+  на винде в %USERPROFILE/documents/.messenger/message-story.json
+В core/tests есть пример. Правда там время пока не оч работает :D
 
-MessageInfo
-  std::string from_uid_;
-  std::string to_uid_;
-  std::string sendTime_;
-  std::string message_;
+// GUI --> Core
+dispatcher.GetMessageStory(userId, handler)
 
+// core_dispatcher.h
+void GetMessageStory(const std::string &id, MessageStoryHandler handler);
+
+// message.h
+class Message {
+private:
+  size_t chat_id;
+  std::string from_uuid;
+  std::time_t sendTime;
+  std::string text;
+
+public:
+  size_t GetChatId() const { return chat_id_; }
+  std::string GetFrom() const { return from_uuid_; }
+  std::time_t GetSendTime() const { return sendTime_; }
+  std::string GetText() const { return text_; }
+}
 */
 struct MessageStoryHandler final {
-  using MessageStory = std::vector<m2::core::MessageInfo>;
+    using MessageStory = std::vector<m2::core::Message>;
 
-  using CompletionHandler = std::function<void(MessageStory &&)>;
-  using ErrorHandler = std::function<void(Error &&error)>;
+    using CompletionHandler = std::function<void(const MessageStory &)>;
+    using ErrorHandler = std::function<void(/*Error &&error*/)>;
 
-  CompletionHandler onCompletion;
-  ErrorHandler onError;
+    CompletionHandler onCompletion;
+    ErrorHandler onError;
 };
 
 // В процессе...
 struct ServerSetHandler final {
-  using CompletionHandler = std::function<void(std::set<std::string> servers)>;
-  using ErrorHandler = std::function<void(Error &&error)>;
+    using CompletionHandler = std::function<void(std::set<std::string> servers)>;
+    using ErrorHandler = std::function<void(Error &&error)>;
 
-  CompletionHandler onCompletion;
-  ErrorHandler onError;
+    CompletionHandler onCompletion;
+    ErrorHandler onError;
 };
 }

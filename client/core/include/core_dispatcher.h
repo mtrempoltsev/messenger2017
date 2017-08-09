@@ -32,27 +32,27 @@ namespace m2 {
 //};
 
 namespace core {
-class CoreDispatcher final {
- public:
-  CoreDispatcher() = default;
-  CoreDispatcher(CoreDispatcher &) = delete;
-  CoreDispatcher &operator=(CoreDispatcher &) = delete;
+    class CoreDispatcher final {
+    public:
+        CoreDispatcher() = default;
+        CoreDispatcher(CoreDispatcher &) = delete;
+        CoreDispatcher &operator=(CoreDispatcher &) = delete;
 
-  CoreDispatcher(CoreDispatcher &&) = delete;
-  CoreDispatcher &operator=(CoreDispatcher &&) = delete;
+        CoreDispatcher(CoreDispatcher &&) = delete;
+        CoreDispatcher &operator=(CoreDispatcher &&) = delete;
 
-  // login_manager
-  void Login(LoginHandler handler);
-  void RegisterUser(RegisterHandler handler);
-  void GetServerSet(ServerSetHandler handler);
+        // login_manager
+        void Login(LoginHandler handler);
+        void RegisterUser(RegisterHandler handler);
+        void GetServerSet(ServerSetHandler handler);
 
-  // messages
-  void GetMessageStory(const std::string &id, MessageStoryHandler handler);
+        // messages
+        void GetMessageStory(const std::string &id, MessageStoryHandler handler);
 
-  void stopCore();
+        void stopCore();
 
-  std::shared_ptr<Core> core_;
-};
+        std::shared_ptr<Core> core_;
+    };
 
 }  // core
 }  // m2
