@@ -9,7 +9,7 @@
 
 #include <functional>
 #include <memory>
-#include <vector>
+#include <list>
 
 namespace m2 {
 
@@ -43,6 +43,9 @@ public:
 
   void Login(LoginHandler handler);
   void RegisterUser(RegisterHandler handler);
+
+  bool HasServer();
+  std::list<std::string> GetServerList();
 
   void stopCore();
 
