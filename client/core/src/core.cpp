@@ -108,13 +108,13 @@ void Core::SetChosenServer(const std::string & serverDomain) {
 /**********HTTP INTERFACE*****************/
 bool Core::InitHttpConnection(const std::stirng & serverDomain) {
   std::string validServerDomain = serverDomain.empty() ? chosenServer_ : serverDomain;
-  httpConnection = loginManager_->SetConnection(validServerDomain, httpClient);
+  if (httpConnection == nullptr)
+    httpConnection = httpClient.connect(validServerDomain);
   if (httpConnection != nullptr) {
-    core.logger_(SL_ERROR) << "The Connection does not exist!";
-    return false;
+    chosenServer_ = serverDomain;
   }
   else {
-    chosenServer_ = serverDomain;
-    return true;
+    core.logger_(SL_ERROR) << "The Connection does not exist!";
   }
+  return httpConnection != nullptr;
 }
