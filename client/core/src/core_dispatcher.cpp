@@ -37,7 +37,8 @@ namespace core {
 
     void CoreDispatcher::GetServerSet(ServerSetHandler handler) {
         JobType job = [handler](Core &core) {
-            std::set<std::string> servers = core.GetLoginManager()->GetServerSet();
+            // std::set<std::string> servers = core.GetLoginManager()->GetServerSet();
+            std::set<std::string> servers /* = core.GetLoginManager()->GetServerSet()*/;
             if (servers.empty()) {
                 handler.onCompletion(servers);
             } else {

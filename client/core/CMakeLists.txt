@@ -22,6 +22,8 @@ set(HEADERS
     include/path_settings.h
     include/jobtype.h
     ../shared_client/handlers.h
+    ../../shared/include/safe_log.h
+
     )
 
 set(SOURCES
@@ -39,7 +41,9 @@ set(SOURCES
     src/message.cpp
     src/guid.cpp
     src/config.cpp
+    src/login_manager.cpp
     src/path_settings.cpp
+    ../../shared/src/safe_log.cpp
     )
 
 if (ENABLE_TESTS)

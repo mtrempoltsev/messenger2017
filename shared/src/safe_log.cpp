@@ -1,11 +1,14 @@
-#include "safe_log.h"
+#include "../include/safe_log.h"
 
-#include <functional> // std::bind
+#include <chrono>
+#include <ctime>
+#include <functional>
 #include <map>
 #include <string>
 #include <thread>
 
 using namespace m2::safelog;
+using namespace std::chrono;
 
 static std::map<SafeLog::MessageType, std::string> labelNameMap = {
     {SafeLog::MessageType::ERROR, "[Error]: "},
@@ -25,6 +28,7 @@ void SafeLog::InnerSafeLog::reset(const std::string &filePath) {
     logFile_.close();
   logFile_.open(filePath);
   if (logFile_.is_open()) {
+
     isRunning_ = true;
     std::thread thread(std::bind(&InnerSafeLog::mainLoop, this));
     thread.detach();
@@ -32,6 +36,7 @@ void SafeLog::InnerSafeLog::reset(const std::string &filePath) {
 }
 
 void SafeLog::InnerSafeLog::pushMessage(const std::string &message) {
+
   std::unique_lock<std::mutex> lock(mutex_);
   messageQueue_.push(message);
   hasMessage_.notify_one();
@@ -63,11 +68,20 @@ SafeLog::~SafeLog() { innerLog_->stop(); }
 void SafeLog::reset(const std::string &filePath) { innerLog_->reset(filePath); }
 
 SafeLog &SafeLog::operator<<(const std::string &message) {
+
   innerLog_->pushMessage(message + "\n\n");
   return *this;
 }
 
 SafeLog &SafeLog::operator()(const MessageType &messageType) {
-  innerLog_->pushMessage(labelNameMap[messageType]);
+  innerLog_->pushMessage("[" + getTimeAsString() + "]" +
+                         labelNameMap[messageType]);
   return *this;
+}
+
+std::string SafeLog::getTimeAsString() {
+  system_clock::time_point p = system_clock::now();
+  std::time_t t = system_clock::to_time_t(p);
+  std::string timestr = std::ctime(&t);
+  return std::string(timestr.begin(), timestr.end() - 1);
 }
