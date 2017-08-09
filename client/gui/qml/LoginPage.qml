@@ -3,7 +3,6 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 import Controler.Login 1.0
 
-
 PageWithLogo {
     id: loginPage
 
@@ -55,7 +54,6 @@ PageWithLogo {
         font.pointSize: parent.fontSize
         onClicked: stackView.push("qrc:/qml/RegisterPage.qml")
     }
-
 
     states: [
         State {

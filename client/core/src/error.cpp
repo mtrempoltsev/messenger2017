@@ -1,3 +1,3 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
 #include "../include/error.h"

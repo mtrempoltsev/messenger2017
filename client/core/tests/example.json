@@ -1,0 +1,16 @@
+{
+    "contacts": [
+        {
+            "id": "uuid1",
+            "nickname": "qwerty"
+        },
+        {
+            "id": "uuid2",
+            "nickname": "qwerty"
+        },
+        {
+            "id": "uuid3",
+            "nickname": "qwerty"
+        }
+    ]
+}
