@@ -94,9 +94,11 @@ namespace safelog {
 	public:
 	  InnerLoginWritter(SafeLog & sl) : sl_(sl) {}
 	  ILoginWritter & operator<<(const std::string & message) override;
+	  void SetLabel(const std::string & label) { label_ = label; }
 
 	private:
 	  SafeLog & sl_;
+	  std::string label_;
 
 	  friend SafeLog;
 	} logginWritter_;

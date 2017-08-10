@@ -72,7 +72,7 @@ void SafeLog::InnerSafeLog::safePop() {
 }
 
 ILoginWritter & SafeLog::InnerLoginWritter::operator<<(const std::string & message) {
-  sl_.innerLog_->pushMessage(message + "\n\n");
+  sl_.innerLog_->pushMessage(label_ + message + "\n\n");
   return *this;
 }
 
@@ -82,7 +82,8 @@ SafeLog::SafeLog() :
   innerLog_ = new InnerSafeLog();
 }
 
-SafeLog::SafeLog(const std::string & filePath)
+SafeLog::SafeLog(const std::string & filePath) :
+  logginWritter_(*this)
 {
   innerLog_ = new InnerSafeLog(filePath);
 }
@@ -105,7 +106,7 @@ void SafeLog::reset(const std::string & filePath)
 
 ILoginWritter & SafeLog::operator()(const MessageType & messageType)
 {
-  innerLog_->pushMessage("[" + getTimeAsString() + "]" + labelNameMap[messageType]);
+  logginWritter_.SetLabel("[" + getTimeAsString() + "]" + labelNameMap[messageType]);
   return logginWritter_;
 }
 
