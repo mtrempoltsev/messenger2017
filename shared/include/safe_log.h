@@ -40,6 +40,11 @@ Write a debug message:
 #include <condition_variable>
 namespace m2 {
 namespace safelog {
+  
+  class ILoginWritter {
+  public:
+    virtual ILoginWritter & operator<<(const std::string & message) = 0;
+  };
 
   class SafeLog
   {
@@ -56,8 +61,8 @@ namespace safelog {
     SafeLog(const std::string & filePath);
     ~SafeLog();
 
-    SafeLog & operator<<(const std::string & message);
-    SafeLog & operator()(const MessageType & messageType);
+    //SafeLog & operator<<(const std::string & message);
+	ILoginWritter & operator()(const MessageType & messageType);
 
     void reset(const std::string & filePath);
 
@@ -84,6 +89,18 @@ namespace safelog {
       void mainLoop();
       void safePop();
     }  *innerLog_;
+
+	class InnerLoginWritter : public ILoginWritter {
+	public:
+	  InnerLoginWritter(SafeLog & sl) : sl_(sl) {}
+	  ILoginWritter & operator<<(const std::string & message) override;
+
+	private:
+	  SafeLog & sl_;
+
+	  friend SafeLog;
+	} logginWritter_;
+
     std::string getTimeAsString();
   };
 
