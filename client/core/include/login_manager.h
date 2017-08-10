@@ -12,6 +12,8 @@
 #include "crypto_pki.h"
 #include "error.h"
 
+#include <boost/property_tree/ptree.hpp>
+
 namespace m2 {
 namespace core {
 class LoginManager {
@@ -21,15 +23,15 @@ public:
   Error RegisterUser(const HttpConnectionPtr & connection);
   std::string GetServerDomain() { return serverDomain_;}
   void SetServerDomain(const std::string & severDomain) { serverDomain_ = severDomain; }
-  //std::string
   //std::string GetChosenServerUuid();
   std::list<std::string> GetServerList();
   void ReadLoginInfo();
   void WriteLoginInfo();
+
 private:
   void UniveralCallback(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out);
   Error CheckServerResponse(PerformResult & result, HttpResponsePtr & response, const std::string & requestName, int lineNum);
-  Error CheckJsonValidFormat(const std::list<const std::string> & jsomParams, int lineNum, boost::property_tree::ptree & jsonPt);
+  Error CheckJsonValidFormat(const std::list<std::string>& jsomParams, int lineNum, boost::property_tree::ptree & jsonPt);
 
   std::vector<char> httpBuffer_;
 
