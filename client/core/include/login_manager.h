@@ -19,28 +19,35 @@ public:
   LoginManager();
   std::string Login(const HttpConnectionPtr & connection);
   Error RegisterUser(const HttpConnectionPtr & connection);
-  void SetHttpClient (HttpClient);
-  std::string GetChosenServerDomain();
-  std::string GetChosenServerUuid();
-
+  std::string GetServerDomain() { return serverDomain_;}
+  void SetServerDomain(const std::string & severDomain) { serverDomain_ = severDomain; }
+  //std::string
+  //std::string GetChosenServerUuid();
   std::list<std::string> GetServerList();
+  void ReadLoginInfo();
+  void WriteLoginInfo();
 private:
   void CheckKey(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out);
   void FilnalRegistration(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out);
-  std::unique_ptr<crypto::common::OpenSSL_RSA_CryptoProvider> publicKey_;
-  std::unique_ptr<crypto::common::OpenSSL_RSA_CryptoProvider> privateKey_;
-  //std::pair<crypto::common::OpenSSL_RSA_CryptoProvider, crypto::common::OpenSSL_RSA_CryptoProvider> crypto_;
+
   std::vector<char> httpBuffer_;
 
   safelog::SafeLog logger_;
-  bool inProcess_;
-  HttpConnectionPtr currentConnection_;
-  std::string userUuid_;
 
-  Error registrationError_;
 
+  //thread control
   std::mutex mutex_;
   std::condition_variable hasResponse_;
+  bool inProcess_;
+
+  HttpConnectionPtr currentConnection_;
+  //login info
+  std::string loginFilePath_;
+  std::string userUuid_;
+  std::string serverDomain_;
+  std::unique_ptr<crypto::common::OpenSSL_RSA_CryptoProvider> publicKey_;
+  std::unique_ptr<crypto::common::OpenSSL_RSA_CryptoProvider> privateKey_;
+  //Error registrationError_;
 };
 } // core
 } // m2
