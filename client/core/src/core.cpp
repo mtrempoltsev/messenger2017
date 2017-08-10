@@ -86,8 +86,9 @@ void Core::JobLoop() {
   }
 }
 
-void Core::PushJob(JobType job) {
+void Core::PushJob(JobType job, std::string && jobname) {
   std::cout << "      push job" << std::endl;
+  logger_(SL_DEBUG) << "push job with name " + jobname;
   std::unique_lock<std::mutex> lock(mutex_);
   jobQueue_.push(job);
   hasJob_.notify_one();

@@ -52,7 +52,7 @@ public:
   void Start();
   void Stop();
   void JobLoop();
-  void PushJob(JobType job);
+  void PushJob(JobType job, std::string && jobname);
 
 
   // managers
