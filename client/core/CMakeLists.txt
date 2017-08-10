@@ -23,6 +23,9 @@ set(HEADERS
     include/jobtype.h
     ../shared/handlers.h
     ../../shared/include/safe_log.h
+    ../../shared/include/crypto_common.h
+    ../../shared/include/http_client.h
+    ../../shared/include/http_connection.h
     )
 
 set(SOURCES
@@ -43,6 +46,9 @@ set(SOURCES
     src/login_manager.cpp
     src/path_settings.cpp
     ../../shared/src/safe_log.cpp
+    ../../shared/src/crypto_common.cpp
+    ../../shared/src/http_client.cpp
+    ../../shared/src/http_connection.cpp
     )
 
 if (ENABLE_TESTS)

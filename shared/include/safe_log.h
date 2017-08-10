@@ -22,24 +22,24 @@ Write a debug message:
 
 #pragma once
 
+#ifndef SL_ERROR
+#define SL_ERROR m2::safelog::SafeLog::MessageType::ERROR
+#endif //SL_ERROR
+
+#ifndef SL_WARNING
+#define SL_WARNING m2::safelog::SafeLog::MessageType::WARNING
+#endif //SL_WARNING
+
+#ifndef SL_DEBUG
+#define SL_DEBUG m2::safelog::SafeLog::MessageType::DEBUG
+#endif //SL_DEBUG
+
 #include <fstream>
 #include <queue>
 #include <mutex>
 #include <condition_variable>
 namespace m2 {
 namespace safelog {
-
-#ifndef SL_ERROR
-#define SL_ERROR SafeLog::MessageType::ERROR
-#endif //SL_ERROR
-
-#ifndef SL_WARNING
-#define SL_WARNING SafeLog::MessageType::WARNING
-#endif //SL_WARNING
-
-#ifndef SL_DEBUG
-#define SL_DEBUG SafeLog::MessageType::DEBUG
-#endif //SL_DEBUG
 
   class SafeLog
   {

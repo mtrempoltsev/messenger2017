@@ -8,9 +8,9 @@
 #include "login_manager.h"
 #include "message.h"
 
-#include "../../../shared/include/http_client.h"
-#include "../../../shared/include/http_connection.h"
-#include "../../../shared/include/safe_log.h"
+#include "http_client.h"
+#include "http_connection.h"
+#include "safe_log.h"
 
 #include <boost/optional.hpp>
 #include <condition_variable>

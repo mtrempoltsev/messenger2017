@@ -14,7 +14,6 @@ namespace core {
 class LoginManager {
 public:
   LoginManager();
-  using AsyncRegisterUserHandler = std::function<void(int)>;
   std::string Login(const HttpConnectionPtr & connection);
   Error RegisterUser(const HttpConnectionPtr & connection);
   void SetHttpClient (HttpClient);

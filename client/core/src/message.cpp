@@ -3,6 +3,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <exception>
+#include <iostream>
 
 namespace m2 {
 namespace core {

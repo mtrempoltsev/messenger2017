@@ -15,10 +15,9 @@ using namespace safelog;
 void CoreDispatcher::stopCore() { core_->Stop(); }
 void CoreDispatcher::Login(LoginHandler handler) {
     JobType job = [handler](Core &core) {
-      if (!core.GetHttpConnection() == nullptr) {
+      if (core.GetHttpConnection() == nullptr) {
         if (core.InitHttpConnection()) {
-          Error error;
-          handler.onError(error);
+          handler.onError(Error(Error::Code::NetworkError, "Connection error"));
           return;
         }
       }
@@ -27,41 +26,36 @@ void CoreDispatcher::Login(LoginHandler handler) {
         handler.onComletion(uuid);
       }
       else {
-        Error error;
-        handler.onError(error);
+        handler.onError(Error(Error::Code::LoginError, "Login error"));
       }
     };
-    std::cout << "        push job" << std::endl;
-    core.logger_(SL_DEBUG) << "push Login job";
-    core_->PushJob(job);
+    core_->PushJob(job, "Login");
 }
 
 void CoreDispatcher::RegisterUser(const std::string & serverDomain, RegisterHandler handler) {
     JobType job = [serverDomain, handler](Core &core) {
       if (!core.InitHttpConnection(serverDomain)) {
-        Error error;
-        handler.onError(error);
+        handler.onError(Error(Error::Code::NetworkError, "Connection error"));
         return;
       }
       m2::Error ret = core.GetLoginManager()->RegisterUser(core.GetHttpConnection());
-      if (ret == m2::Error::NoError) {
+      if (ret.code == m2::Error::Code::NoError) {
         handler.onCompletion();
       }
       else {
-        handler.onError(ret);
+        handler.onError(std::move(ret));
       }
     };
     std::cout << "        push job" << std::endl;
-    core.logger_(SL_DEBUG) << "push Register job";
-    core_->PushJob(job);
+    core_->PushJob(job, "Registation");
 }
 
 bool CoreDispatcher::HasServer() {
-  return core_->HasChoosedServer();
+  return core_->HasChosenServer();
 }
 
-std::list<std::string> CoreDispathcer::GetServerList() {
-  return core_->GetLoginManager().GetServerList();
+std::list<std::string> CoreDispatcher::GetServerList() {
+  return core_->GetLoginManager()->GetServerList();
 }
 
 } // core
