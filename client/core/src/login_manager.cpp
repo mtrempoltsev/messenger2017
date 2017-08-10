@@ -60,12 +60,12 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
 
   if(result == PerformResult::NetworkError)
   {
-    logger_(SL_ERROR) << "Network Error in CheckKey";
+    logger_(SL_ERROR) << "Network Error in RegisterUser on line=" + std::to_string(__LINE__);
     return Error(Error::Code::NetworkError, std::string("the \"/user/sendKey\" request failed"));
   }
   if(response->code != 200)
   {
-      logger_(SL_ERROR) << "Bad response code in CheckKey";
+      logger_(SL_ERROR) << "Bad response code in RegisterUser on line=" + std::to_string(__LINE__);
       return Error(Error::Code::NetworkError, std::string("the \"/user/checkKey\" response ended with code " + std::to_string(response->code)));
   }
 
@@ -87,11 +87,11 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
   {
     Error registrationError(Error::Code::NoError, std::string());
     if(pt.find(c_server_string) == pt.not_found()) {
-      logger_(SL_ERROR) << "Bad server_string JSON in CheckKey";
+      logger_(SL_ERROR) << "Bad server_string JSON in RegisterUser on line=" + std::to_string(__LINE__);
       registrationError.message += "the \"server_string\" field has not founded\n";
     }
     if(pt.find(c_client_string) == pt.not_found()) {
-      logger_(SL_ERROR) << "Bad client_string JSON in CheckKey";
+      logger_(SL_ERROR) << "Bad client_string JSON in RegisterUser on line=" + std::to_string(__LINE__);
       registrationError.message += "the \"client_string\" field has not founded\n";
     }
     registrationError.code = Error::Code::NetworkError;
@@ -117,12 +117,12 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
 
   if(result == PerformResult::NetworkError)
   {
-      logger_(SL_ERROR) << "Network Error in CheckKey";
+      logger_(SL_ERROR) << "Network Error in RegisterUser on line=" + std::to_string(__LINE__);
       return Error(Error::Code::NetworkError, std::string("the \"/user/register\" request failed"));
   }
   if(response->code != 200)
   {
-      logger_(SL_ERROR) << "Bad response code in CheckKey";
+      logger_(SL_ERROR) << "Bad response in RegisterUser on line=" + std::to_string(__LINE__);
       return Error(Error::Code::NetworkError, std::string("the \"/user/register\" response ended with code " + std::to_string(response->code)));
   }
   std::string json_str(httpBuffer_.begin(), httpBuffer_.end());
@@ -139,7 +139,7 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
   if (returnAfterCatch)
       return Error(Error::Code::NetworkError, std::string("the \"/user/register\" response data has not json format"));
   if(pt.find(c_uuid_string) == pt.not_found()) {
-    logger_(SL_ERROR) << "Bad uuid_string JSON in CheckKey";
+    logger_(SL_ERROR) << "Bad uuid_string JSON in RegisterUser on line=" + std::to_string(__LINE__);
     return Error(Error::Code::NetworkError, std::string("the \"" + c_uuid_string + "\" field has not founded\n"));
   }
   userUuid_ = pt.get<std::string>(c_uuid_string);
