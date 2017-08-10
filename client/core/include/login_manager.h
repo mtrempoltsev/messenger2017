@@ -25,8 +25,8 @@ public:
 
   std::list<std::string> GetServerList();
 private:
-  void CheckKey(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttResponsePtr & response_out);
-  void FilnalRegistration(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttResponsePtr & response_out);
+  void CheckKey(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out);
+  void FilnalRegistration(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out);
   std::unique_ptr<crypto::common::OpenSSL_RSA_CryptoProvider> publicKey_;
   std::unique_ptr<crypto::common::OpenSSL_RSA_CryptoProvider> privateKey_;
   //std::pair<crypto::common::OpenSSL_RSA_CryptoProvider, crypto::common::OpenSSL_RSA_CryptoProvider> crypto_;

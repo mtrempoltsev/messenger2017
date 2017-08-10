@@ -2,13 +2,15 @@
 
 #include <iostream>
 #include <fstream>
+#include <boost/filesystem.hpp>
 //#include <thread>
+#include "path_settings.h"
 
 using namespace m2::core;
 
-const std::string chosenFilePath = "chosen_server.txt";
+const std::string chosenFilePath = "/home/vova/chosen_server.txt";
 
-Core::Core() : logger_("logs/core.log") {
+Core::Core() :logger_(GetManagerPath("logs").append("core.log")) {
   contactManager_ = std::make_shared<ContactManager>();
   messageManager_ = std::make_shared<MessageManager>();
   loginManager_ = std::make_shared<LoginManager>();

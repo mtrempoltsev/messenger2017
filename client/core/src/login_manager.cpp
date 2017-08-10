@@ -43,20 +43,22 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
 
   publicKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.first.str_key(), true);
   privateKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.second.str_key(), false);
-  ptree pt;
-  pt.put("public_key", publicKey_->str_key());
-  std::ostringstream ss;
-  write_json(ss, pt);
-  std::string json = ss.str();
-  std::vector<char> responseData(json.begin(), json.end());
+  ptree ptreeSendKey;
+  ptreeSendKey.put("public_key", publicKey_->str_key());
+  std::ostringstream ssSendKey;
+  write_json(ssSendKey, ptreeSendKey);
+  std::string jsonSendKey = ssSendKey.str();
+  std::vector<char> responseDataCheckKey(jsonSendKey.begin(), jsonSendKey.end());
 
   PerformResult result;
   HttpResponsePtr response;
 
-  std::unique_lock<std::mutex> lock(mutex_);
-  currentConnection_.get()->perform({"/user/sendKey", std::chrono::milliseconds(TIMEOUT)}, responseData, httpBuffer_,
+  logger_(SL_DEBUG) << "Prev mutex";
+  std::unique_lock<std::mutex> lockSendKey(mutex_);
+  logger_(SL_DEBUG) << "Mutex locked";
+  currentConnection_.get()->perform({"/user/sendKey", std::chrono::milliseconds(TIMEOUT)}, responseDataCheckKey, httpBuffer_,
              std::bind(&LoginManager::CheckKey, this, std::placeholders::_1, std::placeholders::_2, std::ref(result), std::ref(response)));
-  hasResponse_.wait(lock);
+  hasResponse_.wait(lockSendKey);
 
   if(result == PerformResult::NetworkError)
   {
@@ -69,12 +71,12 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
       return Error(Error::Code::NetworkError, std::string("the \"/user/checkKey\" response ended with code " + std::to_string(response->code)));
   }
 
-  std::string json_str(httpBuffer_.begin(), httpBuffer_.end());
-  std::istringstream ss(json_str);
-  ptree pt;
+  std::string jsonCheckKey(httpBuffer_.begin(), httpBuffer_.end());
+  std::istringstream ssCheckKey(jsonCheckKey);
+  ptree ptreeCheckKey;
   bool returnAfterCatch = false;
   try {
-      read_json(ss, pt);
+      read_json(ssCheckKey, ptreeCheckKey);
   }
   catch (json_parser_error & ex) {
     logger_(SL_ERROR) << ex.what();
@@ -82,38 +84,38 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
   }
   if (returnAfterCatch)
       return Error(Error::Code::NetworkError, std::string("the \"/user/checkKey\" response data has not json format"));
-  if(pt.find(c_server_string) == pt.not_found() ||
-     pt.find(c_client_string) == pt.not_found())
+  if(ptreeCheckKey.find(c_server_string) == ptreeCheckKey.not_found() ||
+     ptreeCheckKey.find(c_client_string) == ptreeCheckKey.not_found())
   {
     Error registrationError(Error::Code::NoError, std::string());
-    if(pt.find(c_server_string) == pt.not_found()) {
+    if(ptreeCheckKey.find(c_server_string) == ptreeCheckKey.not_found()) {
       logger_(SL_ERROR) << "Bad server_string JSON in RegisterUser on line=" + std::to_string(__LINE__);
       registrationError.message += "the \"server_string\" field has not founded\n";
     }
-    if(pt.find(c_client_string) == pt.not_found()) {
+    if(ptreeCheckKey.find(c_client_string) == ptreeCheckKey.not_found()) {
       logger_(SL_ERROR) << "Bad client_string JSON in RegisterUser on line=" + std::to_string(__LINE__);
       registrationError.message += "the \"client_string\" field has not founded\n";
     }
     registrationError.code = Error::Code::NetworkError;
     return registrationError;
   }
-  pt.clear();
-  std::string serverString = pt.get<std::string>("server_string");
-  std::string clientString = pt.get<std::string>("client_string");
+  ptreeCheckKey.clear();
+  std::string serverString = ptreeCheckKey.get<std::string>("server_string");
+  std::string clientString = ptreeCheckKey.get<std::string>("client_string");
   clientString = privateKey_->decrypt(clientString);
-  pt.put(c_client_string, clientString); //decrypt client string with privateKey_ and put into tree
-  pt.put(c_server_string, serverString);
+  ptreeCheckKey.put(c_client_string, clientString); //decrypt client string with privateKey_ and put into tree
+  ptreeCheckKey.put(c_server_string, serverString);
 
-  std::ostringstream ss;
-  write_json(ss, pt);
-  std::string json = ss.str();
-  std::vector<char> responseData(json.begin(), json.end());
+  std::ostringstream ssConfirmKey;
+  write_json(ssConfirmKey, ptreeCheckKey);
+  std::string jsonConfirmKey = ssConfirmKey.str();
+  std::vector<char> responseDataConfirmKey(jsonConfirmKey.begin(), jsonConfirmKey.end());
   httpBuffer_.clear();
 
-  std::unique_lock<std::mutex> lock(mutex_);
-  currentConnection_.get()->perform({"/user/sendKey", std::chrono::milliseconds(TIMEOUT)}, responseData, httpBuffer_,
+  std::unique_lock<std::mutex> lockConfirmKey(mutex_);
+  currentConnection_.get()->perform({"/user/sendKey", std::chrono::milliseconds(TIMEOUT)}, responseDataConfirmKey, httpBuffer_,
              std::bind(&LoginManager::FilnalRegistration, this, std::placeholders::_1, std::placeholders::_2, std::ref(result), std::ref(response)));
-  hasResponse_.wait(lock);
+  hasResponse_.wait(lockConfirmKey);
 
   if(result == PerformResult::NetworkError)
   {
@@ -125,12 +127,12 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
       logger_(SL_ERROR) << "Bad response in RegisterUser on line=" + std::to_string(__LINE__);
       return Error(Error::Code::NetworkError, std::string("the \"/user/register\" response ended with code " + std::to_string(response->code)));
   }
-  std::string json_str(httpBuffer_.begin(), httpBuffer_.end());
-  std::istringstream ss(json_str);
-  ptree pt;
+  std::string jsonFinalRegistration(httpBuffer_.begin(), httpBuffer_.end());
+  std::istringstream ssFinalRegistration(jsonFinalRegistration);
+  ptree ptreeFinalRegistration;
   returnAfterCatch = false;
   try {
-      read_json(ss, pt);
+      read_json(ssFinalRegistration, ptreeFinalRegistration);
   }
   catch (json_parser_error & ex) {
     logger_(SL_ERROR) << ex.what();
@@ -138,24 +140,24 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
   }
   if (returnAfterCatch)
       return Error(Error::Code::NetworkError, std::string("the \"/user/register\" response data has not json format"));
-  if(pt.find(c_uuid_string) == pt.not_found()) {
+  if(ptreeFinalRegistration.find(c_uuid_string) == ptreeFinalRegistration.not_found()) {
     logger_(SL_ERROR) << "Bad uuid_string JSON in RegisterUser on line=" + std::to_string(__LINE__);
     return Error(Error::Code::NetworkError, std::string("the \"" + c_uuid_string + "\" field has not founded\n"));
   }
-  userUuid_ = pt.get<std::string>(c_uuid_string);
+  userUuid_ = ptreeFinalRegistration.get<std::string>(c_uuid_string);
   return Error(Error::Code::NoError, std::string());
 }
 
-void LoginManager::CheckKey(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttResponsePtr & response_out) {
-    response_out = result_in;
-    response_out = response_in;
+void LoginManager::CheckKey(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out) {
+    result_out = result_in;
+    response_out = std::move(response_in);
     hasResponse_.notify_one();
 }
 
-void LoginManager::FilnalRegistration(m2::PerformResult result, m2::HttpResponsePtr &&response)
+void LoginManager::FilnalRegistration(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out)
 {
-    response_out = result_in;
-    response_out = response_in;
+    result_out = result_in;
+    response_out = std::move(response_in);
     hasResponse_.notify_one();
 }
 

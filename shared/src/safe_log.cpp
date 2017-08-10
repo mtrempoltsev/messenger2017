@@ -5,6 +5,7 @@
 #include <map>
 #include <chrono>
 #include <ctime>
+//#include <iostream>
 
 using namespace m2::safelog;
 using namespace std::chrono;
@@ -32,7 +33,7 @@ void SafeLog::InnerSafeLog::reset(const std::string & filePath)
 {
   if (logFile_.is_open())
     logFile_.close();
-  logFile_.open(filePath);
+  logFile_.open(filePath, std::ios::app);
   if (logFile_.is_open())
   {
     isRunning_ = true;
