@@ -66,7 +66,7 @@ Rectangle {
             state: "Normal"
 
             //for filtering
-            visible: RegExp(searchText.text, "i").test(name)
+            visible: regExp(searchText.text, "i").test(name)
             height: visible ? 50 : 0
 
             // item view
