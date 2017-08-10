@@ -8,6 +8,7 @@
 #include "safe_log.h"
 #include "http_connection.h"
 #include "crypto_pki.h"
+#include "error.h"
 namespace m2 {
 namespace core {
 class LoginManager {
@@ -15,7 +16,7 @@ public:
   LoginManager();
   using AsyncRegisterUserHandler = std::function<void(int)>;
   std::string Login(const HttpConnectionPtr & connection);
-  bool RegisterUser(const HttpConnectionPtr & connection);
+  Error RegisterUser(const HttpConnectionPtr & connection);
   void SetHttpClient (HttpClient);
   std::string GetChosenServerDomain();
   std::string GetChosenServerUuid();
@@ -30,10 +31,11 @@ private:
   std::vector<char> httpBuffer_;
 
   safelog::SafeLog logger_;
-  bool result_;
   bool inProcess_;
   HttpConnectionPtr currentConnection_;
   std::string userUuid_;
+
+  Error registrationError_;
 };
 } // core
 } // m2

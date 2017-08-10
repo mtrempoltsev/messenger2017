@@ -5,6 +5,7 @@
 #include "core_dispatcher.h"
 #include "jobtype.h"
 #include "message.h"
+#include "error.h"
 
 namespace m2 {
 namespace core {
@@ -42,13 +43,12 @@ void CoreDispatcher::RegisterUser(const std::string & serverDomain, RegisterHand
         handler.onError(error);
         return;
       }
-      bool ret = core.GetLoginManager()->RegisterUser(core.GetHttpConnection());
-      if (ret) {
+      m2::Error ret = core.GetLoginManager()->RegisterUser(core.GetHttpConnection());
+      if (ret == m2::Error::NoError) {
         handler.onCompletion();
       }
       else {
-        Error error;
-        handler.onError(error);
+        handler.onError(ret);
       }
     };
     std::cout << "        push job" << std::endl;

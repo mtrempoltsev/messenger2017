@@ -4,7 +4,7 @@
 
 namespace m2 {
 struct Error final {
-  enum class Code { NetworkError };
+  enum class Code { NoError, NetworkError };
 
   Error(Code code, std::string &&message) : code{code}, message{message} {}
 

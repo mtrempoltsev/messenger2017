@@ -18,6 +18,8 @@ using namespace  m2::crypto::common;
 using namespace boost::property_tree;
 using namespace m2::safelog;
 
+using m2::Error;
+
 LoginManager::LoginManager() :
   logger_(GetManagerPath("log").append("login_manager.log"))
 {
@@ -29,8 +31,9 @@ std::string LoginManager::Login(const m2::HttpConnectionPtr &connection)
 
 }
 
-bool LoginManager::RegisterUser(const HttpConnectionPtr &connection)
+Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
 {
+  registrationError_ = Error(Error::Code::NoError, std::string());
   currentConnection_ = connection;
   inProcess_ = true;
   result_ = true;
@@ -47,22 +50,25 @@ bool LoginManager::RegisterUser(const HttpConnectionPtr &connection)
   currentConnection_.get()->perform({"/user/sendKey", std::chrono::milliseconds(TIMEOUT)}, responseData, httpBuffer_,
              std::bind(&LoginManager::CheckKey, this, std::placeholders::_1, std::placeholders::_2));
   while(inProcess_);
-  return result_;
+  return registrationError_;
 }
 
 void LoginManager::CheckKey(PerformResult result, HttpResponsePtr &&response)
 {
     if(result == PerformResult::NetworkError)
     {
-        logger_(SL_ERROR) << "Network Error in CheckKey";
-        result_ = false;
-        inProcess_ = false;
-        return;
+      logger_(SL_ERROR) << "Network Error in CheckKey";
+      inProcess_ = false;
+      registrationError_.code = m2::Error::Code::NetworkError;
+      registrationError_.message = "the \"/user/sendKey\" request failed";
+      return;
     }
     if(response->code != 200)
     {
         logger_(SL_ERROR) << "Bad response code in CheckKey";
-        result_ = false;
+        inProcess_ = false;
+        registrationError_.code = Error::Code::NetworkError;
+        registrationError_.message = "the \"/user/checkKey\" response ended with code " + std::to_string(response->code);
         return;
     }
     std::string json_str(httpBuffer_.begin(), httpBuffer_.end());
@@ -73,20 +79,25 @@ void LoginManager::CheckKey(PerformResult result, HttpResponsePtr &&response)
     }
     catch (json_parser_error & ex) {
       logger_(SL_ERROR) << ex.what();
-      result_ = false;
       inProcess_ = false;
+      registrationError_.code = Error::Code::NetworkError;
+      registrationError_.message = "the \"/user/checkKey\" response data has not json format";
     }
-    if(result == PerformResult::Success)
+    if(registrationError_ == Error::Code::NoError)
     {
         if(pt.find(c_server_string) == pt.not_found() ||
            pt.find(c_client_string) == pt.not_found())
         {
-          if(pt.find(c_server_string) == pt.not_found())
+          if(pt.find(c_server_string) == pt.not_found()) {
             logger_(SL_ERROR) << "Bad server_string JSON in CheckKey";
-          if(pt.find(c_client_string) == pt.not_found())
+            registrationError_.message += "the \"server_string\" field has not founded\n";
+          }
+          if(pt.find(c_client_string) == pt.not_found()) {
             logger_(SL_ERROR) << "Bad client_string JSON in CheckKey";
-          result_ = false;
+            registrationError_.message += "the \"client_string\" field has not founded\n";
+          }
           inProcess_ = false;
+          registrationError_.code = Error::Code::NetworkError;
           return;
         }
         pt.clear();
@@ -112,14 +123,17 @@ void LoginManager::FilnalRegistration(m2::PerformResult result, m2::HttpResponse
     if(result == PerformResult::NetworkError)
     {
         logger_(SL_ERROR) << "Network Error in CheckKey";
-        result_ = false;
         inProcess_ = false;
+        registrationError_.code = Error::Code::NetworkError;
+        registrationError_.message = "the \"/user/register\" request failed";
         return;
     }
     if(response->code != 200)
     {
         logger_(SL_ERROR) << "Bad response code in CheckKey";
-        result_ = false;
+        inProcess_ = false;
+        registrationError_.code = Error::Code::NetworkError;
+        registrationError_.message = "the \"/user/register\" response ended with code " + std::to_string(response->code);
         return;
     }
     std::string json_str(httpBuffer_.begin(), httpBuffer_.end());
@@ -130,14 +144,16 @@ void LoginManager::FilnalRegistration(m2::PerformResult result, m2::HttpResponse
     }
     catch (json_parser_error & ex) {
       logger_(SL_ERROR) << ex.what();
-      result_ = false;
       inProcess_ = false;
+      registrationError_.code = Error::Code::NetworkError;
+      registrationError_.message = "the \"/user/register\" response data has not json format";
     }
     if(result == PerformResult::Success){
         if(pt.find(c_uuid_string) == pt.not_found()) {
             logger_(SL_ERROR) << "Bad uuid_string JSON in CheckKey";
-            result_ = false;
             inProcess_ = false;
+            registrationError_.code = Error::Code::NetworkError;
+            registrationError_.message = "the \"" + c_uuid_string + "\" field has not founded\n";
             return;
         }
         userUuid_ = pt.get<std::string>(c_uuid_string);
