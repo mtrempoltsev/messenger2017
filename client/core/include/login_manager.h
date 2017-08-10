@@ -30,7 +30,7 @@ private:
   void CheckKey(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out);
   void FilnalRegistration(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out);
 
-  using str_pair = std::tuple<const std::string, const std::string>;
+  void UniveralCallback(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out);
   Error CheckServerResponse(PerformResult & result, HttpResponsePtr & response, const std::string & requestName, int lineNum);
   Error CheckJsonValidFormat(const std::list<const std::string> & jsomParams, int lineNum, boost::property_tree::ptree & jsonPt);
 

@@ -64,7 +64,7 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
   std::unique_lock<std::mutex> lockSendKey(mutex_);
   logger_(SL_DEBUG) << "Mutex locked";
   currentConnection_.get()->perform({"/user/sendKey", std::chrono::milliseconds(TIMEOUT)}, responseDataCheckKey, httpBuffer_,
-             std::bind(&LoginManager::CheckKey, this, std::placeholders::_1, std::placeholders::_2, std::ref(result), std::ref(response)));
+             std::bind(&LoginManager::UniveralCallback, this, std::placeholders::_1, std::placeholders::_2, std::ref(result), std::ref(response)));
   hasResponse_.wait(lockSendKey);
 
   Error checkKeyError = CheckServerResponse(result, response, "/user/sendKey", __LINE__);
@@ -97,7 +97,7 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
 
   std::unique_lock<std::mutex> lockConfirmKey(mutex_);
   currentConnection_.get()->perform({"/user/sendKey", std::chrono::milliseconds(TIMEOUT)}, responseDataConfirmKey, httpBuffer_,
-             std::bind(&LoginManager::FilnalRegistration, this, std::placeholders::_1, std::placeholders::_2, std::ref(result), std::ref(response)));
+             std::bind(&LoginManager::UniveralCallback, this, std::placeholders::_1, std::placeholders::_2, std::ref(result), std::ref(response)));
   hasResponse_.wait(lockConfirmKey);
 
 
@@ -115,14 +115,7 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
   return Error(Error::Code::NoError, std::string());
 }
 
-void LoginManager::CheckKey(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out) {
-    result_out = result_in;
-    response_out = std::move(response_in);
-    hasResponse_.notify_one();
-}
-
-void LoginManager::FilnalRegistration(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out)
-{
+void LoginManager::UniveralCallback(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out) {
     result_out = result_in;
     response_out = std::move(response_in);
     hasResponse_.notify_one();
