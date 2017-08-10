@@ -54,9 +54,9 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
   HttpResponsePtr response;
 
   std::unique_lock<std::mutex> lock(mutex_);
-  hasResponse_.wait(lock);
   currentConnection_.get()->perform({"/user/sendKey", std::chrono::milliseconds(TIMEOUT)}, responseData, httpBuffer_,
              std::bind(&LoginManager::CheckKey, this, std::placeholders::_1, std::placeholders::_2, std::ref(result), std::ref(response)));
+  hasResponse_.wait(lock);
 
   if(result == PerformResult::NetworkError)
   {
@@ -111,9 +111,9 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
   httpBuffer_.clear();
 
   std::unique_lock<std::mutex> lock(mutex_);
-  hasResponse_.wait(lock);
   currentConnection_.get()->perform({"/user/sendKey", std::chrono::milliseconds(TIMEOUT)}, responseData, httpBuffer_,
              std::bind(&LoginManager::FilnalRegistration, this, std::placeholders::_1, std::placeholders::_2, std::ref(result), std::ref(response)));
+  hasResponse_.wait(lock);
 
   if(result == PerformResult::NetworkError)
   {
