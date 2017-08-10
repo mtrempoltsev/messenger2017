@@ -10,6 +10,8 @@
 
 #include "path_settings.h"
 
+#define DEFAULT_ERROR Error(Error::Code::NoError, std::string());
+
 //int definition
 const int KEYSIZE = 2048;
 const int TIMEOUT = 1000;
@@ -40,7 +42,6 @@ LoginManager::LoginManager() :
     ReadLoginInfo();
 }
 
-
 Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
 {
   currentConnection_ = connection;
@@ -66,54 +67,30 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
              std::bind(&LoginManager::CheckKey, this, std::placeholders::_1, std::placeholders::_2, std::ref(result), std::ref(response)));
   hasResponse_.wait(lockSendKey);
 
-  if(result == PerformResult::NetworkError)
-  {
-    logger_(SL_ERROR) << "Network Error in RegisterUser on line=" + std::to_string(__LINE__);
-    return Error(Error::Code::NetworkError, std::string("the \"/user/sendKey\" request failed"));
-  }
-  if(response->code != 200)
-  {
-      logger_(SL_ERROR) << "Bad response code in RegisterUser on line=" + std::to_string(__LINE__);
-      return Error(Error::Code::NetworkError, std::string("the \"/user/checkKey\" response ended with code " + std::to_string(response->code)));
-  }
+  Error checkKeyError = CheckServerResponse(result, response, "/user/sendKey", __LINE__);
+  if (checkKeyError.code != Error::Code::NoError)
+	  return checkKeyError;
 
-  std::string jsonCheckKey(httpBuffer_.begin(), httpBuffer_.end());
-  std::istringstream ssCheckKey(jsonCheckKey);
-  ptree ptreeCheckKey;
-  bool returnAfterCatch = false;
-  try {
-      read_json(ssCheckKey, ptreeCheckKey);
-  }
-  catch (json_parser_error & ex) {
-    logger_(SL_ERROR) << ex.what();
-    returnAfterCatch = true;
-  }
-  if (returnAfterCatch)
-      return Error(Error::Code::NetworkError, std::string("the \"/user/checkKey\" response data has not json format"));
-  if(ptreeCheckKey.find(c_server_string) == ptreeCheckKey.not_found() ||
-     ptreeCheckKey.find(c_client_string) == ptreeCheckKey.not_found())
-  {
-    Error registrationError(Error::Code::NoError, std::string());
-    if(ptreeCheckKey.find(c_server_string) == ptreeCheckKey.not_found()) {
-      logger_(SL_ERROR) << "Bad server_string JSON in RegisterUser on line=" + std::to_string(__LINE__);
-      registrationError.message += "the \"server_string\" field has not founded\n";
-    }
-    if(ptreeCheckKey.find(c_client_string) == ptreeCheckKey.not_found()) {
-      logger_(SL_ERROR) << "Bad client_string JSON in RegisterUser on line=" + std::to_string(__LINE__);
-      registrationError.message += "the \"client_string\" field has not founded\n";
-    }
-    registrationError.code = Error::Code::NetworkError;
-    return registrationError;
-  }
-  ptreeCheckKey.clear();
-  std::string serverString = ptreeCheckKey.get<std::string>("server_string");
-  std::string clientString = ptreeCheckKey.get<std::string>("client_string");
+  ptree jsonPt;
+  Error jsonError = CheckJsonValidFormat({ c_server_string, c_client_string }, __LINE__, jsonPt);
+  if (jsonError.code != Error::Code::NoError)
+	  return jsonError;
+
+  std::string serverString = jsonPt.get<std::string>(c_server_string);
+  std::string clientString = jsonPt.get<std::string>(c_client_string);
   clientString = privateKey_->decrypt(clientString);
-  ptreeCheckKey.put(c_client_string, clientString); //decrypt client string with privateKey_ and put into tree
-  ptreeCheckKey.put(c_server_string, serverString);
+  jsonPt.put(c_client_string, clientString); //decrypt client string with privateKey_ and put into tree
+  jsonPt.put(c_server_string, serverString);
 
   std::ostringstream ssConfirmKey;
-  write_json(ssConfirmKey, ptreeCheckKey);
+  try {
+    write_json(ssConfirmKey, jsonPt);
+  }
+  catch (json_parser_error & ex) {
+	 logger_(SL_ERROR) << ex.what();
+	 return Error(Error::Code::RegistationError, std::string("SOME ERROR I DO NOT KNOW!"));
+  }
+  
   std::string jsonConfirmKey = ssConfirmKey.str();
   std::vector<char> responseDataConfirmKey(jsonConfirmKey.begin(), jsonConfirmKey.end());
   httpBuffer_.clear();
@@ -123,33 +100,16 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
              std::bind(&LoginManager::FilnalRegistration, this, std::placeholders::_1, std::placeholders::_2, std::ref(result), std::ref(response)));
   hasResponse_.wait(lockConfirmKey);
 
-  if(result == PerformResult::NetworkError)
-  {
-      logger_(SL_ERROR) << "Network Error in RegisterUser on line=" + std::to_string(__LINE__);
-      return Error(Error::Code::NetworkError, std::string("the \"/user/register\" request failed"));
-  }
-  if(response->code != 200)
-  {
-      logger_(SL_ERROR) << "Bad response in RegisterUser on line=" + std::to_string(__LINE__);
-      return Error(Error::Code::NetworkError, std::string("the \"/user/register\" response ended with code " + std::to_string(response->code)));
-  }
-  std::string jsonFinalRegistration(httpBuffer_.begin(), httpBuffer_.end());
-  std::istringstream ssFinalRegistration(jsonFinalRegistration);
-  ptree ptreeFinalRegistration;
-  returnAfterCatch = false;
-  try {
-      read_json(ssFinalRegistration, ptreeFinalRegistration);
-  }
-  catch (json_parser_error & ex) {
-    logger_(SL_ERROR) << ex.what();
-    returnAfterCatch = true;
-  }
-  if (returnAfterCatch)
-      return Error(Error::Code::NetworkError, std::string("the \"/user/register\" response data has not json format"));
-  if(ptreeFinalRegistration.find(c_uuid_string) == ptreeFinalRegistration.not_found()) {
-    logger_(SL_ERROR) << "Bad uuid_string JSON in RegisterUser on line=" + std::to_string(__LINE__);
-    return Error(Error::Code::NetworkError, std::string("the \"" + c_uuid_string + "\" field has not founded\n"));
-  }
+
+  Error filnalRegistrationError = CheckServerResponse(result, response, "/user/register", __LINE__);
+  if (filnalRegistrationError.code != Error::Code::NoError)
+	  return filnalRegistrationError;
+ 
+  jsonPt.clear();
+  Error jsonError = CheckJsonValidFormat({ c_uuid_string }, __LINE__, jsonPt);
+  if (jsonError.code != Error::Code::NoError)
+	  return jsonError;
+
   userUuid_ = ptreeFinalRegistration.get<std::string>(c_uuid_string);
   WriteLoginInfo();
   return Error(Error::Code::NoError, std::string());
@@ -166,6 +126,44 @@ void LoginManager::FilnalRegistration(PerformResult result_in, HttpResponsePtr &
     result_out = result_in;
     response_out = std::move(response_in);
     hasResponse_.notify_one();
+}
+
+Error LoginManager::CheckServerResponse(PerformResult & result, HttpResponsePtr & response, const std::string & requestName, int lineNum) {
+	if (result == PerformResult::NetworkError)
+	{
+		logger_(SL_ERROR) << "Network Error in RegisterUser on line=" + std::to_string(lineNum);
+		return Error(Error::Code::NetworkError, std::string("the \"" + requestName +"\" request failed"));
+	}
+	if (response->code != 200)
+	{
+		logger_(SL_ERROR) << "Bad response in RegisterUser on line=" + std::to_string(lineNum);
+		return Error(Error::Code::NetworkError, std::string("the \"" + requestName + "\" response ended with code " + std::to_string(response->code)));
+	}
+	return DEFAULT_ERROR;
+}
+
+Error LoginManager::CheckJsonValidFormat(const std::string & sourceString, const std::list<const std::string> & jsomParams, int lineNum, ptree & jsonPt) {
+	std::istringstream iss(std::string(httpBuffer_.begin(), httpBuffer_.end()));
+	try {
+		read_json(iss, jsonPt);
+	}
+	catch (json_parser_error & ex) {
+		logger_(SL_ERROR) << ex.what();
+		return Error(Error::Code::RegistationError, std::string("the \"" + requestName + "\" response data has not json format"));
+	}
+	
+	Error jsonParamNotFoundError(Error::Code::NoError, std::string());
+	for (auto & jsonParam : jsomParams) {
+		if (pt.find(jsonParam) == jsonPt.not_found()) {
+			logger_(SL_ERROR) << "Bad " + jsonParam + " JSON in RegisterUser on line=" + std::to_string(lineNum);
+			jsonParamNotFoundError.message += "the \"" + jsonParam + "\" field has not found";
+		}
+	}
+	if (!jsonParamNotFoundError.message.empty()) {
+		jsonParamNotFoundError.code = Error::Code::NetworkError;
+		return jsonParamNotFoundError;
+	}
+	return DEFAULT_ERROR;
 }
 
 std::list<std::string> LoginManager::GetServerList()
@@ -254,4 +252,3 @@ void LoginManager::WriteLoginInfo() {
         logger_(SL_ERROR) << "Could not open login info file";
     }
 }
-
