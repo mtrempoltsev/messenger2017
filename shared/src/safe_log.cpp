@@ -24,11 +24,12 @@ SafeLog::InnerSafeLog::InnerSafeLog(const std::string &filePath)
 }
 
 void SafeLog::InnerSafeLog::reset(const std::string &filePath) {
-  if (logFile_.is_open())
-    logFile_.close();
-  logFile_.open(filePath);
   if (logFile_.is_open()) {
+    logFile_.close();
+  }
 
+  logFile_.open(filePath, std::ios::app);
+  if (logFile_.is_open()) {
     isRunning_ = true;
     std::thread thread(std::bind(&InnerSafeLog::mainLoop, this));
     thread.detach();
@@ -45,21 +46,38 @@ void SafeLog::InnerSafeLog::pushMessage(const std::string &message) {
 void SafeLog::InnerSafeLog::mainLoop() {
   while (isRunning_) {
     std::unique_lock<std::mutex> lock(mutex_);
-    while (messageQueue_.empty()) {
-      hasMessage_.wait(lock);
-      if (!isRunning_)
-        break;
-    }
-    logFile_ << messageQueue_.front();
-    messageQueue_.pop();
+    hasMessage_.wait(lock);
+    if (!isRunning_) break;
+    safePop();
+  }
+  messageQueue_.push("End of session");
+  while (!messageQueue_.empty()) {
+      safePop();
   }
   logFile_.close();
   delete this;
 }
 
-SafeLog::SafeLog() { innerLog_ = new InnerSafeLog(); }
+void SafeLog::InnerSafeLog::safePop() {
+  logFile_ << messageQueue_.front();
+  logFile_.flush();
+  messageQueue_.pop();
+}
 
-SafeLog::SafeLog(const std::string &filePath) {
+ILoginWritter & SafeLog::InnerLoginWritter::operator<<(const std::string & message) {
+  sl_.innerLog_->pushMessage(label_ + message + "\n\n");
+  return *this;
+}
+
+SafeLog::SafeLog() :
+  logginWritter_(*this)
+{
+  innerLog_ = new InnerSafeLog();
+}
+
+SafeLog::SafeLog(const std::string & filePath) :
+  logginWritter_(*this)
+{
   innerLog_ = new InnerSafeLog(filePath);
 }
 
@@ -67,16 +85,10 @@ SafeLog::~SafeLog() { innerLog_->stop(); }
 
 void SafeLog::reset(const std::string &filePath) { innerLog_->reset(filePath); }
 
-SafeLog &SafeLog::operator<<(const std::string &message) {
-
-  innerLog_->pushMessage(message + "\n\n");
-  return *this;
-}
-
-SafeLog &SafeLog::operator()(const MessageType &messageType) {
-  innerLog_->pushMessage("[" + getTimeAsString() + "]" +
-                         labelNameMap[messageType]);
-  return *this;
+ILoginWritter & SafeLog::operator()(const MessageType & messageType)
+{
+  logginWritter_.SetLabel("[" + getTimeAsString() + "]" + labelNameMap[messageType]);
+  return logginWritter_;
 }
 
 std::string SafeLog::getTimeAsString() {

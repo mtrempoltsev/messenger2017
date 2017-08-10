@@ -403,62 +403,62 @@ std::future<void> download(m2::HttpConnectionPtr connection, const std::string& 
     return promise->get_future();
 }
 
-int main()
-{
-    auto client = std::make_shared<m2::HttpClient>();
+//int main()
+//{
+//    auto client = std::make_shared<m2::HttpClient>();
 
-    auto c1 = client->connect("http://kirillovka.ks.ua");
+//    auto c1 = client->connect("http://kirillovka.ks.ua");
 
-    std::thread t1([c1]()
-    {
-        download(c1, "/wp-content/uploads/2012/06/azovsea-rest.jpg").wait();
-        download(c1, "/wp-content/uploads/2016/03/kirillovka-howto05.jpg").wait();
-        download(c1, "/wp-content/uploads/2015/06/biryuchii-2.jpg").wait();
-        download(c1, "/wp-content/uploads/2015/06/biryuchii-1.jpg").wait();
-    });
+//    std::thread t1([c1]()
+//    {
+//        download(c1, "/wp-content/uploads/2012/06/azovsea-rest.jpg").wait();
+//        download(c1, "/wp-content/uploads/2016/03/kirillovka-howto05.jpg").wait();
+//        download(c1, "/wp-content/uploads/2015/06/biryuchii-2.jpg").wait();
+//        download(c1, "/wp-content/uploads/2015/06/biryuchii-1.jpg").wait();
+//    });
 
-    auto c2 = client->connect("https://curl.haxx.se");
+//    auto c2 = client->connect("https://curl.haxx.se");
 
-    std::thread t2([c2]()
-    {
-        download(c2, "/libcurl/c/libcurl-errors.html#CURLMOK").wait();
-        download(c2, "/libcurl/c/CURLOPT_HEADERFUNCTION.html").wait();
-    });
+//    std::thread t2([c2]()
+//    {
+//        download(c2, "/libcurl/c/libcurl-errors.html#CURLMOK").wait();
+//        download(c2, "/libcurl/c/CURLOPT_HEADERFUNCTION.html").wait();
+//    });
 
-    auto c3 = client->connect("http://orig10.deviantart.net");
+//    auto c3 = client->connect("http://orig10.deviantart.net");
 
-    std::thread t3([c3]()
-    {
-        download(c3, "/51b6/f/2008/189/4/e/mountain_by_cablekevin.jpg").wait();
-    });
+//    std::thread t3([c3]()
+//    {
+//        download(c3, "/51b6/f/2008/189/4/e/mountain_by_cablekevin.jpg").wait();
+//    });
 
-    auto c4 = client->connect("http://images.summitpost.org");
+//    auto c4 = client->connect("http://images.summitpost.org");
 
-    std::thread t4([c4]()
-    {
-        download(c4, "/original/973786.jpg").wait();
-    });
+//    std::thread t4([c4]()
+//    {
+//        download(c4, "/original/973786.jpg").wait();
+//    });
 
-    auto c5 = client->connect("https://www.perc.org");
+//    auto c5 = client->connect("https://www.perc.org");
 
-    std::thread t5([c5]()
-    {
-        download(c5, "/sites/default/files/field/image/Forest_54882631.jpg").wait();
-    });
+//    std::thread t5([c5]()
+//    {
+//        download(c5, "/sites/default/files/field/image/Forest_54882631.jpg").wait();
+//    });
 
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-    t5.join();
+//    t1.join();
+//    t2.join();
+//    t3.join();
+//    t4.join();
+//    t5.join();
 
-    client->close(c1);
-    client->close(c2);
-    client->close(c3);
-    client->close(c4);
-    client->close(c5);
+//    client->close(c1);
+//    client->close(c2);
+//    client->close(c3);
+//    client->close(c4);
+//    client->close(c5);
 
-    client->stop();
+//    client->stop();
 
-    return 0;
-}
+//    return 0;
+//}

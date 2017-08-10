@@ -5,50 +5,60 @@
 #include "core_dispatcher.h"
 #include "jobtype.h"
 #include "message.h"
+#include "error.h"
 
 #include <vector>
 
 namespace m2 {
 namespace core {
 
-    void CoreDispatcher::stopCore() { core_->Stop(); }
-    void CoreDispatcher::Login(LoginHandler handler) {
-        JobType job = [handler](Core &core) {
-            std::string uuid = core.GetLoginManager()->Login();
-            handler.onCompletion(uuid);
-        };
-        std::cout << "        push job" << std::endl;
-        core_->PushJob(job);
-    }
+using namespace safelog;
 
-    void CoreDispatcher::RegisterUser(RegisterHandler handler) {
-        JobType job = [handler](Core &core) {
-            int ret = core.GetLoginManager()->RegisterUser();
-            if (ret == 0) {
-                handler.onCompletion();
-            } else {
-                ;
-                //      handler.onError();
-            }
-        };
-        std::cout << "        push job" << std::endl;
-        core_->PushJob(job);
-    }
+void CoreDispatcher::stopCore() { core_->Stop(); }
+void CoreDispatcher::Login(LoginHandler handler) {
+    JobType job = [handler](Core &core) {
+      if (core.GetHttpConnection() == nullptr) {
+        if (core.InitHttpConnection()) {
+          handler.onError(Error(Error::Code::NetworkError, "Connection error"));
+          return;
+        }
+      }
+      auto uuid = core.GetLoginManager()->Login(core.GetHttpConnection());
+      if (!uuid.empty()) {
+        handler.onCompletion(uuid);
+      }
+      else {
+        handler.onError(Error(Error::Code::LoginError, "Login error"));
+      }
+    };
+    core_->PushJob(job, "Login");
+}
 
-    void CoreDispatcher::GetServerSet(ServerSetHandler handler) {
-        JobType job = [handler](Core &core) {
-            // std::set<std::string> servers = core.GetLoginManager()->GetServerSet();
-            std::set<std::string> servers /* = core.GetLoginManager()->GetServerSet()*/;
-            if (servers.empty()) {
-                handler.onCompletion(servers);
-            } else {
-                ;
-                //      handler.onError();
-            }
-        };
-        std::cout << "        push job get server list" << std::endl;
-        core_->PushJob(job);
-    }
+void CoreDispatcher::RegisterUser(const std::string & serverDomain, RegisterHandler handler) {
+    JobType job = [serverDomain, handler](Core &core) {
+      if (!core.InitHttpConnection(serverDomain)) {
+        handler.onError(Error(Error::Code::NetworkError, "Connection error"));
+        return;
+      }
+      m2::Error ret = core.GetLoginManager()->RegisterUser(core.GetHttpConnection());
+      if (ret.code == m2::Error::Code::NoError) {
+        handler.onCompletion();
+      }
+      else {
+        handler.onError(std::move(ret));
+      }
+    };
+    std::cout << "        push job" << std::endl;
+    core_->PushJob(job, "Registation");
+}
+
+bool CoreDispatcher::HasServer() {
+  return core_->HasChosenServer();
+}
+
+std::list<std::string> CoreDispatcher::GetServerList() {
+  return core_->GetLoginManager()->GetServerList();
+}
 
     void CoreDispatcher::GetMessageStory(const std::string &idStr, MessageStoryHandler handler) {
         // some uber-thread stuff (begin)

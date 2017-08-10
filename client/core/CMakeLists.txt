@@ -23,7 +23,12 @@ set(HEADERS
     include/jobtype.h
     ../shared_client/handlers.h
     ../../shared/include/safe_log.h
-
+    ../../shared/include/http_client.h
+    ../../shared/include/http_connection.h
+    ../../shared/include/crypto_common.h
+    ../../shared/include/crypto_hash.h
+    ../../shared/include/crypto_pki.h
+    ../../shared/include/crypto_sym.h
     )
 
 set(SOURCES
@@ -44,6 +49,12 @@ set(SOURCES
     src/login_manager.cpp
     src/path_settings.cpp
     ../../shared/src/safe_log.cpp
+    ../../shared/src/http_client.cpp
+    ../../shared/src/http_connection.cpp
+    ../../shared/src/crypto_common.cpp
+    ../../shared/src/crypto_hash.cpp
+    ../../shared/src/crypto_pki.cpp
+    ../../shared/src/crypto_sym.cpp
     )
 
 if (ENABLE_TESTS)
@@ -62,4 +73,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT s
 cotire(${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME}
-    ${Boost_LIBRARIES} -lboost_filesystem -lboost_system)
+    ${Boost_LIBRARIES} -lboost_system -lboost_filesystem)
+target_link_libraries(${PROJECT_NAME}
+    -lcurl -levent -lcrypto)

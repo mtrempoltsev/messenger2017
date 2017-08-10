@@ -23,27 +23,30 @@ Write a debug message:
 
 #pragma once
 
+#ifndef SL_ERROR
+#define SL_ERROR m2::safelog::SafeLog::MessageType::ERROR
+
+#endif //SL_ERROR
+
+#ifndef SL_WARNING
+#define SL_WARNING m2::safelog::SafeLog::MessageType::WARNING
+#endif //SL_WARNING
+
+#ifndef SL_DEBUG
+#define SL_DEBUG m2::safelog::SafeLog::MessageType::DEBUG
+#endif //SL_DEBUG
 
 #include <fstream>
 #include <queue>
 #include <mutex>
 #include <condition_variable>
-
 namespace m2 {
 namespace safelog {
-
-#ifndef SL_ERROR
-#define SL_ERROR SafeLog::MessageType::ERROR
-
-#endif //SL_ERROR
-
-#ifndef SL_WARNING
-#define SL_WARNING SafeLog::MessageType::WARNING
-#endif //SL_WARNING
-
-#ifndef SL_DEBUG
-#define SL_DEBUG SafeLog::MessageType::DEBUG
-#endif //SL_DEBUG
+  
+  class ILoginWritter {
+  public:
+    virtual ILoginWritter & operator<<(const std::string & message) = 0;
+  };
 
   class SafeLog
   {
@@ -60,8 +63,8 @@ namespace safelog {
     SafeLog(const std::string & filePath);
     ~SafeLog();
 
-    SafeLog & operator<<(const std::string & message);
-    SafeLog & operator()(const MessageType & messageType);
+    //SafeLog & operator<<(const std::string & message);
+    ILoginWritter & operator()(const MessageType & messageType);
 
     void reset(const std::string & filePath);
 
@@ -86,7 +89,22 @@ namespace safelog {
       std::condition_variable hasMessage_;
 
       void mainLoop();
+      void safePop();
     }  *innerLog_;
+
+  class InnerLoginWritter : public ILoginWritter {
+  public:
+    InnerLoginWritter(SafeLog & sl) : sl_(sl) {}
+    ILoginWritter & operator<<(const std::string & message) override;
+    void SetLabel(const std::string & label) { label_ = label; }
+
+  private:
+    SafeLog & sl_;
+    std::string label_;
+
+    friend SafeLog;
+  } logginWritter_;
+
     std::string getTimeAsString();
   };
 
