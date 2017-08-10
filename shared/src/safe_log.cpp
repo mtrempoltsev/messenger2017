@@ -53,15 +53,21 @@ void SafeLog::InnerSafeLog::mainLoop()
   while (isRunning_)
   {
     std::unique_lock<std::mutex> lock(mutex_);
-    while (messageQueue_.empty()) {
-      hasMessage_.wait(lock);
-      if (!isRunning_) break;
-    }
-    logFile_ << messageQueue_.front();
-    messageQueue_.pop();
+    hasMessage_.wait(lock);
+    if (!isRunning_) break;
+    safePop();
   }
+  messageQueue_.push("End of session");
+  while (!messageQueue_.empty())
+      safePop();
   logFile_.close();
   delete this;
+}
+
+void SafeLog::InnerSafeLog::safePop() {
+  logFile_ << messageQueue_.front();
+  logFile_.flush();
+  messageQueue_.pop();
 }
 
 SafeLog::SafeLog()

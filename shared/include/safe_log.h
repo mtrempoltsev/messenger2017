@@ -82,6 +82,7 @@ namespace safelog {
       std::condition_variable hasMessage_;
 
       void mainLoop();
+      void safePop();
     }  *innerLog_;
     std::string getTimeAsString();
   };
