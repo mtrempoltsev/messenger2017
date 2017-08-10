@@ -9,9 +9,9 @@ using namespace m2::core;
 const std::string chosenFilePath = "chosen_server.txt";
 
 Core::Core() : logger_("logs/core.log") {
-  contactManager_ = std::make_shared<ContactManager>(new ContactManager());
-  messageManager_ = std::make_shared<MessageManager>(new MessageManager());
-  loginManager_ = std::make_shared<LoginManager>(new LoginManager());
+  contactManager_ = std::make_shared<ContactManager>();
+  messageManager_ = std::make_shared<MessageManager>();
+  loginManager_ = std::make_shared<LoginManager>();
 
   std::ifstream serverFileStream(chosenFilePath);
   if (serverFileStream.is_open()) {
