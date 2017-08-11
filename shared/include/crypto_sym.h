@@ -23,6 +23,11 @@ namespace common
         std::string encrypt(const std::string &string) const override;
         std::string decrypt(const std::string &string) const override;
         size_t key_size() const;
+
+        std::string encrypt_to_b64(const std::string &string) const override;
+
+        std::string decrypt_from_b64(const std::string &string) const override;
+
     protected:
         std::unique_ptr<char[]> key_, iv_ ;
         size_t bit_size_;
