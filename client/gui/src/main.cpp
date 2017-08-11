@@ -47,8 +47,8 @@ int main(int argc, char *argv[]) {
     return -1;
 
   RegisterHandler regCallback;
-  regCallback.onCompletion = nullptr;//[]() { std::cout << "Registration complete"; };
-  regCallback.onError = nullptr;// [] (m2::Error && error) { std::cout << error.message; };
+  regCallback.onCompletion = []() { std::cout << "Registration complete"; };
+  regCallback.onError =  [] (m2::Error && error) { std::cout << error.message; };
 
   std::thread coreThread(runcore, std::ref(core));
   try
@@ -88,11 +88,11 @@ int main(int argc, char *argv[]) {
 
     // вызов кора выдать стори
     dispatcher.GetMessageStory(chatId, handler);
-    return app.exec();
+    //return app.exec();
 
     // from merging-branch
-    //const auto result = app.exec();
-    //dispatcher.stopCore();
-    //coreThread.join();
-    //return result;
+    const auto result = app.exec();
+    dispatcher.stopCore();
+    coreThread.join();
+    return result;
 }
