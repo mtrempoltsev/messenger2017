@@ -35,6 +35,9 @@ namespace common
     public:
         virtual std::string encrypt(const std::string &) const = 0;
         virtual std::string decrypt(const std::string &) const = 0;
+        virtual std::string encrypt_to_b64(const std::string &string) const = 0;
+        virtual std::string decrypt_from_b64(const std::string &string) const = 0;
+
     };
 }
 }

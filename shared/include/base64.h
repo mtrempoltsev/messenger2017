@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //
 // Created by lol on 6/6/2017.
 //
@@ -32,8 +33,6 @@
    René Nyffenegger rene.nyffenegger@adp-gmbh.ch
 
 */
-
-
 
 
 static inline bool is_base64(unsigned char c);

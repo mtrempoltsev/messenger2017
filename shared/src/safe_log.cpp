@@ -10,10 +10,12 @@
 using namespace m2::safelog;
 using namespace std::chrono;
 
-static std::map<SafeLog::MessageType, std::string> labelNameMap = {
-    {SafeLog::MessageType::ERROR, "[Error]: "},
-    {SafeLog::MessageType::WARNING, "[Warning]: "},
-    {SafeLog::MessageType::DEBUG, "[Debug]: "},
+static std::map<SafeLog::MessageType, std::string> labelNameMap =
+{
+  { SafeLog::MessageType::ERROR, "[Error]: "},
+  { SafeLog::MessageType::WARNING, "[Warning]: " },
+  { SafeLog::MessageType::DEBUG, "[Debug]: " },
+  { SafeLog::MessageType::INFO, "[Info]" }
 };
 
 SafeLog::InnerSafeLog::InnerSafeLog() : isRunning_(false) {}
@@ -50,10 +52,9 @@ void SafeLog::InnerSafeLog::mainLoop() {
     if (!isRunning_) break;
     safePop();
   }
-  messageQueue_.push("End of session");
-  while (!messageQueue_.empty()) {
-      safePop();
-  }
+  /*messageQueue_.push("End of session");
+  while (!messageQueue_.empty())
+      safePop();*/    //do not work :(
   logFile_.close();
   delete this;
 }
@@ -83,17 +84,8 @@ SafeLog::SafeLog(const std::string & filePath) :
 
 SafeLog::~SafeLog() { innerLog_->stop(); }
 
-void SafeLog::reset(const std::string &filePath) { innerLog_->reset(filePath); }
-
 ILoginWritter & SafeLog::operator()(const MessageType & messageType)
 {
-  logginWritter_.SetLabel("[" + getTimeAsString() + "]" + labelNameMap[messageType]);
+  logginWritter_.SetLabel(std::string("[") + __TIMESTAMP__ + "]" + labelNameMap[messageType]);
   return logginWritter_;
-}
-
-std::string SafeLog::getTimeAsString() {
-  system_clock::time_point p = system_clock::now();
-  std::time_t t = system_clock::to_time_t(p);
-  std::string timestr = std::ctime(&t);
-  return std::string(timestr.begin(), timestr.end() - 1);
 }

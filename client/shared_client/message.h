@@ -1,13 +1,8 @@
 #pragma once
 
-#include <ctime>
-#include <fstream>
-#include <string>
-#include <vector>
-
 namespace m2 {
+// namespace client_shared {
 namespace core {
-
     class MessageBuilder {
     public:
         size_t chat_id;
@@ -39,20 +34,5 @@ namespace core {
         std::time_t sendTime_;  // unix-time
         std::string text_;
     };
-
-    class MessageManager {
-    public:
-        MessageManager() { LoadMessageStory(); }
-
-        using MessageStory = std::vector<Message>;
-
-        const MessageStory& GetMessageStory(const size_t chat_id) const;
-        void LoadMessageStory();
-        void SaveMessageStory();
-
-    private:
-        MessageStory messageStory_;
-    };
-
-}  // core
-}  // m2
+}
+}
