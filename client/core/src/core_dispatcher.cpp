@@ -21,12 +21,12 @@ void CoreDispatcher::Login(LoginHandler handler) {
           return;
         }
       }
-      auto uuid = core.GetLoginManager()->Login(core.GetHttpConnection());
-      if (!uuid.empty()) {
-        handler.onComletion(uuid);
+      Error loginError = core.GetLoginManager()->Login(core.GetHttpConnection());
+      if (loginError.code == Error::Code::NoError) {
+        handler.onComletion(core.GetLoginManager()->GetUserUuid());
       }
       else {
-        handler.onError(Error(Error::Code::LoginError, "Login error"));
+        handler.onError(std::move(loginError));
       }
     };
     core_->PushJob(job, "Login");
@@ -63,7 +63,7 @@ std::list<std::string> CoreDispatcher::GetServerList() {
 }
 
 std::string CoreDispatcher::GetUserUuid() {
-  return core_.GetLoginManager()->GetUserUuid();
+  return core_->GetLoginManager()->GetUserUuid();
 }
 
 } // core

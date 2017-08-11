@@ -93,7 +93,7 @@ Error LoginManager::TalkWithServer(const std::string & firstRequestName, const s
 		return error;
 
 	std::string serverString = jsonPt.get<std::string>(c_server_string);
-	std::string clientString = base64::base64_decrypt(privateKey_->decrypt_from_b64(base64::base64_decode(jsonPt.get<std::string>(c_client_string))));
+    std::string clientString = base64::base64_encrypt(privateKey_->decrypt_from_b64(base64::base64_decode(jsonPt.get<std::string>(c_client_string))));
 
 	httpBuffer_.clear();
 	jsonPt.clear();

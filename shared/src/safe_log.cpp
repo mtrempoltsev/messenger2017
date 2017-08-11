@@ -101,6 +101,6 @@ void SafeLog::reset(const std::string & filePath)
 
 ILoginWritter & SafeLog::operator()(const MessageType & messageType)
 {
-  logginWritter_.SetLabel("[" + __TIMESTAMP__ + "]" + labelNameMap[messageType]);
+  logginWritter_.SetLabel(std::string("[") + __TIMESTAMP__ + "]" + labelNameMap[messageType]);
   return logginWritter_;
 }
