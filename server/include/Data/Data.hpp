@@ -5,12 +5,14 @@
 
 #include "Data/User/Users.h"
 #include "Data/Dialog/Dialogs.h"
+#include "Data/Sessions/Sessions.h"
 
 namespace m2  {
 namespace data{
 
     using namespace user;
     using namespace dialog;
+    using namespace sessions;
 
 }}
 

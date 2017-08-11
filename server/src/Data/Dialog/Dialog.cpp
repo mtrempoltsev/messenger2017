@@ -10,28 +10,29 @@ ADialog::ADialog(const std::string& Root, uuids::uuid Uid)
 
 /**********************************************************/
 
-ADialog::MPtr
-ADialog::AddMessage(const std::string& time, const std::string& text) {
-    auto tmp = AMessage(root, uid.str(), time, text);
-          index.Add(time);
-    return cash.Add(tmp);
+uuids::uuid
+ADialog::AddMessage(const std::string& text) {
+    auto& Id = ++index.Flag();
+    auto tmp = AMessage(root, Id, text);
+    index.Add(Id);
+    return Id;
 }
 
-void ADialog::DeleteMessage(const std::string& time) {
-    checkR(index[time]);
-    index.Remove(time);
+void ADialog::DeleteMessage(const uuids::uuid& Id) {
+    checkR(index[Id]);
+    index.Remove(Id);
 
-    AMessage msg(root, uid.str(), time);
+    AMessage msg(root, Id);
     cash.Remove(msg);
     msg.Remove();
 }
 
 ADialog::MPtr
-ADialog::Get(const std::string& time) {
-    checkR(index[time]) nullptr;
+ADialog::Get(const uuids::uuid& Id) {
+    checkR(index[Id]) nullptr;
 
     // from cash
-    AMessage tmp(root, uid.str(), time); //TODO::make key compare
+    AMessage tmp(root, Id); //TODO::make key compare
     auto ptr = cash(tmp);
     ifR (ptr) ptr;
 
@@ -40,11 +41,11 @@ ADialog::Get(const std::string& time) {
 }
 
 ADialog::CPtr
-ADialog::Get(const std::string& time) const {
-    checkR(index[time]) nullptr;
+ADialog::Get(const uuids::uuid& Id) const {
+    checkR(index[Id]) nullptr;
 
     // from cash
-    AMessage tmp(root, uid.str(), time); //TODO::make key compare
+    AMessage tmp(root, Id); //TODO::make key compare
     return cash(tmp);
 }
 

@@ -29,8 +29,8 @@ set(SOURCES
     src/crypto_hash.cpp
     src/crypto_pki.cpp
     src/crypto_sym.cpp
-    )
-
+    src/safe_log.cpp
+)
 
 set(HEADERS
         include/http_client.h

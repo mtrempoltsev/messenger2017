@@ -11,7 +11,7 @@
 #include <sstream>
 #include <crypto_pki.h>
 #include <crypto_hash.h>
-#include <base64.h>
+#include "base64.h"
 #include <utility>
 
 #pragma clang diagnostic push
@@ -68,7 +68,7 @@ namespace common
         do {
             auto bytes_done = actor(string.size() /*static_cast<int>(std::min(string.size(), rsa_size/2))*/,
                     (const unsigned char *)(string.c_str()+total_bytes_done), buf.get(),
-                                    key_.get(), this->get_padding(encryption));
+                                    key_.get(), public_ ? RSA_PKCS1_OAEP_PADDING : RSA_PKCS1_PADDING);
 
             if (bytes_done == -1) {
                 throw common::OpenSSL_CryptoError("Error during PKI cryptography action: ");
@@ -177,7 +177,6 @@ namespace common
 
     std::string OpenSSL_RSA_CryptoProvider::decrypt_from_b64(const std::string &string) const {
         return decrypt(m2::base64::base64_decode(string));
-
     }
 
     int OpenSSL_RSA_CryptoProvider::get_padding(bool encryption) const {

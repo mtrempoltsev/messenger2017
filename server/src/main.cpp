@@ -4,6 +4,8 @@
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 
+#include "Data/Data_Test.h"
+
 int main(int argc, char* argv[])
 {
     using namespace m2::server;
