@@ -11,7 +11,7 @@
 #include <sstream>
 #include <crypto_pki.h>
 #include <crypto_hash.h>
-#include <base64.h>
+#include "base64.h"
 #include <utility>
 
 #pragma clang diagnostic push
@@ -177,7 +177,6 @@ namespace common
 
     std::string OpenSSL_RSA_CryptoProvider::decrypt_from_b64(const std::string &string) const {
         return decrypt(m2::base64::base64_decode(string));
-
     }
 
     int OpenSSL_RSA_CryptoProvider::get_padding(bool encryption) const {
