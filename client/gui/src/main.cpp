@@ -62,14 +62,6 @@ int main(int argc, char *argv[]) {
   //  RegisterHandler rh;
   //  rh.onCompletion = []() { std::cout << "REGISTERED OK!" << std::endl; };
 
-    QQmlApplicationEngine engine;
-
-    LoginControler::declareQML();
-    RegistrationControler::declareQML();
-
-    engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
-    if (engine.rootObjects().isEmpty()) return -1;
-
     ChatsFilterProxyModel chats;
     MessagesModel messages;
     ContactsModel contacts;
@@ -80,13 +72,6 @@ int main(int argc, char *argv[]) {
 
     /* START CORE */
     std::cout << "start core" << std::endl;
-    m2::core::Core core;
-    m2::core::CoreDispatcher dispatcher;
-    dispatcher.core_ = std::shared_ptr<Core>(&core);
-    std::thread coreThread(runcore, std::ref(core));
-
-    //    coreThread.join();
-    //    dispatcher.stopCore();
 
     /* GUI <--> CORE MESSAGE STORY TEST */
     const std::string chatId = "1";

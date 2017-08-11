@@ -89,10 +89,3 @@ ILoginWritter & SafeLog::operator()(const MessageType & messageType)
   logginWritter_.SetLabel(std::string("[") + __TIMESTAMP__ + "]" + labelNameMap[messageType]);
   return logginWritter_;
 }
-
-std::string SafeLog::getTimeAsString() {
-  system_clock::time_point p = system_clock::now();
-  std::time_t t = system_clock::to_time_t(p);
-  std::string timestr = std::ctime(&t);
-  return std::string(timestr.begin(), timestr.end() - 1);
-}

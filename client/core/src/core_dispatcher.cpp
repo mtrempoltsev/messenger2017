@@ -42,7 +42,7 @@ void CoreDispatcher::Login(LoginHandler handler) {
       }
       Error loginError = core.GetLoginManager()->Login(core.GetHttpConnection());
       if (loginError.code == Error::Code::NoError) {
-        handler.onComletion(core.GetLoginManager()->GetUserUuid());
+        handler.onCompletion(core.GetLoginManager()->GetUserUuid());
       }
       else {
         handler.onError(std::move(loginError));

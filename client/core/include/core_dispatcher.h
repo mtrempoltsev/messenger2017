@@ -50,12 +50,6 @@ namespace core {
 
         std::string GetUserUuid();
 
-        void stopCore();
-
-        bool HasServer();
-        std::list<std::string> GetServerList();
-
-
         // messages
         void GetMessageStory(const std::string &id, MessageStoryHandler handler);
 
