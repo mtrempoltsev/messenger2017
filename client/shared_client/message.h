@@ -5,7 +5,7 @@ namespace m2 {
 namespace core {
     class MessageBuilder {
     public:
-        size_t chat_id;
+        int chat_id;
         std::string from_uuid;
         std::time_t sendTime;
         std::string text;
@@ -20,7 +20,7 @@ namespace core {
               sendTime_(mb.sendTime),
               text_(mb.text) {}
 
-        size_t GetChatId() const { return chat_id_; }
+        int GetChatId() const { return chat_id_; }
         std::string GetFrom() const { return from_uuid_; }
         std::time_t GetSendTime() const { return sendTime_; }
         std::string GetText() const { return text_; }
@@ -29,7 +29,7 @@ namespace core {
         friend std::istream& operator>>(std::istream& stream, Message& message);
 
     private:
-        size_t chat_id_;
+        int chat_id_;
         std::string from_uuid_;
         std::time_t sendTime_;  // unix-time
         std::string text_;
