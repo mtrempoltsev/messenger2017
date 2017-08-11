@@ -35,18 +35,16 @@ namespace core {
             LoadMessageStory(it);
         }
     }
-    const MessageManager::MessageStory& MessageManager::GetMessageStory(const size_t chatId) const {
+    const MessageManager::MessageStory& MessageManager::GetMessageStory(const int chatId) const {
         if (storyByChat_.count(chatId) > 0)  // если есть чат с заданным id
             return storyByChat_.at(chatId);
         else  // чата нет
-            /* FIXME: оч нехорошо, потому что мы возвращаем ссылку на временный объект, по идее сюда
-              мы не должны заходить, потому что GetMessageStory только если ChatExists
-              надо какой-нибудь optional<Error>*/
-            return std::vector<Message>();
+            /* FIXME: мб надо какой-нибудь optional<Error>*/
+            return emptyStory_;
     }
 
-    // void MessageManager::LoadMessageStory(/*size_t pos, size_t messageNumber*/) {
-    void MessageManager::LoadMessageStory(size_t chatId) {
+    // void MessageManager::LoadMessageStory(/*int pos, int messageNumber*/) {
+    void MessageManager::LoadMessageStory(int chatId) {
         //        m2::safelog::SafeLog log(GetManagerPath("log").append("mess.log"));
         try {
             std::string managerPath = GetManagerPath("messages");
@@ -59,7 +57,7 @@ namespace core {
                 read_json(stream, pt);
                 MessageBuilder mb;
                 for (auto& it : pt.get_child("messages")) {
-                    mb.chat_id = it.second.get<size_t>("chat_id");
+                    mb.chat_id = it.second.get<int>("chat_id");
                     mb.from_uuid = it.second.get<std::string>("from_uuid");
                     // TODO: time (from string --> time?)
                     //                    mb.sendTime = it.second.get<std::time_t>("send_time");

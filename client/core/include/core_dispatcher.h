@@ -9,7 +9,7 @@
 
 #include <functional>
 #include <memory>
-#include <vector>
+#include <list>
 
 namespace m2 {
 
@@ -41,10 +41,16 @@ namespace core {
         CoreDispatcher(CoreDispatcher &&) = delete;
         CoreDispatcher &operator=(CoreDispatcher &&) = delete;
 
-        // login_manager
         void Login(LoginHandler handler);
+
         void RegisterUser(RegisterHandler handler);
-        void GetServerList(ServerSetHandler handler);
+   //     void GetServerList(ServerSetHandler handler);
+
+        void RegisterUser(const std::string & serverDomain, RegisterHandler handler);
+
+        bool HasServer();
+        std::list<std::string> GetServerList();
+
 
         // messages
         void GetMessageStory(const std::string &id, MessageStoryHandler handler);

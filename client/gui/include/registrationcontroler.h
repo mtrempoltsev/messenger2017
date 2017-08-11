@@ -11,7 +11,7 @@ class RegistrationControler : public QObject {
  public:
   static void declareQML();
 
-  // RegistrationControler();
+  RegistrationControler();
 
   Q_INVOKABLE void registerMe(const QString &server) const;
 
