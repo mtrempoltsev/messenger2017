@@ -21,10 +21,11 @@ namespace core {
 class LoginManager {
 public:
   LoginManager();
-  std::string Login(const HttpConnectionPtr & connection);
+  Error Login(const HttpConnectionPtr & connection);
   Error RegisterUser(const HttpConnectionPtr & connection);
   std::string GetServerDomain() { return serverDomain_;}
   void SetServerDomain(const std::string & severDomain) { serverDomain_ = severDomain; }
+  std::string GetUserUuid() { return userUuid_; }
   //std::string GetChosenServerUuid();
   std::list<std::string> GetServerList();
   void ReadLoginInfo();
@@ -32,9 +33,9 @@ public:
 
 private:
   Error SendRequestProccess(const std::string & requestName, const std::map<std::string, std::string> & jsonKeyValues,
-                            const std::list<std::string>& jsomParams, boost::property_tree::ptree & jsonPt);
+                            const std::list<std::string>& jsonParams, boost::property_tree::ptree & jsonPt);
 
-  std::vector<char> PrepareHttpRequest(const std::map<std::string, std::string> & jsonKeyValues, const std::string & jsonWriteErrorMessage);
+  Error PrepareHttpRequest(const std::map<std::string, std::string> & jsonKeyValues, std::vector<char> &httpRequestData, const std::string & jsonWriteErrorMessage);
   void UniveralCallback(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out);
   Error CheckServerResponse(PerformResult & result, HttpResponsePtr & response, const std::string & requestName, int lineNum);
   Error CheckJsonValidFormat(const std::list<std::string>& jsomParams, int lineNum, boost::property_tree::ptree & jsonPt);

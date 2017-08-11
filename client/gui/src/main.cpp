@@ -71,6 +71,5 @@ int main(int argc, char *argv[]) {
     engine.rootContext()->setContextProperty("chatModel", &chats);
     engine.rootContext()->setContextProperty("messagesModel", &messages);
     engine.rootContext()->setContextProperty("contactsModel", &contacts);
-
     return app.exec();
 }

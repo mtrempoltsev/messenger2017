@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <fstream>
+#include <algorithm>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -23,6 +24,7 @@ const std::string c_server_field = "server_domain";
 const std::string c_user_uuid_field = "user_uuid";
 const std::string c_private_key_field = "private_key";
 const std::string c_public_key_field = "public_key";
+const std::string c_error_text_field = "error_msg";
 
 //error messages
 const std::string c_write_json_error = "some error text";
@@ -85,28 +87,32 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
 }
 
 Error LoginManager::SendRequestProccess(const std::string & requestName, const std::map<std::string, std::string> & jsonKeyValues,
-                                        const std::list<std::string>& jsomParams, boost::property_tree::ptree & jsonPt) {
+                                        const std::list<std::string>& jsonParams, boost::property_tree::ptree & jsonPt) {
   PerformResult result;
   HttpResponsePtr response;
-  auto httpRequestData = PrepareHttpRequest(jsonKeyValues, c_write_json_error);
-  std::unique_lock<std::mutex> lockSendKey(mutex_);
-  currentConnection_.get()->perform({requestName, std::chrono::milliseconds(TIMEOUT)},
-                                    httpRequestData, httpBuffer_,
-                                    std::bind(&LoginManager::UniveralCallback, this,
-                                              std::placeholders::_1, std::placeholders::_2,
-                                              std::ref(result), std::ref(response)));
-  hasResponse_.wait(lockSendKey);
-  Error checkKeyError = CheckServerResponse(result, response, requestName, __LINE__);
-  if (checkKeyError.code != Error::Code::NoError) {
-    return checkKeyError;
+  std::vector<char> httpRequestData;
+  Error prepareError = PrepareHttpRequest(jsonKeyValues, httpRequestData, c_write_json_error);
+  if(prepareError.code == Error::Code::NoError) {
+    std::unique_lock<std::mutex> lockSendKey(mutex_);
+    currentConnection_.get()->perform({requestName, std::chrono::milliseconds(TIMEOUT)},
+                                      httpRequestData, httpBuffer_,
+                                      std::bind(&LoginManager::UniveralCallback, this,
+                                                std::placeholders::_1, std::placeholders::_2,
+                                                std::ref(result), std::ref(response)));
+    hasResponse_.wait(lockSendKey);
+    Error checkKeyError = CheckServerResponse(result, response, requestName, __LINE__);
+    if (checkKeyError.code != Error::Code::NoError) {
+      return checkKeyError;
+    }
+    Error jsonError = CheckJsonValidFormat(jsonParams, __LINE__, jsonPt);
+    if (jsonError.code != Error::Code::NoError) {
+      return jsonError;
+    }
   }
-  Error jsonError = CheckJsonValidFormat(jsomParams, __LINE__, jsonPt);
-  if (jsonError.code != Error::Code::NoError) {
-    return jsonError;
-  }
+  return prepareError;
 }
 
-std::vector<char> LoginManager::PrepareHttpRequest(const std::map<std::string, std::string> & jsonKeyValues, const std::string & jsonWriteErrorMessage) {
+Error LoginManager::PrepareHttpRequest(const std::map<std::string, std::string> & jsonKeyValues, std::vector<char> &httpRequestData, const std::string & jsonWriteErrorMessage) {
   ptree jsonPt;
   for (auto & jsonIter : jsonKeyValues) {
     jsonPt.put(jsonIter.first, jsonIter.second);
@@ -117,10 +123,11 @@ std::vector<char> LoginManager::PrepareHttpRequest(const std::map<std::string, s
   }
   catch (json_parser_error & ex) {
     logger_(SL_ERROR) << ex.what();
-    return Error(Error::Code::RegistationError, std::move(jsonWriteErrorMessage));
+    return Error(Error::Code::RegistationError, std::string(jsonWriteErrorMessage));
   }
   std::string resultString = oss.str();
-  return std::vector<char>(resultString.begin(), resultString.end());
+  std::copy(resultString.begin(), resultString.end(), std::back_inserter(httpRequestData));
+  return DEFAULT_ERROR;
 }
 
 void LoginManager::UniveralCallback(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out) {
@@ -137,8 +144,12 @@ Error LoginManager::CheckServerResponse(PerformResult & result, HttpResponsePtr 
   }
   if (response->code != 200)
   {
-    logger_(SL_ERROR) << "Bad response in RegisterUser on line=" + std::to_string(lineNum);
-    return Error(Error::Code::NetworkError, std::string("the \"" + requestName + "\" response ended with code " + std::to_string(response->code)));
+    ptree errorPt;
+    Error error = CheckJsonValidFormat({c_error_text_field}, lineNum, errorPt);
+    if (error.code == Error::Code::NoError)
+      return Error(Error::Code::ServerError, std::string(errorPt.get<std::string>(c_error_text_field)));
+    else
+      return error;
   }
   return DEFAULT_ERROR;
 }
@@ -189,7 +200,7 @@ std::list<std::string> LoginManager::GetServerList()
   return serverList;
 }
 
-std::string LoginManager::Login(const m2::HttpConnectionPtr &connection)
+m2::Error LoginManager::Login(const m2::HttpConnectionPtr &connection)
 {
 
 }
