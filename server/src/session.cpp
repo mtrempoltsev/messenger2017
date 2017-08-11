@@ -1,8 +1,6 @@
 #include "session.h"
 #include "http_request.h"
 #include "http_response.h"
-#include "manager_controller.h"
-
 #include <iostream>
 
 void LOG(const std::string& log) {
@@ -14,7 +12,7 @@ namespace server {
     Session::Session(boost::asio::io_service& service, Database *database)
     : socket_(service)
     , write_strand_(service)
-    , db(database)
+    , manager_(database, this)
     {
     }
 
@@ -98,8 +96,7 @@ namespace server {
         }
         else if (error == boost::asio::error::eof)
         {
-            ManagerController manager(db);
-            auto response = manager.doProcess(request);
+            auto response = manager_.doProcess(request);
             sendResponse(response);
         }
         else {

@@ -8,14 +8,15 @@ namespace server
 class LoginSendKeyManager: public Manager
 {
 public:
-    LoginSendKeyManager(Database *database);
+    LoginSendKeyManager(ManagerController* controller);
     virtual HttpResponse::Code doAction(const std::string &data, std::string &response) final;
-
 protected:
-    std::string deserialize(const std::string &data);
+    uuids::uuid deserialize(const std::string &data);
 
 private:
-    std::string createResponse(const std::string &publicKey);
+    std::string createResponse(const uuids::uuid &uuid);
+
+    ManagerController* controller;
 };
 }
 }

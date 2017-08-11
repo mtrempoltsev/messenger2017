@@ -75,7 +75,7 @@ namespace dialog {
      * create a 2-lvl index system
      */
     class ADialog
-            : public TDialogSystem<AMessage, std::string>
+            : public TDialogSystem<AMessage>
     {
     public:
 
@@ -86,37 +86,36 @@ namespace dialog {
         //void Serialize    (std::ostream& os, std::string since);
 
         /**
-         * Add a message to cash
-         * @param time - time of the message
          * @param text - text of the message
          * @return pointer on message
          */
-        std::shared_ptr<AMessage>
-        AddMessage(const std::string& time, const std::string& text);
+        uuids::uuid
+        AddMessage(const std::string& text);
 
         /**
          * Delete a message both from a cash and a disk
          * @param time - time of the message (as key)
          */
-        void DeleteMessage(const std::string& time);
+        void DeleteMessage(const uuids::uuid& Id);
 
         /**
          * @param time - time of the message (as key)
          * @return pointer on the message or nullptr
          */
         std::shared_ptr<AMessage>
-        Get(const std::string& time)       override;
+        Get(const uuids::uuid& Id)       override;
 
         const
         std::shared_ptr<AMessage>
-        Get(const std::string& time) const override;
+        Get(const uuids::uuid& Id) const override;
 
     public: /***************| operators |***************/
 
         //std::ostream& operator<<(std::ostream& os);
     };
 
-
+    using DialogPtr  = std::shared_ptr<ADialog>;
+    using DialogWPtr = std::weak_ptr  <ADialog>;
 
 }}}
 

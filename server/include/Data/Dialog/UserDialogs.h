@@ -25,15 +25,15 @@ namespace dialog {
 
     public:
 
-        /**
+        /** get or create a dialog
          * @param Uid - uid of chat (usually uid of contact)
          * @return - pointer on a Dialog
          */
         std::shared_ptr<ADialog>
         Get(const uuids::uuid& Uid)       override;
 
-        /**
-         * @return - pointer on a Dialog or nullptr
+        /** get a dialog
+         *  NOTE: if the dialog doesn't exist return nullptr
          */
         const
         std::shared_ptr<ADialog>
@@ -44,7 +44,8 @@ namespace dialog {
         MPtr create_dialog(uuids::uuid Uid);
     };
 
-
+    using UserDialogsPtr  = std::shared_ptr<AUserDialogs>;
+    using UserDialogsWPtr = std::weak_ptr  <AUserDialogs>;
 }}}
 
 #endif //M2_SERVER_USERDIALOGS_H

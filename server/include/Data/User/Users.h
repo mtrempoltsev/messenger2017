@@ -48,6 +48,7 @@ namespace user {
 
         const std::string& RootDir() const;
         const UserUids&    Users  () const;
+        size_t             Size   () const;
 
 
     public: /***************| Operators |***************/

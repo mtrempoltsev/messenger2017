@@ -1,7 +1,10 @@
 #include <shared/include/crypto_pki.h>
+#include <shared/include/crypto_sym.h>
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/string_generator.hpp>
 #include "Registration/RegisterManager.h"
+#include <shared/include/base64.h>
 
 
 using namespace m2::server;
@@ -14,8 +17,8 @@ RegisterManager::StringsPair RegisterManager::deserialize (const std::string &da
     stream << data;
 
     boost::property_tree::read_json (stream, request);
-    info.serverString = request.get<std::string> ("server_string");
-    info.clientString = request.get<std::string> ("client_string");
+    info.serverString = base64_decode(request.get<std::string> ("server_string"));
+    info.clientString = base64_decode(request.get<std::string> ("client_string"));
 
     return info;
 }
@@ -31,38 +34,42 @@ HttpResponse::Code RegisterManager::doAction (const std::string &data, std::stri
         return HttpResponse::Code::FORBIDEN;
     }
     userInfo info;
-    auto result = createResponse (preparedData, info);
+    response = createResponse (preparedData, info);
 
-    if (result != response_result::ok) {
+    if (info.status != response_result::ok) {
         return HttpResponse::Code::FORBIDEN;
     }
-
-    db->CreateUser (info.fingerprint, info.clientPublicKey);
+  //  auto generator =  boost::uuids::string_generator()(info.fingerprint);
+    db->CreateUser (uuids::to_uuid(info.fingerprint), info.clientPublicKey);
 
     return HttpResponse::Code::OK;
 }
 
 
-RegisterManager::RegisterManager (Database *db)
-        : Manager (db) {
+RegisterManager::RegisterManager (ManagerController* controller)
+        : Manager (controller) {
 
 }
 
-Manager::response_result RegisterManager::createResponse (const StringsPair &pair, userInfo &result) {
+std::string RegisterManager::createResponse (const StringsPair &pair, userInfo &result) {
 
     std::string serverCheck;
     std::string clientString;
     std::string clientKey;
+    std::string fingerPrint;
     try {
-        auto serv_cryptor = m2::crypto::common::OpenSSL_RSA_CryptoProvider (db->getPublicServerKey (), true);
+        auto serv_cryptor = m2::crypto::common::OpenSSL_AES_CryptoProvider (256, "123", "byaka-salt");
         auto server_string = serv_cryptor.decrypt (pair.serverString);
+        // determine uuid-length
         auto uuid = boost::uuids::random_generator () ();
         auto stringLenTemp = boost::uuids::to_string (uuid);
+        // >>>>>> end <<<<<<<
         serverCheck = server_string.substr (0, stringLenTemp.size ());
         clientKey = server_string.substr (stringLenTemp.size ());
         auto cli_cryptor = m2::crypto::common::OpenSSL_RSA_CryptoProvider (clientKey, true);
-        std::string client_string = cli_cryptor.encrypt (pair.clientString);
-
+        clientString = pair.clientString;
+        //fingerPrint  =  boost::uuids::to_string(cli_cryptor.fingerprint());
+        result.fingerprint = cli_cryptor.fingerprint();
     }
         catch (const m2::crypto::common::CryptoError &e) {
 
@@ -70,12 +77,19 @@ Manager::response_result RegisterManager::createResponse (const StringsPair &pai
         }
 
     if (serverCheck != clientString) {
-        return Manager::response_result::wrong_response;
+        result.status = response_result::wrong_response;
+    }
+    else{
+        result.status = response_result::ok;
     }
 
     result.clientPublicKey = clientKey;
-    m2::crypto::common::OpenSSL_RSA_CryptoProvider orca (clientKey, true);
-//    result.fingerprint = orca.fingerprint ();
 
-    return response_result::ok;
+    pt::ptree tree;
+    std::stringstream stream;
+    tree.put("uuid", boost::uuids::to_string(result.fingerprint));
+    boost::property_tree::write_json(stream, tree);
+
+    return stream.str();//    result.fingerprint = orca.fingerprint ();
+
 }

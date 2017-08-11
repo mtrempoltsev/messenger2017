@@ -1,5 +1,5 @@
 #include "http_request.h"
-
+#include <sstream>
 
 namespace m2 {
 namespace server {

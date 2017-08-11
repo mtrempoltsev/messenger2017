@@ -24,8 +24,8 @@ namespace common
 
     }
 
-    std::string OpenSSL_CryptoError::makeOpenSSLErrString(bool prefix) {
-        std::string err = prefix ? "Error occured in OpenSSL context: " : "";
+    std::string OpenSSL_CryptoError::   makeOpenSSLErrString(bool prefix) {
+            std::string err = prefix ? "Error occured in OpenSSL context: " : "";
         char buf[1024];
         auto code = ERR_get_error();
         ERR_error_string(code, buf);

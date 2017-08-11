@@ -10,13 +10,9 @@ namespace server
 
 class RegisterManager: public Manager
 {
-    struct userInfo
-    {
-        uuids::uuid fingerprint;
-        std::string clientPublicKey;
-    };
+
 public:
-    RegisterManager(Database *db);
+    RegisterManager(ManagerController* controller);
 
     virtual HttpResponse::Code doAction(const std::string &data, std::string &response) final;
 
@@ -27,8 +23,7 @@ private:
     StringsPair deserialize(const std::string &data);
 
 
-
-    response_result createResponse (const StringsPair &pair, userInfo &result);
+    std::string createResponse (const StringsPair &pair, userInfo &result);
 };
 }
 }
