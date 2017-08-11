@@ -1,0 +1,16 @@
+{
+  "messages": [
+       {
+           "chat_id": 1,
+           "from_uuid": "uiid1",
+           "send_time" : "time but string",
+           "text" : "HII"
+       },
+       {
+           "chat_id": 1,
+           "from_uuid": "uiid1",
+           "send_time" : "time but string #2",
+           "text" : "HII 222"
+       }
+   ]
+}

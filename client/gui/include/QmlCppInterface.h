@@ -25,7 +25,7 @@ public:
   Q_INVOKABLE void loginButtonClicked() {
 
     LoginHandler lh;
-    lh.onComletion = [](std::string uid) {
+    lh.onCompletion = [](std::string uid) {
       std::cout << "GUI GOT UID!!! " << uid << std::endl;
     };
     dispatcher_->Login(lh);
