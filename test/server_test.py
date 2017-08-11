@@ -69,7 +69,6 @@ class ClientTest(unittest.TestCase):
         print("SAVE THIS KEY: {} ".format(key.exportKey('PEM')))
         print("SAVE THIS UUID: {} ".format(uid))
 
-
     def test_authorization(self):
         uid, key = self.register()
         cryptor = PKCS1_OAEP.new(key)
