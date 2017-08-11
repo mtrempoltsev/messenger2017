@@ -52,28 +52,29 @@ LoginManager::LoginManager() :
 
 Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
 {
-  std::pair<OpenSSL_RSA_CryptoProvider, OpenSSL_RSA_CryptoProvider> crypto = OpenSSL_RSA_CryptoProvider::make(KEYSIZE);
+  currentConnection_ = connection;
+  auto crypto = OpenSSL_RSA_CryptoProvider::make(KEYSIZE);
 
-  publicKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.first.str_key(), true);
-  privateKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.second.str_key(), false);
+  publicKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.first->str_key(), true);
+  privateKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.second->str_key(), false);
 
-  Error error = TalkWithServer(c_send_key_request, c_register_request, publicKey_->str());
+  Error error = TalkWithServer(c_send_key_request, c_register_request, publicKey_->str_key());
   if (error.code != Error::Code::NoError)
 	  return error;
 
-  userUuid_ = jsonPt.get<std::string>(c_uuid_string);
+  userUuid_ = error.message;
   WriteLoginInfo();
 
   return DEFAULT_ERROR;
 }
 
 Error LoginManager::Login(const HttpConnectionPtr &connection) {
-
+  currentConnection_ = connection;
   Error error = TalkWithServer(c_send_key_request, c_register_request, userUuid_);
   if (error.code != Error::Code::NoError)
     return error;
   ptree jsonPt;
-  Error error = SendRequestProccess(c_send_key_request,
+  error = SendRequestProccess(c_send_key_request,
                                     {{c_public_key_field, userUuid_ }},
                                     { c_server_string, c_client_string },
                                     jsonPt);
@@ -93,7 +94,7 @@ Error LoginManager::TalkWithServer(const std::string & firstRequestName, const s
 		return error;
 
 	std::string serverString = jsonPt.get<std::string>(c_server_string);
-    std::string clientString = base64::base64_encrypt(privateKey_->decrypt_from_b64(base64::base64_decode(jsonPt.get<std::string>(c_client_string))));
+    std::string clientString = base64::base64_encode(privateKey_->decrypt_from_b64(base64::base64_decode(jsonPt.get<std::string>(c_client_string))));
 
 	httpBuffer_.clear();
 	jsonPt.clear();
@@ -104,7 +105,7 @@ Error LoginManager::TalkWithServer(const std::string & firstRequestName, const s
 		                        jsonPt);
 	if (error.code != Error::Code::NoError)
 		return error;
-	return DEFAULT_ERROR;
+    return Error(Error::Code::NoError, jsonPt.get<std::string>(c_uuid_string));
 }
 
 Error LoginManager::SendRequestProccess(const std::string & requestName, const std::map<std::string, std::string> & jsonKeyValues,
@@ -115,7 +116,7 @@ Error LoginManager::SendRequestProccess(const std::string & requestName, const s
   Error prepareError = PrepareHttpRequest(jsonKeyValues, httpRequestData, c_write_json_error);
   if(prepareError.code == Error::Code::NoError) {
     std::unique_lock<std::mutex> lockSendKey(mutex_);
-    currentConnection_.get()->perform({requestName, std::chrono::milliseconds(TIMEOUT)},
+    currentConnection_->perform({requestName, std::chrono::milliseconds(TIMEOUT)},
                                       httpRequestData, httpBuffer_,
                                       std::bind(&LoginManager::UniveralCallback, this,
                                                 std::placeholders::_1, std::placeholders::_2,
@@ -221,11 +222,6 @@ std::list<std::string> LoginManager::GetServerList()
       logger_(SL_ERROR) << "the \"Server List\" file did not opened!";
   }
   return serverList;
-}
-
-m2::Error LoginManager::Login(const m2::HttpConnectionPtr &connection)
-{
-
 }
 
 void LoginManager::ReadLoginInfo() {

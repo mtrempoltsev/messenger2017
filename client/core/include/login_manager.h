@@ -41,6 +41,8 @@ private:
   Error CheckServerResponse(PerformResult & result, HttpResponsePtr & response, const std::string & requestName, int lineNum);
   Error CheckJsonValidFormat(const std::list<std::string>& jsomParams, int lineNum, boost::property_tree::ptree & jsonPt);
 
+
+  HttpConnectionPtr currentConnection_;
   std::vector<char> httpBuffer_;
 
   safelog::SafeLog logger_;

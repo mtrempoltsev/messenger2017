@@ -29,6 +29,7 @@ set(HEADERS
     ../../shared/include/crypto_hash.h
     ../../shared/include/crypto_pki.h
     ../../shared/include/crypto_sym.h
+    ../../shared/include/base64.h
     )
 
 set(SOURCES
@@ -55,6 +56,7 @@ set(SOURCES
     ../../shared/src/crypto_hash.cpp
     ../../shared/src/crypto_pki.cpp
     ../../shared/src/crypto_sym.cpp
+    ../../shared/src/base64.cpp
     )
 
 if (ENABLE_TESTS)

@@ -354,8 +354,8 @@ void m2::HttpClient::Context::update(curl_socket_t socket, int action)
     if (action & CURL_POLL_OUT)
         kind |= EV_WRITE;
 
-    event_ = event_new(client_->eventBase_, socket_, kind, eventCallback, this);
-    event_add(event_, NULL);
+    //event_ = event_new(client_->eventBase_, socket_, kind, eventCallback, this);
+    //event_add(event_, NULL);
 }
 
 void m2::HttpClient::Context::freeEvent()

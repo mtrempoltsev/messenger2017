@@ -39,7 +39,7 @@ namespace m2
     void addSocket(curl_socket_t socket, CURL* curl, int action, HttpClient* client);
     int socketCallback(CURL* curl, curl_socket_t socket, int what, void* clientPtr, void* contextPtr);
     int timerCallback(CURLM* curlMulti, Milliseconds timeout, void* clientPtr);
-    void eventCallback(long long int socket, short kind, void *contextPtr);
+    void eventCallback(long long socket, short kind, void *contextPtr);
     void eventTimerCallback(evutil_socket_t descriptor, short flags, void* clientPtr);
     void eventTimeoutCallback(evutil_socket_t descriptor, short flags, void* clientPtr);
     void startTaskCallback(evutil_socket_t descriptor, short flags, void* clientPtr);
