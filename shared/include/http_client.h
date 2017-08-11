@@ -15,7 +15,7 @@
 
 #include <event2/event.h>
 
-#include "http_connection.h"
+#include <http_connection.h>
 
 /*
     You can use one HttpConnection for multiple requests and you must do this.
@@ -39,7 +39,7 @@ namespace m2
     void addSocket(curl_socket_t socket, CURL* curl, int action, HttpClient* client);
     int socketCallback(CURL* curl, curl_socket_t socket, int what, void* clientPtr, void* contextPtr);
     int timerCallback(CURLM* curlMulti, Milliseconds timeout, void* clientPtr);
-    void eventCallback(int socket, short kind, void* contextPtr);
+    void eventCallback(int socket, short kind, void *contextPtr);
     void eventTimerCallback(evutil_socket_t descriptor, short flags, void* clientPtr);
     void eventTimeoutCallback(evutil_socket_t descriptor, short flags, void* clientPtr);
     void startTaskCallback(evutil_socket_t descriptor, short flags, void* clientPtr);
@@ -52,7 +52,7 @@ namespace m2
         friend void addSocket(curl_socket_t socket, CURL* curl, int action, HttpClient* client);
         friend int socketCallback(CURL* curl, curl_socket_t socket, int what, void* clientPtr, void* contextPtr);
         friend int timerCallback(CURLM* curlMulti, Milliseconds timeout, void* clientPtr);
-        friend void eventCallback(int socket, short kind, void* contextPtr);
+        friend void eventCallback(int socket, short kind, void *contextPtr);
         friend void eventTimerCallback(evutil_socket_t descriptor, short flags, void* clientPtr);
         friend void eventTimeoutCallback(evutil_socket_t descriptor, short flags, void* contextPtr);
         friend void startTaskCallback(evutil_socket_t descriptor, short flags, void* clientPtr);

@@ -24,67 +24,54 @@
 namespace m2 {
 namespace core {
 
-    class Core {
-    public:
-        Core();
+class Core {
+public:
+  Core();
 
-        // core <--> server
-        boost::optional<m2::Error> StartServerConnection(const m2::Uuid &serverGuid);
-        boost::optional<m2::Error> Login(const m2::Uuid &clientUuid);
-        boost::optional<m2::Error> RegisterNewUser();
+  // core <--> server
+  boost::optional<m2::Error> StartServerConnection(const m2::Uuid &serverGuid);
+  boost::optional<m2::Error> Login(const m2::Uuid &clientUuid);
+  boost::optional<m2::Error> RegisterNewUser();
 
-        std::map<m2::Uuid, std::string> GetServersMap();
+  std::map<m2::Uuid, std::string> GetServersMap();
 
-        std::shared_ptr<ContactManager> GetContactManager();
-        std::shared_ptr<LoginManager> GetLoginManager();
-        std::shared_ptr<MessageManager> GetMessageManager();
+  std::shared_ptr<ContactManager> GetContactManager();
+  std::shared_ptr<LoginManager> GetLoginManager();
+  std::shared_ptr<MessageManager> GetMessageManager();
 
-        // chosen server interfase
-        bool HasChosenServer() { return !chosenServer_.empty(); }
-        void SetChosenServer(const std::string &serverDomain);
-        std::string GetChosenServer() { return chosenServer_; }
+  //http interface
+  HttpClient & GetHttpClient() { return httpClient; }
+  HttpConnectionPtr GetHttpConnection() { return httpConnection; }
+  void SetHttpConnetion(HttpConnectionPtr httpCon) { httpConnection = httpCon; }
+  bool InitHttpConnection(const std::string & serverDomain = std::string());
 
-        // http interface
-        HttpClient &GetHttpClient() { return httpClient; }
-        HttpConnectionPtr GetHttpConnection() { return httpConnection; }
-        void SetHttpConnetion(HttpConnectionPtr httpCon) { httpConnection = httpCon; }
-        bool InitHttpConnection(const std::string &serverDomain = std::string());
+  // uber-threads
+  void Start();
+  void Stop();
+  void JobLoop();
+  void PushJob(JobType job, std::string && jobname);
 
-        void PushJob(JobType job, std::string &&jobname);
 
-        // uber-threads
-        void Start();
-        void Stop();
-        void JobLoop();
-        //     void PushJob(JobType job);
+  // managers
+  std::shared_ptr<ContactManager> contactManager_;
+  std::shared_ptr<LoginManager> loginManager_;
+  std::shared_ptr<MessageManager> messageManager_;
 
-    private:  // WOHOOO, I'M HERE AGAIN!!!!!!!!!!1111111
-        // servers setup
-        // make list (actually, map) of availible servers
-        //  std::map<m2::Uuid, std::string> ReadServersFile();
+  // map of availible servers
+  std::map<m2::Uuid, std::string> serversMap_;
 
-        // managers
-        std::shared_ptr<ContactManager> contactManager_;
-        std::shared_ptr<LoginManager> loginManager_;
-        std::shared_ptr<MessageManager> messageManager_;
+  // threads
+  bool keepWorking_; // working flag
+  std::mutex mutex_;
+  std::condition_variable hasJob_;
+  std::queue<JobType> jobQueue_;
 
-        // map of availible servers
-        std::map<m2::Uuid, std::string> serversMap_;
-        std::string chosenServer_;
+  //http
+  HttpClient httpClient;
+  HttpConnectionPtr httpConnection;
 
-        // threads
-        bool keepWorking_;  // working flag
-        std::mutex mutex_;
-        std::condition_variable hasJob_;
-        std::queue<JobType> jobQueue_;
-
-        // http
-        HttpClient httpClient;
-        HttpConnectionPtr httpConnection;
-
-        // logger
-        safelog::SafeLog logger_;
-    };
-
-}  // core
-}  // m2
+  //logger
+  safelog::SafeLog logger_;
+};
+} // core
+} // m2

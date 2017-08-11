@@ -9,7 +9,8 @@ struct Error final {
       NoError,
       NetworkError,
       LoginError,
-      RegistationError
+      RegistationError,
+      ServerError
   };
 
   Error(Code code, std::string &&message) : code{code}, message{message} {}

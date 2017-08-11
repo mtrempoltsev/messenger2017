@@ -42,11 +42,15 @@ namespace core {
         CoreDispatcher &operator=(CoreDispatcher &&) = delete;
 
         void Login(LoginHandler handler);
+        void RegisterUser(const std::string & serverDomain, RegisterHandler &handler);
 
-        void RegisterUser(RegisterHandler handler);
-   //     void GetServerList(ServerSetHandler handler);
+        bool HasServer();
+        std::string GetServerDomain();
+        std::list<std::string> GetServerList();
 
-        void RegisterUser(const std::string & serverDomain, RegisterHandler handler);
+        std::string GetUserUuid();
+
+        void stopCore();
 
         bool HasServer();
         std::list<std::string> GetServerList();

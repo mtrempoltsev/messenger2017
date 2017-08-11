@@ -5,6 +5,7 @@
 #include <openssl/evp.h>
 #include <memory>
 #include <cstring>
+#include <base64.h>
 #include "../include/crypto_sym.h"
 
 namespace m2
@@ -27,7 +28,7 @@ namespace common
                 EVP_CIPHER_CTX_new(), &EVP_CIPHER_CTX_free
         };
         const auto buf_size = static_cast<const size_t>(2*key_size());
-        std::unique_ptr<unsigned char[]> buf { new unsigned char[buf_size] };
+        std::unique_ptr<unsigned char[]> buf { new unsigned char[buf_size+1] };
         int len = 0;
         std::string ciphertext;
         auto init_actor = encrypt ? EVP_EncryptInit_ex : EVP_DecryptInit_ex;
@@ -85,6 +86,14 @@ namespace common
 
     size_t OpenSSL_AES_CryptoProvider::key_size() const {
         return bit_size_ / 8;
+    }
+
+    std::string OpenSSL_AES_CryptoProvider::encrypt_to_b64(const std::string &string) const {
+        return m2::base64::base64_encode(encrypt(string));
+    }
+
+    std::string OpenSSL_AES_CryptoProvider::decrypt_from_b64(const std::string &string) const {
+        return decrypt(m2::base64::base64_decode(string));
     }
 }
 }
