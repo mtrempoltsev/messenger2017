@@ -23,15 +23,13 @@ namespace message {
         // new message
         AMessage(std::istream& is);
         AMessage( const std::string& Dir
-                , const std::string& Author
-                , const std::string& Time
+                , const uuids::uuid& Id
                 , const std::string& Text);
 
         // open existing message
-        AMessage(const std::string&  FileName);
+        AMessage( const std::string& FileName);
         AMessage( const std::string& Dir
-                , const std::string& Author
-                , const std::string& Time);
+                , const uuids::uuid& Id);
 
         ~AMessage();
 
@@ -48,25 +46,19 @@ namespace message {
         bool bChanged;
 
         std::string dir;
-        std::string author;
-        std::string time;
+        uuids::uuid id;
         std::string text;
 
     public:
 
-        const std::string& Author() const { return author; }
-        const std::string& Time()   const { return time;   }
-        const std::string& Text()   const { return text;   }
+        const uuids::uuid& Id()   const { return id;  }
+        const std::string& Text() const { return text; }
 
     public:
 
-        void SetAuthor(const std::string& New);
-        void SetTime  (const std::string& New);
-        void SetText  (const std::string& New);
-
-        void SetAuthor(std::string&& New);
-        void SetTime  (std::string&& New);
-        void SetText  (std::string&& New);
+        void SetId    (const uuids::uuid&  New);
+        void SetText  (const std::string&  New);
+        void SetText  (      std::string&& New);
 
     protected:
 

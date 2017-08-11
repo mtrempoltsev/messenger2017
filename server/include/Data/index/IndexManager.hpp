@@ -19,8 +19,8 @@ namespace indices {
      * UID3
      *
      */
-    template< typename _Tp = uuids::uuid
-            , typename _Hs = std::hash<_Tp>
+    template< typename _Tp = uuids::uuid    // indexing type
+            , typename _Hs = std::hash<_Tp> // hash function
     >class TIndexManager
     //        : boost::noncopyable
     {
@@ -33,11 +33,13 @@ namespace indices {
         TIndexManager(const std::string& Path)
             : root(separate_root(Path))
             , path(Path)
+            , flag(0)
         { LoadFromDisk(); }
 
         TIndexManager(std::string&& Path)
                 : root(separate_root(Path))
                 , path(std::move(Path))
+                , flag(0)
         { LoadFromDisk(); }
 
         ~TIndexManager()
@@ -50,8 +52,7 @@ namespace indices {
             checkR(in.is_open())
                 StoreOnDisk();
 
-            int size; //TODO:: check count
-            in >> size;
+            in >> flag;
 
             _Tp Uid;
             for(; in >> Uid; Uid = _Tp())
@@ -64,7 +65,7 @@ namespace indices {
             checkR(os.is_open());
             // send error
 
-            os << uids.size();
+            os << flag;
             os << "\n";
 
             for (auto& i : uids) {
@@ -79,20 +80,27 @@ namespace indices {
         void Remove    (const _Tp& Uid)
         { uids.erase (Uid); }
 
-        bool IsContains(const _Tp& Uid) const
-        { return uids.find(Uid) != uids.end(); }
+        bool IsContains(const _Tp& Uid) const {
+            for (auto& i : uids)
+                if (i == Uid)
+                    return true;
+            return false;
+        }
 
     protected: /************| Members |***************/
 
         std::string root;
         std::string path;
 
-        LUids uids;
+        uuids::uuid flag;
+        LUids       uids;
 
     public:
 
         std::string  Path() const { return path; }
         const LUids& Uids() const { return uids; }
+        uuids::uuid& Flag()       { return flag; }
+        uuids::uuid  Flag() const { return flag; }
 
     protected:
 
@@ -103,7 +111,6 @@ namespace indices {
 
         bool operator[](const _Tp& Uid) const
         { return IsContains(Uid); }
-
     };
 
     using AIndexManager = TIndexManager<>;

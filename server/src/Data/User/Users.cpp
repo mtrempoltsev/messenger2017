@@ -51,6 +51,9 @@ const std::string& AUsers::RootDir() const
 const AUsers::UserUids& AUsers::Users() const
 { return users.Uids(); }
 
+size_t AUsers::Size() const
+{ return users.Uids().size(); }
+
 bool AUsers::operator[](const uuids::uuid& Uid)
 { return users[Uid]; }
 

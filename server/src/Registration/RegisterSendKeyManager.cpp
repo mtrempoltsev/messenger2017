@@ -6,6 +6,8 @@
 
 
 #include <crypto_pki.h>
+#include <shared/include/crypto_sym.h>
+#include <shared/include/base64.h>
 
 using namespace m2::server;
 
@@ -47,9 +49,10 @@ std::string RegisterSendKeyManager::createResponse(const std::string &publicKey)
     std::string client_string;
     auto privateKey = db->getPrivateServerKey();
     try {
-
+        //криптор публик кея
         auto cli_cryptor = m2::crypto::common::OpenSSL_RSA_CryptoProvider(publicKey, true);
-        auto serv_cryptor = m2::crypto::common::OpenSSL_RSA_CryptoProvider(privateKey, false);
+        //криптор сервер кея
+        auto serv_cryptor = m2::crypto::common::OpenSSL_AES_CryptoProvider (256, "123", "byaka-salt");
         client_string = cli_cryptor.encrypt(stringForCrypt);
         server_string = serv_cryptor.encrypt(stringForCrypt + publicKey);
 
@@ -62,15 +65,15 @@ std::string RegisterSendKeyManager::createResponse(const std::string &publicKey)
 
     pt::ptree tree;
     std::stringstream stream;
-    tree.put("client_string", client_string);
-    tree.put("server_string", server_string);
+    tree.put("client_string", base64_encode(client_string.c_str(), client_string.size()));
+    tree.put("server_string", base64_encode(server_string.c_str(), server_string.size()));
     boost::property_tree::write_json(stream, tree);
 
     return stream.str();
 }
 
-RegisterSendKeyManager::RegisterSendKeyManager(Database *database)
-    : Manager(database)
+RegisterSendKeyManager::RegisterSendKeyManager(ManagerController* controller)
+    : Manager(controller)
 {
 
 }
