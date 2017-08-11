@@ -1,7 +1,7 @@
 //
 // Created by lol on 8/5/2017.
 //
-#include "../include/crypto_common.h"
+#include <crypto_common.h>
 #include <openssl/err.h>
 
 namespace m2

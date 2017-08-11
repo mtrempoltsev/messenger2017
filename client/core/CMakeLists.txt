@@ -12,16 +12,21 @@ set(HEADERS
     stdafx.h
 
     include/config.h
-    include/contact.h
+    include/contact_manager.h
     include/core.h
     include/core_dispatcher.h
     include/error.h
     include/guid.h
-    include/message.h
+    include/message_manager.h
     include/login_manager.h
     include/path_settings.h
     include/jobtype.h
+
+    ../shared_client/chat.h
     ../shared_client/handlers.h
+    ../shared_client/message.h
+    ../shared_client/contact.h
+
     ../../shared/include/safe_log.h
     ../../shared/include/http_client.h
     ../../shared/include/http_connection.h
@@ -29,25 +34,26 @@ set(HEADERS
     ../../shared/include/crypto_hash.h
     ../../shared/include/crypto_pki.h
     ../../shared/include/crypto_sym.h
+    ../../shared/include/base64.h
     )
 
 set(SOURCES
     src/stdafx.cpp
 
     src/config.cpp
-    src/contact.cpp
+    src/contact_manager.cpp
     src/core.cpp
     src/core_dispatcher.cpp
 
     src/guid.cpp
-    src/message.cpp
     src/error.cpp
     src/login_manager.cpp
-    src/message.cpp
+    src/message_manager.cpp
     src/guid.cpp
     src/config.cpp
     src/login_manager.cpp
     src/path_settings.cpp
+
     ../../shared/src/safe_log.cpp
     ../../shared/src/http_client.cpp
     ../../shared/src/http_connection.cpp
@@ -55,6 +61,7 @@ set(SOURCES
     ../../shared/src/crypto_hash.cpp
     ../../shared/src/crypto_pki.cpp
     ../../shared/src/crypto_sym.cpp
+    ../../shared/src/base64.cpp
     )
 
 if (ENABLE_TESTS)

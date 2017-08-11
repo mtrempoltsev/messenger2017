@@ -28,17 +28,39 @@ void runcore(Core &core) {
 }
 
 int main(int argc, char *argv[]) {
-    /* GUI MAGIC */
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QGuiApplication app(argc, argv);
 
-    QQmlApplicationEngine engine;
+  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+  QGuiApplication app(argc, argv);
 
-    LoginControler::declareQML();
-    RegistrationControler::declareQML();
+  QQmlApplicationEngine engine;
 
-    engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
-    if (engine.rootObjects().isEmpty()) return -1;
+  LoginControler::declareQML();
+  RegistrationControler::declareQML();
+
+  std::cout << "start core" << std::endl;
+  m2::core::Core core;
+  m2::core::CoreDispatcher dispatcher;
+  dispatcher.core_ = std::shared_ptr<Core>(&core);
+
+  engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
+  if (engine.rootObjects().isEmpty())
+    return -1;
+
+  RegisterHandler regCallback;
+  regCallback.onCompletion = nullptr;//[]() { std::cout << "Registration complete"; };
+  regCallback.onError = nullptr;// [] (m2::Error && error) { std::cout << error.message; };
+
+  std::thread coreThread(runcore, std::ref(core));
+  try
+  {
+    dispatcher.RegisterUser("https://volt.trempoltsev.ru", regCallback);
+  }
+  catch (std::exception & ex) {
+      std::cout << ex.what();
+  }
+
+  //  RegisterHandler rh;
+  //  rh.onCompletion = []() { std::cout << "REGISTERED OK!" << std::endl; };
 
     ChatsFilterProxyModel chats;
     MessagesModel messages;
@@ -50,16 +72,9 @@ int main(int argc, char *argv[]) {
 
     /* START CORE */
     std::cout << "start core" << std::endl;
-    m2::core::Core core;
-    m2::core::CoreDispatcher dispatcher;
-    dispatcher.core_ = std::shared_ptr<Core>(&core);
-    std::thread coreThread(runcore, std::ref(core));
-
-    // coreThread.join();
-    // dispatcher.stopCore();
 
     /* GUI <--> CORE MESSAGE STORY TEST */
-    const std::string userId = "1";
+    const std::string chatId = "1";
     m2::MessageStoryHandler handler;
     using MessageStory = std::vector<m2::core::Message>;
     handler.onCompletion = [](const MessageStory &story) {
@@ -72,7 +87,12 @@ int main(int argc, char *argv[]) {
     handler.onError = []() { std::cout << "You're a loser."; };
 
     // вызов кора выдать стори
-    dispatcher.GetMessageStory(userId, handler);
-
+    dispatcher.GetMessageStory(chatId, handler);
     return app.exec();
+
+    // from merging-branch
+    //const auto result = app.exec();
+    //dispatcher.stopCore();
+    //coreThread.join();
+    //return result;
 }

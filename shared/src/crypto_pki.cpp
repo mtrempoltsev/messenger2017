@@ -9,9 +9,13 @@
 #include <cstring>
 #include <string>
 #include <sstream>
-#include "../include/crypto_pki.h"
-#include "../include/crypto_hash.h"
+#include <crypto_pki.h>
+#include <crypto_hash.h>
+#include "base64.h"
+#include <utility>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
 namespace m2
 {
 namespace crypto
@@ -62,12 +66,12 @@ namespace common
                       : (public_ ? &RSA_public_decrypt : &RSA_private_decrypt);
 
         do {
-            auto bytes_done = actor(static_cast<int>(std::min(string.size(), rsa_size/2)),
+            auto bytes_done = actor(string.size() /*static_cast<int>(std::min(string.size(), rsa_size/2))*/,
                     (const unsigned char *)(string.c_str()+total_bytes_done), buf.get(),
                                     key_.get(), public_ ? RSA_PKCS1_OAEP_PADDING : RSA_PKCS1_PADDING);
 
             if (bytes_done == -1) {
-                throw common::OpenSSL_CryptoError("Error during public key encryption: ");
+                throw common::OpenSSL_CryptoError("Error during PKI cryptography action: ");
             }
             total_bytes_done += bytes_done;
             res.append((char*)buf.get(), bytes_done);
@@ -75,7 +79,7 @@ namespace common
         return res;
     }
 
-    std::pair<OpenSSL_RSA_CryptoProvider, OpenSSL_RSA_CryptoProvider>
+    std::pair<std::unique_ptr<OpenSSL_RSA_CryptoProvider>, std::unique_ptr<OpenSSL_RSA_CryptoProvider>>
     OpenSSL_RSA_CryptoProvider::make(int bit_size) {
         KeyContainer cnt { RSA_new(), &RSA_free };
         std::unique_ptr<BIGNUM, decltype(&BN_free)> bne { BN_new(), &BN_free };
@@ -88,14 +92,33 @@ namespace common
         if (ret != 1)
             throw common::OpenSSL_CryptoError("Error generating RSA key");
         KeyContainer pub {RSAPublicKey_dup(cnt.get()), &RSA_free};
-        return { OpenSSL_RSA_CryptoProvider { std::move(cnt), false } ,
-                 OpenSSL_RSA_CryptoProvider { std::move(pub), true } };
+        auto pair = std::make_pair(
+                std::make_unique<OpenSSL_RSA_CryptoProvider> ( std::move(cnt), false),
+                std::make_unique<OpenSSL_RSA_CryptoProvider> ( std::move(pub), true )
+        );
+        return std::move(pair);
+    }
+
+    std::unique_ptr<OpenSSL_RSA_CryptoProvider>
+    OpenSSL_RSA_CryptoProvider::make_private(int bit_size) {
+        KeyContainer cnt { RSA_new(), &RSA_free };
+        std::unique_ptr<BIGNUM, decltype(&BN_free)> bne { BN_new(), &BN_free };
+        int ret = 0;
+        unsigned long e = RSA_F4;
+        ret = BN_set_word(bne.get(), e);
+        if (ret != 1)
+            throw common::OpenSSL_CryptoError("Unknown error when setting BN_set_word()");
+        ret = RSA_generate_key_ex(cnt.get(), bit_size, bne.get(), nullptr);
+        if (ret != 1)
+            throw common::OpenSSL_CryptoError("Error generating RSA key");
+        KeyContainer pub {RSAPublicKey_dup(cnt.get()), &RSA_free};
+        return std::make_unique<OpenSSL_RSA_CryptoProvider>( std::move(cnt), false );
     }
 
     boost::uuids::uuid OpenSSL_RSA_CryptoProvider::fingerprint() const {
         // a copy from http://www.boost.org/doc/libs/1_54_0/boost/uuid/name_generator.hpp
         std::string sha1 = OpenSSL_SHA1_HashProvider().hash(str_key());
-        boost::uuids::uuid u;
+        boost::uuids::uuid u {} ;
         for (int i=0; i<4; ++i) {
             *(u.begin() + i*4+0) = static_cast<uint8_t>((sha1[i] >> 24) & 0xFF);
             *(u.begin() + i*4+1) = static_cast<uint8_t>((sha1[i] >> 16) & 0xFF);
@@ -131,7 +154,37 @@ namespace common
             : key_( std::move(key) ), public_(is_public) {
 
     }
+
+    bool OpenSSL_RSA_CryptoProvider::is_public() const {
+        return public_;
+    }
+
+    bool OpenSSL_RSA_CryptoProvider::is_private() const {
+        return !public_;
+    }
+
+    std::unique_ptr<OpenSSL_RSA_CryptoProvider> OpenSSL_RSA_CryptoProvider::get_public() {
+        if (is_public())
+            throw CryptoError("Cannot make a public key from a public key itself");
+
+        KeyContainer pub {RSAPublicKey_dup(key_.get()), &RSA_free};
+        return std::make_unique<OpenSSL_RSA_CryptoProvider>(std::move(pub), true);
+    }
+
+    std::string OpenSSL_RSA_CryptoProvider::encrypt_to_b64(const std::string &string) const {
+        return m2::base64::base64_encode(encrypt(string));
+    }
+
+    std::string OpenSSL_RSA_CryptoProvider::decrypt_from_b64(const std::string &string) const {
+        return decrypt(m2::base64::base64_decode(string));
+    }
+
+    int OpenSSL_RSA_CryptoProvider::get_padding(bool encryption) const {
+        return RSA_PKCS1_PADDING;
+    }
 }
 }
 }
 
+
+#pragma clang diagnostic pop

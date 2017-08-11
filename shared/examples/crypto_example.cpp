@@ -23,10 +23,17 @@ int main() {
         throw std::runtime_error("Lines for AES do not match");
 
     auto m = m2::crypto::common::OpenSSL_RSA_CryptoProvider::make(2048);
-    encrypted = m.second.encrypt(to_encrypt);
-    decrypted = m.first.decrypt(encrypted);
+    encrypted = (m.second)->encrypt_to_b64(to_encrypt);
+    decrypted = (m.first)->decrypt_from_b64(encrypted);
     auto finger = orca.fingerprint();
     if (decrypted != to_encrypt)
         throw std::runtime_error("Lines for RSA do not match");
+
+    auto private_ = m2::crypto::common::OpenSSL_RSA_CryptoProvider::make_private(2048);
+    auto public_ = private_->get_public();
+    encrypted = private_->encrypt_to_b64(to_encrypt);
+    decrypted = public_->decrypt_from_b64(encrypted);
+
+
     return 0;
 }

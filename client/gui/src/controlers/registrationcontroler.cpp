@@ -4,32 +4,27 @@
 
 namespace m2 {
 namespace gui {
-namespace controler {
+    namespace controler {
 
-RegistrationControler::RegistrationControler()
-{
+        RegistrationControler::RegistrationControler() {}
 
-}
+        void RegistrationControler::declareQML() {
+            qmlRegisterType<RegistrationControler>("Controler.Registration", 1, 0,
+                                                   "RegistraionControler");
+        }
 
-void RegistrationControler::declareQML() {
-  qmlRegisterType<RegistrationControler>("Controler.Registration", 1, 0,
-                                         "RegistraionControler");
-}
+        void RegistrationControler::registerMe(const QString &server) const {
+            // TODO get core
+            emit startRegister();
+            //    emit finishRegisterSuccessed();
+        }
 
-void RegistrationControler::registerMe(const QString &server) const {
-  // TODO get core
-  emit startRegister();
-  //    emit finishRegisterSuccessed();
-}
+        void RegistrationControler::registrationSuccessed(const std::string &guid) {
+            GuiAdapter::getInstance().setGuid(guid);
+            emit finishRegisterSuccessed();
+        }
 
-void RegistrationControler::registrationSuccessed(const std::string &guid) {
-  GuiAdapter::getInstance().setGuid(guid);
-  emit finishRegisterSuccessed();
-}
-
-void RegistrationControler::registrationFailed() {
-  emit finishRegisterFailed("Error");
-}
-}
+        void RegistrationControler::registrationFailed() { emit finishRegisterFailed("Error"); }
+    }
 }
 }

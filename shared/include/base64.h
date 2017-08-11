@@ -33,12 +33,12 @@
 
 */
 
-
-
-
+namespace m2 {
+namespace base64 {
 static inline bool is_base64(unsigned char c);
 
-std::string base64_encode(const char *bytes_to_encode, size_t in_len);
-std::string base64_decode(std::string const& encoded_string);
-
+std::string base64_encode(const std::string& bytes_to_encode);
+std::string base64_decode(const std::string& encoded_string);
+}
+}
 #endif //LOG4CPP_BASE64_H

@@ -1,12 +1,14 @@
 #pragma once
 
-#include "config.h"
-#include "contact.h"
 #include "error.h"
 #include "guid.h"
 #include "jobtype.h"
 #include "login_manager.h"
+
+#include "contact.h"
+#include "contact_manager.h"
 #include "message.h"
+#include "message_manager.h"
 
 #include "http_client.h"
 #include "http_connection.h"
@@ -23,7 +25,7 @@ namespace m2 {
 namespace core {
 
 class Core {
- public:
+public:
   Core();
 
   // core <--> server
@@ -37,11 +39,6 @@ class Core {
   std::shared_ptr<LoginManager> GetLoginManager();
   std::shared_ptr<MessageManager> GetMessageManager();
 
-  //chosen server interfase
-  bool HasChosenServer() { return !chosenServer_.empty(); }
-  void SetChosenServer(const std::string & serverDomain);
-  std::string GetChosenServer() { return chosenServer_; }
-
   //http interface
   HttpClient & GetHttpClient() { return httpClient; }
   HttpConnectionPtr GetHttpConnection() { return httpConnection; }
@@ -54,11 +51,6 @@ class Core {
   void JobLoop();
   void PushJob(JobType job, std::string && jobname);
 
- private:  // WOHOOO, I'M HERE AGAIN!!!!!!!!!!1111111
-  // servers setup
-  // make list (actually, map) of availible servers
-//  std::map<m2::Uuid, std::string> ReadServersFile();
-
 
   // managers
   std::shared_ptr<ContactManager> contactManager_;
@@ -67,10 +59,9 @@ class Core {
 
   // map of availible servers
   std::map<m2::Uuid, std::string> serversMap_;
-  std::string chosenServer_;
 
   // threads
-  bool keepWorking_;  // working flag
+  bool keepWorking_; // working flag
   std::mutex mutex_;
   std::condition_variable hasJob_;
   std::queue<JobType> jobQueue_;
@@ -82,5 +73,5 @@ class Core {
   //logger
   safelog::SafeLog logger_;
 };
-}  // core
-}  // m2
+} // core
+} // m2

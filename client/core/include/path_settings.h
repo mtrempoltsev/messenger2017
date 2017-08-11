@@ -8,6 +8,5 @@ namespace core {
 
     const std::string contactListFileName = "contact-list.json";
     const std::string messageStoryFileName = "message-story.json";
-
-} // core
-} // m2
+}  // core
+}  // m2
