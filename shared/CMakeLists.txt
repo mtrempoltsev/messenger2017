@@ -4,26 +4,36 @@ set(CMAKE_CXX_STANDARD 14)
 
 # -------------------------   sources   -------------------------
 set(SOURCES
-        src/http_client.cpp
-        src/http_connection.cpp
+    src/http_client.cpp
+    src/http_connection.cpp
 
-        src/crypto_common.cpp
-        src/crypto_hash.cpp
-        src/crypto_pki.cpp
-        src/crypto_sym.cpp
-        src/base64.cc
-        )
+    src/crypto_common.cpp
+    src/crypto_hash.cpp
+    src/crypto_pki.cpp
+    src/crypto_sym.cpp
+    
+    src/safe_log.cpp
+
+    src/crypto_common.cpp
+    src/crypto_hash.cpp
+    src/crypto_pki.cpp
+    src/crypto_sym.cpp
+    src/base64.cc
+)
 
 set(HEADERS
-        include/http_client.h
-        include/http_connection.h
-        include/perform_result.h
+    include/http_client.h
+    include/http_connection.h
+    include/perform_result.h
 
-        include/crypto_common.h
-        include/crypto_hash.h
-        include/crypto_pki.h
-        include/crypto_sym.h
-        )
+    include/crypto_common.h
+    include/crypto_hash.h
+    include/crypto_pki.h
+    include/crypto_sym.h
+
+    include/safe_log.h
+)
+
 
 set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 

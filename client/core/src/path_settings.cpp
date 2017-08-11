@@ -1,28 +1,41 @@
 #include "path_settings.h"
 
 #include <boost/filesystem.hpp>
-std::string m2::core::GetManagerPath(const std::string &managerName) {
-    std::string delim;
-    std::string userEnv;
+#include <iostream>
+
 #ifdef _WIN32 || _WIN64
-    delim = "\\";
-    userEnv = "USERPROFILE";
+    const std::string delim = "\\";
+    const std::string userEnv = "USERPROFILE";
 #else
-    userEnv = "HOME";
-    delim = "/";
+    const std::string userEnv = "HOME";
+    const std::string delim = "/";
 #endif
+bool createDir(const std::string path)
+{
+    if(!boost::filesystem::exists(path))
+    {
+        boost::system::error_code er;
+        return boost::filesystem::create_directory(path, er);
+    }
+    return true;
+}
+std::string m2::core::GetManagerPath(const std::string &managerName) {
+
+
     std::string managerPath = getenv(userEnv.c_str());
 #ifdef _WIN32 || _WIN64 //In Windows needed documents folder. Temp crtuch maybe
-    managerPath.append(delim).append("documents").append(delim);
+    managerPath.append(delim).append("documents");
+    if(!createDir(managerPath))
+        return std::string();
+    managerPath.append(delim);
 #endif
-    managerPath.append(delim).append(".messenger").append(delim);
+    managerPath.append(delim).append("messenger");
+    if(!createDir(managerPath))
+        return std::string();
     if(!managerName.empty()) {
-        managerPath.append(managerName).append(delim);
+       managerPath.append(delim).append(managerName);
+       if(!createDir(managerPath))
+           return std::string();
     }
-
-    boost::filesystem::path p(managerPath);
-    if(!boost::filesystem::exists(p)) {
-        boost::filesystem::create_directories(p);
-    }
-    return managerPath;
+    return managerPath.append(delim);
 }

@@ -9,7 +9,7 @@
 
 #include <functional>
 #include <memory>
-#include <vector>
+#include <list>
 
 namespace m2 {
 
@@ -32,22 +32,28 @@ namespace m2 {
 //};
 
 namespace core {
-class CoreDispatcher final {
-public:
-  CoreDispatcher() = default;
-  CoreDispatcher(CoreDispatcher &) = delete;
-  CoreDispatcher &operator=(CoreDispatcher &) = delete;
+    class CoreDispatcher final {
+    public:
+        CoreDispatcher() = default;
+        CoreDispatcher(CoreDispatcher &) = delete;
+        CoreDispatcher &operator=(CoreDispatcher &) = delete;
 
-  CoreDispatcher(CoreDispatcher &&) = delete;
-  CoreDispatcher &operator=(CoreDispatcher &&) = delete;
+        CoreDispatcher(CoreDispatcher &&) = delete;
+        CoreDispatcher &operator=(CoreDispatcher &&) = delete;
 
-  void Login(LoginHandler handler);
-  void RegisterUser(RegisterHandler handler);
+        void Login(LoginHandler handler);
+        void RegisterUser(const std::string & serverDomain, RegisterHandler handler);
 
-  void stopCore();
+        bool HasServer();
+        std::list<std::string> GetServerList();
 
-  std::shared_ptr<Core> core_;
-};
+        // messages
+        void GetMessageStory(const std::string &id, MessageStoryHandler handler);
 
-} // core
-} // m2
+        void stopCore();
+
+        std::shared_ptr<Core> core_;
+    };
+
+}  // core
+}  // m2

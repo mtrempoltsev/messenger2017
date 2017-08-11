@@ -17,8 +17,8 @@ namespace m2
 
     struct HttpResponse final
     {
-        long code_;
-        Data header_;
+        long code;
+        Data header;
     };
 
     using HttpResponsePtr = std::unique_ptr<HttpResponse>;
