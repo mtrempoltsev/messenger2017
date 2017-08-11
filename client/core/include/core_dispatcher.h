@@ -45,7 +45,10 @@ public:
   void RegisterUser(const std::string & serverDomain, RegisterHandler handler);
 
   bool HasServer();
+  std::string GetServerDomain();
   std::list<std::string> GetServerList();
+
+  std::string GetUserUuid();
 
   void stopCore();
 

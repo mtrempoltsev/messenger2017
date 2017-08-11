@@ -6,9 +6,6 @@ Creation:
 Reset:
 	logger.reset("/logs/otherlog.log") - use this method when you need to change a logfile or to running logger if you have used default constructor
 	
-Write a message without labels:
-	logger << "some message"
-	
 Write an error message:
 	logger(SL_ERROR) << "some error"
 	
@@ -34,6 +31,10 @@ Write a debug message:
 #define SL_DEBUG m2::safelog::SafeLog::MessageType::DEBUG
 #endif //SL_DEBUG
 
+#ifndef SL_INFO
+#define SL_INFO m2::safelog::SafeLog::MessageType::INFO
+#endif //SL_INFO
+
 #include <fstream>
 #include <queue>
 #include <mutex>
@@ -54,7 +55,8 @@ namespace safelog {
     {
       ERROR,
       WARNING,
-      DEBUG
+      DEBUG,
+      INFO
     };
     
     SafeLog();
@@ -101,9 +103,8 @@ namespace safelog {
 	  std::string label_;
 
 	  friend SafeLog;
-	} logginWritter_;
+  } logginWritter_;
 
-    std::string getTimeAsString();
   };
 
 }

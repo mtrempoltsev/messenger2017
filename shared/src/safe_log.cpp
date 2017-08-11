@@ -15,6 +15,7 @@ static std::map<SafeLog::MessageType, std::string> labelNameMap =
   { SafeLog::MessageType::ERROR, "[Error]: "},
   { SafeLog::MessageType::WARNING, "[Warning]: " },
   { SafeLog::MessageType::DEBUG, "[Debug]: " },
+  { SafeLog::MessageType::INFO, "[Info]" }
 };
 
 SafeLog::InnerSafeLog::InnerSafeLog() :
@@ -58,9 +59,9 @@ void SafeLog::InnerSafeLog::mainLoop()
     if (!isRunning_) break;
     safePop();
   }
-  messageQueue_.push("End of session");
+  /*messageQueue_.push("End of session");
   while (!messageQueue_.empty())
-      safePop();
+      safePop();*/    //do not work :(
   logFile_.close();
   delete this;
 }
@@ -98,22 +99,8 @@ void SafeLog::reset(const std::string & filePath)
   innerLog_->reset(filePath);
 }
 
-/*SafeLog & SafeLog::operator<<(const std::string & message)
-{
-  innerLog_->pushMessage(message + "\n\n");
-  return *this;
-}*/
-
 ILoginWritter & SafeLog::operator()(const MessageType & messageType)
 {
-  logginWritter_.SetLabel("[" + getTimeAsString() + "]" + labelNameMap[messageType]);
+  logginWritter_.SetLabel("[" + __TIMESTAMP__ + "]" + labelNameMap[messageType]);
   return logginWritter_;
-}
-
-std::string SafeLog::getTimeAsString()
-{
-  system_clock::time_point p = system_clock::now();
-  std::time_t t = system_clock::to_time_t(p);
-  std::string timestr = std::ctime(&t);
-  return std::string(timestr.begin(), timestr.end() - 1);
 }

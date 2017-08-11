@@ -51,11 +51,19 @@ void CoreDispatcher::RegisterUser(const std::string & serverDomain, RegisterHand
 }
 
 bool CoreDispatcher::HasServer() {
-  return core_->HasChosenServer();
+  return !core_->GetLoginManager()->GetServerDomain().empty();
+}
+
+std::string CoreDispatcher::GetServerDomain() {
+  return core_->GetLoginManager()->GetServerDomain();
 }
 
 std::list<std::string> CoreDispatcher::GetServerList() {
   return core_->GetLoginManager()->GetServerList();
+}
+
+std::string CoreDispatcher::GetUserUuid() {
+  return core_.GetLoginManager()->GetUserUuid();
 }
 
 } // core
