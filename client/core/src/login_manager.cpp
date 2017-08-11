@@ -8,6 +8,7 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include "path_settings.h"
+#include "base64.h"
 
 #define DEFAULT_ERROR Error(Error::Code::NoError, std::string());
 
@@ -51,39 +52,59 @@ LoginManager::LoginManager() :
 
 Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
 {
-  currentConnection_ = connection;
-  inProcess_ = true;
   std::pair<OpenSSL_RSA_CryptoProvider, OpenSSL_RSA_CryptoProvider> crypto = OpenSSL_RSA_CryptoProvider::make(KEYSIZE);
 
   publicKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.first.str_key(), true);
   privateKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.second.str_key(), false);
 
-  ptree jsonPt;
+  Error error = TalkWithServer(c_send_key_request, c_register_request, publicKey_->str());
+  if (error.code != Error::Code::NoError)
+	  return error;
 
+  userUuid_ = jsonPt.get<std::string>(c_uuid_string);
+  WriteLoginInfo();
+
+  return DEFAULT_ERROR;
+}
+
+Error LoginManager::Login(const HttpConnectionPtr &connection) {
+
+  Error error = TalkWithServer(c_send_key_request, c_register_request, userUuid_);
+  if (error.code != Error::Code::NoError)
+    return error;
+  ptree jsonPt;
   Error error = SendRequestProccess(c_send_key_request,
-                                    {{c_public_key_field, publicKey_->str_key()}},
+                                    {{c_public_key_field, userUuid_ }},
                                     { c_server_string, c_client_string },
                                     jsonPt);
   if (error.code != Error::Code::NoError)
     return error;
 
-  std::string serverString = jsonPt.get<std::string>(c_server_string);
-  std::string clientString = jsonPt.get<std::string>(c_client_string);
-  clientString = privateKey_->decrypt(clientString);
+  return DEFAULT_ERROR;
+}
 
-  httpBuffer_.clear();
-  jsonPt.clear();
+Error LoginManager::TalkWithServer(const std::string & firstRequestName, const std::string & secondRequestName, const std::string & keyStr) {
+	ptree jsonPt;
+	Error error = SendRequestProccess(firstRequestName,
+	{ { c_public_key_field, keyStr } },
+	{ c_server_string, c_client_string },
+		jsonPt);
+	if (error.code != Error::Code::NoError)
+		return error;
 
-  error = SendRequestProccess(c_register_request,
-                              {{c_client_string, clientString},{c_server_string, serverString}},
-                              { c_uuid_string },
-                              jsonPt);
-  if (error.code != Error::Code::NoError)
-    return error;
+	std::string serverString = jsonPt.get<std::string>(c_server_string);
+	std::string clientString = base64::base64_decrypt(privateKey_->decrypt_from_b64(base64::base64_decode(jsonPt.get<std::string>(c_client_string))));
 
-  userUuid_ = jsonPt.get<std::string>(c_uuid_string);
-  WriteLoginInfo();
-  return Error(Error::Code::NoError, std::string());
+	httpBuffer_.clear();
+	jsonPt.clear();
+
+	error = SendRequestProccess(secondRequestName,
+	                            { { c_client_string, clientString },{ c_server_string, serverString } },
+	                            { },
+		                        jsonPt);
+	if (error.code != Error::Code::NoError)
+		return error;
+	return DEFAULT_ERROR;
 }
 
 Error LoginManager::SendRequestProccess(const std::string & requestName, const std::map<std::string, std::string> & jsonKeyValues,
@@ -155,6 +176,8 @@ Error LoginManager::CheckServerResponse(PerformResult & result, HttpResponsePtr 
 }
 
 Error LoginManager::CheckJsonValidFormat(const std::list<std::string>& jsonParams, int lineNum, ptree & jsonPt) {
+  if (jsonParams.empty())
+    return DEFAULT_ERROR;
   std::istringstream iss(std::string(httpBuffer_.begin(), httpBuffer_.end()));
   try {
     read_json(iss, jsonPt);

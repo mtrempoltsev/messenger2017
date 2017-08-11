@@ -32,6 +32,7 @@ public:
   void WriteLoginInfo();
 
 private:
+  Error TalkWithServer(const std::string & firstRequestName, const std::string & secondRequestName, const std::string & keyStr);
   Error SendRequestProccess(const std::string & requestName, const std::map<std::string, std::string> & jsonKeyValues,
                             const std::list<std::string>& jsonParams, boost::property_tree::ptree & jsonPt);
 
@@ -47,9 +48,7 @@ private:
   //thread control
   std::mutex mutex_;
   std::condition_variable hasResponse_;
-  bool inProcess_;
 
-  HttpConnectionPtr currentConnection_;
   //login info
   std::string loginFilePath_;
   std::string userUuid_;
