@@ -4,10 +4,14 @@
 
 namespace m2 {
 struct Error final {
-  enum class Code { NetworkError };
+  enum class Code {
+      NoError,
+      NetworkError,
+      LoginError,
+      RegistationError
+  };
 
   Error(Code code, std::string &&message) : code{code}, message{message} {}
-
   Error(Error &) = delete;
   Error &operator=(Error &) = delete;
 

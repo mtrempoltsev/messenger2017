@@ -19,38 +19,30 @@ namespace core {
     class Message {
     public:
         Message() {}
-        Message(const MessageBuilder& mb) :
-            chat_id_(mb.chat_id), from_uuid_(mb.from_uuid),
-            sendTime_(mb.sendTime), text_(mb.text) {}
+        Message(const MessageBuilder& mb)
+            : chat_id_(mb.chat_id),
+              from_uuid_(mb.from_uuid),
+              sendTime_(mb.sendTime),
+              text_(mb.text) {}
 
-        size_t GetChatId() const {
-            return chat_id_;
-        }
+        size_t GetChatId() const { return chat_id_; }
+        std::string GetFrom() const { return from_uuid_; }
+        std::time_t GetSendTime() const { return sendTime_; }
+        std::string GetText() const { return text_; }
 
-        std::string GetFrom() const {
-            return from_uuid_;
-        }
+        friend std::ostream& operator<<(std::ostream& stream, const Message& message);
+        friend std::istream& operator>>(std::istream& stream, Message& message);
 
-        std::time_t GetSendTime() const {
-            return sendTime_;
-        }
-
-        std::string GetText() const {
-            return text_;
-        }
-
-        friend std::ostream& operator << (std::ostream& stream, const Message& message);
-        friend std::istream& operator >> (std::istream& stream, Message& message);
     private:
         size_t chat_id_;
         std::string from_uuid_;
-        std::time_t sendTime_; // unix-time
+        std::time_t sendTime_;  // unix-time
         std::string text_;
     };
 
     class MessageManager {
     public:
-        MessageManager(){};
+        MessageManager() { LoadMessageStory(); }
 
         using MessageStory = std::vector<Message>;
 
@@ -62,5 +54,5 @@ namespace core {
         MessageStory messageStory_;
     };
 
-}// core
-} // m2
+}  // core
+}  // m2
