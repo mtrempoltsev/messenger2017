@@ -46,6 +46,28 @@ class ClientTest(unittest.TestCase):
             uid = step_ret.json()["uuid"]
         return uid, key
 
+    def authorize(self, uid: str, key: any) -> requests.Session:
+        uid, key = self.register()
+        cryptor = PKCS1_OAEP.new(key)
+        sess = requests.Session()
+        sess.stream = True  # keep-alive
+        step_ret = sess.post(self.url("/user/auth/sendUuid"), json={
+            "uuid": uid
+        })  # type: requests.Response
+        print("1st authorization step > response: {}".format(step_ret.json()))
+        if step_ret.status_code != requests.codes.OK:
+            raise ConnectionError("Failed to continue authorization: status is not ok")
+        step_ret = step_ret.json()
+        msg = cryptor.decrypt(base64.b64decode(step_ret["client_string"]))
+        step_ret = sess.post(self.url("/user/auth"), json={
+            "server_string": step_ret["server_string"],
+            "client_string": base64.b64encode(msg).decode('utf-8')
+        })
+        if step_ret.status_code != requests.codes.OK:
+            raise ConnectionError("Failed to finish authorization: status is not ok")
+        return sess
+
+
     def test_registration(self):
         key = RSA.generate(2048)
         my_public = key.publickey().exportKey('PEM')
@@ -95,15 +117,17 @@ class ClientTest(unittest.TestCase):
                 "uuid": uid
             })  # type: requests.Response
             print("1st authorization step > response: {}".format(step_ret.json()))
-            self.assertTrue(step_ret.status_code, requests.codes.OK)
+            self.assertEqual(step_ret.status_code, requests.codes.OK)
             step_ret = step_ret.json()
             msg = cryptor.decrypt(base64.b64decode(step_ret["client_string"]))
             step_ret = sess.post(self.url("/user/auth"), json={
                 "server_string": step_ret["server_string"],
                 "client_string": base64.b64encode(msg).decode('utf-8')
             })
-            self.assertTrue(step_ret.status_code, requests.codes.OK)
+            self.assertEqual(step_ret.status_code, requests.codes.OK)
 
     def test_user_info(self):
-        u1, u1key =  self.register()
-        self.register()
+        u1, u2_key = self.register()
+        u2, u2_key = self.register()
+
+
