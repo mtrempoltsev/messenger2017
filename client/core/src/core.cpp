@@ -16,10 +16,7 @@ std::shared_ptr<ContactManager> Core::GetContactManager() { return contactManage
 
 std::shared_ptr<LoginManager> Core::GetLoginManager() { return loginManager_; }
 
-std::shared_ptr<MessageManager> Core::GetMessageManager() {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
-    return messageManager_;
-}
+std::shared_ptr<MessageManager> Core::GetMessageManager() { return messageManager_; }
 
 boost::optional<m2::Error> Core::StartServerConnection(const m2::Uuid &serverGuid) {
     boost::optional<m2::Error> error;

@@ -1,0 +1,19 @@
+{
+    "contacts": [
+        {
+            "id": "uuid1",
+            "nickname": "qwerty",
+            "avatar" : "penguin.png"
+        },
+        {
+            "id": "uuid2",
+            "nickname": "qwerty",
+            "avatar" : "panda.png"
+        },
+        {
+            "id": "uuid3",
+            "nickname": "qwerty",
+            "avatar" : "sea-lion.png"
+        }
+    ]
+}

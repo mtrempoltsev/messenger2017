@@ -3,6 +3,7 @@
 #include "contact.h"
 #include "core.h"
 #include "core_dispatcher.h"
+#include "handlers.h"
 #include "jobtype.h"
 #include "message.h"
 
@@ -35,15 +36,14 @@ namespace core {
         core_->PushJob(job);
     }
 
-    void CoreDispatcher::GetServerSet(ServerSetHandler handler) {
+    void CoreDispatcher::GetServerList(ServerSetHandler handler) {
         JobType job = [handler](Core &core) {
-            // std::set<std::string> servers = core.GetLoginManager()->GetServerSet();
-            std::set<std::string> servers /* = core.GetLoginManager()->GetServerSet()*/;
+            std::list<std::string> servers = core.GetLoginManager()->GetServerList();
             if (servers.empty()) {
                 handler.onCompletion(servers);
             } else {
                 ;
-                //      handler.onError();
+                handler.onError();
             }
         };
         std::cout << "        push job get server list" << std::endl;
@@ -56,8 +56,12 @@ namespace core {
         // size_t id =
         // FIXME: int instead of size_t! we need string --> size_t conversion
         int id = std::stoi(idStr);
-        std::vector<Message> story = core_->GetMessageManager()->GetMessageStory(id);
-        handler.onCompletion(std::move(story));
+
+        if (core_->GetMessageManager()->ChatExists(id)) {
+            auto story = core_->GetMessageManager()->GetMessageStory(id);
+            handler.onCompletion(story);
+        } else
+            handler.onError();
         // some uber-thread stuff  (end)
     }
 }  // core

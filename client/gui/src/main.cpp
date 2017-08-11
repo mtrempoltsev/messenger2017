@@ -55,11 +55,11 @@ int main(int argc, char *argv[]) {
     dispatcher.core_ = std::shared_ptr<Core>(&core);
     std::thread coreThread(runcore, std::ref(core));
 
-    // coreThread.join();
-    // dispatcher.stopCore();
+    //    coreThread.join();
+    //    dispatcher.stopCore();
 
     /* GUI <--> CORE MESSAGE STORY TEST */
-    const std::string userId = "1";
+    const std::string chatId = "1";
     m2::MessageStoryHandler handler;
     using MessageStory = std::vector<m2::core::Message>;
     handler.onCompletion = [](const MessageStory &story) {
@@ -72,7 +72,6 @@ int main(int argc, char *argv[]) {
     handler.onError = []() { std::cout << "You're a loser."; };
 
     // вызов кора выдать стори
-    dispatcher.GetMessageStory(userId, handler);
-
+    dispatcher.GetMessageStory(chatId, handler);
     return app.exec();
 }

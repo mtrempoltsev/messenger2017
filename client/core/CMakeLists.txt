@@ -12,37 +12,41 @@ set(HEADERS
     stdafx.h
 
     include/config.h
-    include/contact.h
+    include/contact_manager.h
     include/core.h
     include/core_dispatcher.h
     include/error.h
     include/guid.h
-    include/message.h
+    include/message_manager.h
     include/login_manager.h
     include/path_settings.h
     include/jobtype.h
-    ../shared_client/handlers.h
-    ../../shared/include/safe_log.h
 
+    ../shared_client/chat.h
+    ../shared_client/handlers.h
+    ../shared_client/message.h
+    ../shared_client/contact.h
+
+    ../../shared/include/safe_log.h
     )
 
 set(SOURCES
     src/stdafx.cpp
 
     src/config.cpp
-    src/contact.cpp
+    src/contact_manager.cpp
     src/core.cpp
     src/core_dispatcher.cpp
 
     src/guid.cpp
-    src/message.cpp
     src/error.cpp
     src/login_manager.cpp
-    src/message.cpp
+    src/message_manager.cpp
     src/guid.cpp
     src/config.cpp
     src/login_manager.cpp
     src/path_settings.cpp
+
     ../../shared/src/safe_log.cpp
     )
 

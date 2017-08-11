@@ -44,10 +44,13 @@ namespace core {
         // login_manager
         void Login(LoginHandler handler);
         void RegisterUser(RegisterHandler handler);
-        void GetServerSet(ServerSetHandler handler);
+        void GetServerList(ServerSetHandler handler);
 
         // messages
         void GetMessageStory(const std::string &id, MessageStoryHandler handler);
+
+        // chats
+        void GetChats(ChatsHandler handler);
 
         void stopCore();
 
