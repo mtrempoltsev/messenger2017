@@ -33,7 +33,8 @@ int main() {
     auto public_ = private_->get_public();
     encrypted = private_->encrypt_to_b64(to_encrypt);
     decrypted = public_->decrypt_from_b64(encrypted);
-
+    if (decrypted != to_encrypt)
+        throw std::runtime_error("Lines for RSA (from_private()) do not match");
 
     return 0;
 }
