@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.4)
 
 project(m2)
 
-find_package( Threads REQUIRED)
+find_package(Threads REQUIRED)
 set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-pthread")
 
 set(CORE_PROJECT_NAME m2-core)
