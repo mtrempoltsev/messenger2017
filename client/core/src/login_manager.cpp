@@ -24,6 +24,13 @@ const std::string c_user_uuid_field = "user_uuid";
 const std::string c_private_key_field = "private_key";
 const std::string c_public_key_field = "public_key";
 
+//error messages
+const std::string c_write_json_error = "some error text";
+
+//request names
+const std::string c_send_key_request = "/user/sendKey";
+const std::string c_register_request = "/user/register";
+
 //using namspaces
 using namespace m2::core;
 using namespace  m2::crypto::common;
@@ -49,83 +56,71 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
   publicKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.first.str_key(), true);
   privateKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.second.str_key(), false);
 
-  ptree ptreeSendKey;
-  ptreeSendKey.put("public_key", publicKey_->str_key());
-
-  std::ostringstream ssSendKey;
-  write_json(ssSendKey, ptreeSendKey);
-  std::string jsonSendKey = ssSendKey.str();
-  std::vector<char> responseDataCheckKey(jsonSendKey.begin(), jsonSendKey.end());
-
-  PerformResult result;
-  HttpResponsePtr response;
-
-  logger_(SL_DEBUG) << "Prev mutex";
-  std::unique_lock<std::mutex> lockSendKey(mutex_);
-  logger_(SL_DEBUG) << "Mutex locked";
-
-  currentConnection_.get()->perform({"/user/sendKey", std::chrono::milliseconds(TIMEOUT)},
-                                    responseDataCheckKey, httpBuffer_,
-                                    std::bind(&LoginManager::UniveralCallback, this,
-                                              std::placeholders::_1, std::placeholders::_2,
-                                              std::ref(result), std::ref(response)));
-
-  hasResponse_.wait(lockSendKey);
-
-  Error checkKeyError = CheckServerResponse(result, response, "/user/sendKey", __LINE__);
-  if (checkKeyError.code != Error::Code::NoError) {
-    return checkKeyError;
-  }
-
   ptree jsonPt;
-  Error jsonError = CheckJsonValidFormat({ c_server_string, c_client_string }, __LINE__, jsonPt);
-  if (jsonError.code != Error::Code::NoError) {
-    return jsonError;
-  }
+
+  Error error = SendRequestProccess(c_send_key_request,
+                                    {{c_public_key_field, publicKey_->str_key()}},
+                                    { c_server_string, c_client_string },
+                                    jsonPt);
+  if (error.code != Error::Code::NoError)
+    return error;
 
   std::string serverString = jsonPt.get<std::string>(c_server_string);
   std::string clientString = jsonPt.get<std::string>(c_client_string);
   clientString = privateKey_->decrypt(clientString);
-  jsonPt.put(c_client_string, clientString); //decrypt client string with privateKey_ and put into tree
-  jsonPt.put(c_server_string, serverString);
 
-  std::ostringstream ssConfirmKey;
-  try {
-    write_json(ssConfirmKey, jsonPt);
-  }
-  catch (json_parser_error & ex) {
-    logger_(SL_ERROR) << ex.what();
-    return Error(Error::Code::RegistationError, std::string("SOME ERROR I DO NOT KNOW!"));
-  }
-  
-  std::string jsonConfirmKey = ssConfirmKey.str();
-  std::vector<char> responseDataConfirmKey(jsonConfirmKey.begin(), jsonConfirmKey.end());
   httpBuffer_.clear();
-
-  std::unique_lock<std::mutex> lockConfirmKey(mutex_);
-  currentConnection_.get()->perform({"/user/sendKey", std::chrono::milliseconds(TIMEOUT)},
-                                    responseDataConfirmKey, httpBuffer_,
-                                    std::bind(&LoginManager::UniveralCallback, this,
-                                              std::placeholders::_1, std::placeholders::_2,
-                                              std::ref(result), std::ref(response)));
-
-  hasResponse_.wait(lockConfirmKey);
-
-
-  Error filnalRegistrationError = CheckServerResponse(result, response, "/user/register", __LINE__);
-  if (filnalRegistrationError.code != Error::Code::NoError) {
-    return filnalRegistrationError;
-  }
-
   jsonPt.clear();
-  jsonError = CheckJsonValidFormat({ c_uuid_string }, __LINE__, jsonPt);
-  if (jsonError.code != Error::Code::NoError) {
-    return jsonError;
-  }
+
+  error = SendRequestProccess(c_register_request,
+                              {{c_client_string, clientString},{c_server_string, serverString}},
+                              { c_uuid_string },
+                              jsonPt);
+  if (error.code != Error::Code::NoError)
+    return error;
 
   userUuid_ = jsonPt.get<std::string>(c_uuid_string);
   WriteLoginInfo();
   return Error(Error::Code::NoError, std::string());
+}
+
+Error LoginManager::SendRequestProccess(const std::string & requestName, const std::map<std::string, std::string> & jsonKeyValues,
+                                        const std::list<std::string>& jsomParams, boost::property_tree::ptree & jsonPt) {
+  PerformResult result;
+  HttpResponsePtr response;
+  auto httpRequestData = PrepareHttpRequest(jsonKeyValues, c_write_json_error);
+  std::unique_lock<std::mutex> lockSendKey(mutex_);
+  currentConnection_.get()->perform({requestName, std::chrono::milliseconds(TIMEOUT)},
+                                    httpRequestData, httpBuffer_,
+                                    std::bind(&LoginManager::UniveralCallback, this,
+                                              std::placeholders::_1, std::placeholders::_2,
+                                              std::ref(result), std::ref(response)));
+  hasResponse_.wait(lockSendKey);
+  Error checkKeyError = CheckServerResponse(result, response, requestName, __LINE__);
+  if (checkKeyError.code != Error::Code::NoError) {
+    return checkKeyError;
+  }
+  Error jsonError = CheckJsonValidFormat(jsomParams, __LINE__, jsonPt);
+  if (jsonError.code != Error::Code::NoError) {
+    return jsonError;
+  }
+}
+
+std::vector<char> LoginManager::PrepareHttpRequest(const std::map<std::string, std::string> & jsonKeyValues, const std::string & jsonWriteErrorMessage) {
+  ptree jsonPt;
+  for (auto & jsonIter : jsonKeyValues) {
+    jsonPt.put(jsonIter.first, jsonIter.second);
+  }
+  std::ostringstream oss;
+  try {
+    write_json(oss, jsonPt);
+  }
+  catch (json_parser_error & ex) {
+    logger_(SL_ERROR) << ex.what();
+    return Error(Error::Code::RegistationError, std::move(jsonWriteErrorMessage));
+  }
+  std::string resultString = oss.str();
+  return std::vector<char>(resultString.begin(), resultString.end());
 }
 
 void LoginManager::UniveralCallback(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out) {

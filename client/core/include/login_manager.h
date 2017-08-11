@@ -4,6 +4,8 @@
 #include <functional>
 #include <memory>
 #include <list>
+#include <map>
+#include <vector>
 #include <mutex>
 #include <condition_variable>
 
@@ -29,6 +31,10 @@ public:
   void WriteLoginInfo();
 
 private:
+  Error SendRequestProccess(const std::string & requestName, const std::map<std::string, std::string> & jsonKeyValues,
+                            const std::list<std::string>& jsomParams, boost::property_tree::ptree & jsonPt);
+
+  std::vector<char> PrepareHttpRequest(const std::map<std::string, std::string> & jsonKeyValues, const std::string & jsonWriteErrorMessage);
   void UniveralCallback(PerformResult result_in, HttpResponsePtr && response_in, PerformResult &result_out, HttpResponsePtr & response_out);
   Error CheckServerResponse(PerformResult & result, HttpResponsePtr & response, const std::string & requestName, int lineNum);
   Error CheckJsonValidFormat(const std::list<std::string>& jsomParams, int lineNum, boost::property_tree::ptree & jsonPt);
