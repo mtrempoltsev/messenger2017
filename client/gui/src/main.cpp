@@ -49,7 +49,19 @@ int main(int argc, char *argv[]) {
   if (engine.rootObjects().isEmpty())
     return -1;
 
+  RegisterHandler regCallback;
+  regCallback.onCompletion = nullptr;//[]() { std::cout << "Registration complete"; };
+  regCallback.onError = nullptr;// [] (m2::Error && error) { std::cout << error.message; };
+
   std::thread coreThread(runcore, std::ref(core));
+  try
+  {
+    dispatcher.RegisterUser("https://volt.trempoltsev.ru", regCallback);
+  }
+  catch (std::exception & ex) {
+      std::cout << ex.what();
+  }
+
   //  RegisterHandler rh;
   //  rh.onCompletion = []() { std::cout << "REGISTERED OK!" << std::endl; };
 
@@ -71,5 +83,8 @@ int main(int argc, char *argv[]) {
     engine.rootContext()->setContextProperty("chatModel", &chats);
     engine.rootContext()->setContextProperty("messagesModel", &messages);
     engine.rootContext()->setContextProperty("contactsModel", &contacts);
-    return app.exec();
+    const auto result = app.exec();
+    dispatcher.stopCore();
+    coreThread.join();
+    return result;
 }

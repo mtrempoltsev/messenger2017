@@ -14,7 +14,7 @@ using namespace safelog;
 
 void CoreDispatcher::stopCore() { core_->Stop(); }
 void CoreDispatcher::Login(LoginHandler handler) {
-    JobType job = [handler](Core &core) {
+    JobType job = std::make_shared<JobFunc>([handler](Core &core) {
       if (core.GetHttpConnection() == nullptr) {
         if (core.InitHttpConnection()) {
           handler.onError(Error(Error::Code::NetworkError, "Connection error"));
@@ -28,12 +28,12 @@ void CoreDispatcher::Login(LoginHandler handler) {
       else {
         handler.onError(std::move(loginError));
       }
-    };
+    });
     core_->PushJob(job, "Login");
 }
 
-void CoreDispatcher::RegisterUser(const std::string & serverDomain, RegisterHandler handler) {
-    JobType job = [serverDomain, handler](Core &core) {
+void CoreDispatcher::RegisterUser(const std::string & serverDomain, RegisterHandler & handler) {
+    JobType job = std::make_shared<JobFunc>([serverDomain, &handler](Core &core) {
       if (!core.InitHttpConnection(serverDomain)) {
         handler.onError(Error(Error::Code::NetworkError, "Connection error"));
         return;
@@ -45,7 +45,7 @@ void CoreDispatcher::RegisterUser(const std::string & serverDomain, RegisterHand
       else {
         handler.onError(std::move(ret));
       }
-    };
+    });
     std::cout << "        push job" << std::endl;
     core_->PushJob(job, "Registation");
 }

@@ -21,8 +21,8 @@ namespace core {
 class LoginManager {
 public:
   LoginManager();
-  Error Login(const HttpConnectionPtr & connection);
-  Error RegisterUser(const HttpConnectionPtr & connection);
+  Error Login(const HttpConnectionPtr connection);
+  Error RegisterUser(const HttpConnectionPtr  connection);
   std::string GetServerDomain() { return serverDomain_;}
   void SetServerDomain(const std::string & severDomain) { serverDomain_ = severDomain; }
   std::string GetUserUuid() { return userUuid_; }
@@ -46,6 +46,8 @@ private:
   std::vector<char> httpBuffer_;
 
   safelog::SafeLog logger_;
+
+  std::pair<std::unique_ptr<m2::crypto::common::OpenSSL_RSA_CryptoProvider>, std::unique_ptr<m2::crypto::common::OpenSSL_RSA_CryptoProvider>> crypto_;
 
   //thread control
   std::mutex mutex_;

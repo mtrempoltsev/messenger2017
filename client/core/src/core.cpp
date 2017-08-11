@@ -75,11 +75,15 @@ void Core::JobLoop() {
           return;
       }
       std::cout << "call job" << std::endl;
-      job(*this);
+      job = jobQueue_.front();
+      jobQueue_.pop();
+      (*job)(*this);
     }
     std::cout << "call job" << std::endl;
     logger_(SL_INFO) << "call job";
-    job(*this);
+    job = jobQueue_.front();
+    jobQueue_.pop();
+    (*job)(*this);
   }
 }
 

@@ -98,7 +98,7 @@ int m2::timerCallback(CURLM* curlMulti, Milliseconds timeout, void* clientPtr)
     return 0;
 }
 
-void m2::eventCallback(long long int socket, short kind, void *contextPtr)
+void m2::eventCallback(int socket, short kind, void *contextPtr)
 {
     const auto context = static_cast<HttpClient::Context*>(contextPtr);
 
@@ -354,8 +354,8 @@ void m2::HttpClient::Context::update(curl_socket_t socket, int action)
     if (action & CURL_POLL_OUT)
         kind |= EV_WRITE;
 
-    //event_ = event_new(client_->eventBase_, socket_, kind, eventCallback, this);
-    //event_add(event_, NULL);
+    event_ = event_new(client_->eventBase_, socket_, kind, eventCallback, this);
+    event_add(event_, NULL);
 }
 
 void m2::HttpClient::Context::freeEvent()

@@ -50,15 +50,16 @@ LoginManager::LoginManager() :
     ReadLoginInfo();
 }
 
-Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
+Error LoginManager::RegisterUser(const HttpConnectionPtr connection)
 {
+  logger_(SL_INFO) << "RegisterUser";
   currentConnection_ = connection;
-  auto crypto = OpenSSL_RSA_CryptoProvider::make(KEYSIZE);
+  crypto_ = OpenSSL_RSA_CryptoProvider::make(KEYSIZE);
 
-  publicKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.first->str_key(), true);
-  privateKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.second->str_key(), false);
+  //publicKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.first->str_key(), true);
+  //privateKey_ = std::make_unique<OpenSSL_RSA_CryptoProvider>(crypto.second->str_key(), false);
 
-  Error error = TalkWithServer(c_send_key_request, c_register_request, publicKey_->str_key());
+  Error error = TalkWithServer(c_send_key_request, c_register_request, crypto_.first->str_key());
   if (error.code != Error::Code::NoError)
 	  return error;
 
@@ -68,7 +69,7 @@ Error LoginManager::RegisterUser(const HttpConnectionPtr &connection)
   return DEFAULT_ERROR;
 }
 
-Error LoginManager::Login(const HttpConnectionPtr &connection) {
+Error LoginManager::Login(const HttpConnectionPtr connection) {
   currentConnection_ = connection;
   Error error = TalkWithServer(c_send_key_request, c_register_request, userUuid_);
   if (error.code != Error::Code::NoError)
@@ -94,7 +95,7 @@ Error LoginManager::TalkWithServer(const std::string & firstRequestName, const s
 		return error;
 
 	std::string serverString = jsonPt.get<std::string>(c_server_string);
-    std::string clientString = base64::base64_encode(privateKey_->decrypt_from_b64(base64::base64_decode(jsonPt.get<std::string>(c_client_string))));
+    std::string clientString = base64::base64_encode(crypto_.second->decrypt_from_b64(base64::base64_decode(jsonPt.get<std::string>(c_client_string))));
 
 	httpBuffer_.clear();
 	jsonPt.clear();
