@@ -5,6 +5,7 @@ project(${CORE_PROJECT_NAME})
 
 set(M2_ROOT ${CMAKE_SOURCE_DIR}/../ CACHE STRING "m2-client root dir")
 set(SUBPROJECT_ROOT "${M2_ROOT}/core")
+get_filename_component(SHARED_ROOT "${M2_ROOT}/../shared" ABSOLUTE)
 
 option(ENABLE_TESTS "Enable m2-core tests" OFF)
 
@@ -80,12 +81,14 @@ include_directories(${SUBPROJECT_ROOT})
 include_directories(${SUBPROJECT_ROOT}/include)
 include_directories(${SUBPROJECT_ROOT}/../shared_client)
 
+message(STATUS "SHARED ROOT: ${SHARED_ROOT}")
+include_directories(${SHARED_ROOT}/include)
 
 # ------------------------  3rd-parties  ------------------------
 
-get_filename_component(M2_ROOT "${CMAKE_SOURCE_DIR}" ABSOLUTE)
-set(M2_GLOBAL_3RD_PARTY "${M2_ROOT}/../../3rd-party")
-set(M2_3RD_PARTY "${M2_ROOT}/3rd-party")
+get_filename_component(M2_ROOT "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE)
+get_filename_component(M2_GLOBAL_3RD_PARTY "${M2_ROOT}/../../3rd-party" ABSOLUTE)
+get_filename_component(M2_3RD_PARTY "${M2_ROOT}/3rd-party" ABSOLUTE)
 
 # ----------------------- LIBRARIES ----------------------------
 
@@ -93,13 +96,35 @@ add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT stdafx.h)
 
-#----------- precompiled -----------
+
 #list(APPEND CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY}/cotire-1.7.10/CMake")
 #list(APPEND CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY}/cmake")
-get_filename_component(M2_GLOBAL_3RD_PARTY "${M2_GLOBAL_3RD_PARTY}/cotire-1.7.10/CMake" ABSOLUTE)
-set (CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY}")
+
+# --------------------------  PATHS ----------------------------
+
+get_filename_component(M2_COTIRE "${M2_GLOBAL_3RD_PARTY}/cotire-1.7.10/CMake" ABSOLUTE)
+set (CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY};${M2_GLOBAL_3RD_PARTY}/cmake;${M2_COTIRE}")
+
+
+
+# -------------------------    DEPENDENCIES   --------------------------
+
+find_package(Boost COMPONENTS REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
+
+find_package(CURL REQUIRED)
+include_directories(${CURL_INCLUDE_DIRS})
+
+find_package(Libevent REQUIRED)
+include_directories(${LIBEVENT_INCLUDE_DIRS})
+
+find_package(OpenSSL REQUIRED)
+include_directories(${OPENSSL_INCLUDE_DIR})
+
+find_package(Threads)
+
+#----------- precompiled -----------
 include(cotire)
-message(${CMAKE_MODULE_PATH})
 cotire(${PROJECT_NAME})
 
 
@@ -107,3 +132,5 @@ target_link_libraries(${PROJECT_NAME}
     ${Boost_LIBRARIES} -lboost_system -lboost_filesystem)
 target_link_libraries(${PROJECT_NAME}
     -lcurl -levent -lcrypto)
+
+
