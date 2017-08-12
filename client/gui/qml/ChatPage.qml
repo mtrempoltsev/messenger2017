@@ -1,10 +1,29 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.1
+import QtQuick 2.9
+import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import QtGraphicalEffects 1.0
+import Controler.Message 1.0
+
 
 Page {
     id: chatPage
-    anchors.fill: parent
+    background: Rectangle {
+        color: Style.mainBackground
+    }
+
+
+    MessagesControler{
+        id: messagesControler
+
+        onChatChanged: {
+            chatName.text = name
+            chatAvatar.source = avatar
+        }
+
+        Component.onCompleted: {
+            messagesControler.getChatData()
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -13,6 +32,10 @@ Page {
             Layout.preferredHeight: 75
             Layout.fillWidth: true
             z: 2
+
+            background: Rectangle {
+                color: Style.mainBackground
+            }
 
             RowLayout {
                 id: topLayout
@@ -31,7 +54,7 @@ Page {
                     fillMode: Image.PreserveAspectFit
 
                     //заглушка
-                    source: "/demo/asd.jpg"
+                    //source: "/demo/asd.jpg"
                 }
 
                 Text {
@@ -44,7 +67,9 @@ Page {
                     Layout.maximumWidth: -1
                     Layout.maximumHeight: 50
 
-                    text: "Eba"
+                    //заглушка
+                    //text: "Eba"
+                    color: Style.textColor
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
 
@@ -64,44 +89,58 @@ Page {
 
                     background: Rectangle {
                         radius: 10
-                        color: parent.hovered ? "#a0dea0" : "white"
+                        color: parent.hovered ? Style.hover : Style.mainBackground
                     }
 
-                    text: "⋮"
-                    font.pixelSize: 22
-                    font.bold: true
+                    contentItem: Text {
+                        text: "⋮"
+                        color: Style.buttonColor
+                        font.pixelSize: 22
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
                 }
             }
             Rectangle {
                 id: split_right_chat
-                color: "lightGray"
+                color: Style.splitColor
                 height: 1
                 width: parent.width
                 anchors.top: topLayout.bottom
             }
         }
 
+
         /////////////////////////////////////////////////////////////////////
+        ChatListView {
+            id: chatListView
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            displayMarginBeginning: 40
+            displayMarginEnd: 40
+
+            model: messagesModel
+        }
+
 
         //////////////////////////////////////////////////////////////////////
-
         Rectangle {
             id: split_footer_chat
-            color: "lightGray"
+            color: Style.splitColor
             height: 1
             Layout.fillWidth: true
             anchors.bottom: footer_chat.top
         }
 
-
-        Rectangle{
-            anchors.fill: parent
-            ChatListView{id: listView; model: ChatMessagesModel{id: messages}}
-        }
-
         Page {
             id: footer_chat
             Layout.fillWidth: true
+
+            background: Rectangle {
+                color: Style.mainBackground
+            }
 
             RowLayout {
                 id: bottomLayout
@@ -121,12 +160,18 @@ Page {
                     background: Rectangle {
                         radius: 10
 
-                        color: parent.hovered ? "#a0dea0" : "white"
+                        color: parent.hovered ? Style.hover : Style.mainBackground
                     }
 
                     contentItem: Image {
                         id: affiximg
                         source: "/img/affix.png"
+                    }
+
+                    ColorOverlay {
+                        anchors.fill: affiximg
+                        source: affiximg
+                        color: Style.buttonColor
                     }
                 }
 
@@ -137,25 +182,16 @@ Page {
                     Layout.maximumWidth: -1
                     Layout.maximumHeight: (chatPage.height - header_chat.height) / 3
 
+                    TextArea {
+                        id: chatMessageField
+                        selectByMouse: true
 
-
-
-                TextArea {
-                    id: chatMessageField
-                    selectByMouse: true
-
-                    wrapMode: TextEdit.Wrap
-                    renderType: Text.NativeRendering
-                    Layout.alignment: Qt.AlignBottom
-                    placeholderText: qsTr("Напишите сообщение...")
-
-                    background: Rectangle {
-                        radius: 10
-
-                        color: parent.hovered ? "#a0dea0" : "white"
+                        wrapMode: TextEdit.Wrap
+                        renderType: Text.NativeRendering
+                        placeholderText: qsTr("Напишите сообщение...")
                     }
                 }
-                }
+
                 Button {
                     id: chatSend
 
@@ -165,17 +201,28 @@ Page {
                     Layout.minimumWidth: 40
                     Layout.maximumWidth: 40
                     Layout.maximumHeight: 40
+                    Layout.alignment: Qt.AlignBottom
+
+                    background: Rectangle {
+                        radius: 10
+
+                        color: parent.hovered ? Style.hover : Style.mainBackground
+                    }
 
                     contentItem: Image {
                         id: sendimg
                         source: "/img/send.png"
                     }
 
-                    text: "send"
+                    ColorOverlay {
+                        anchors.fill: sendimg
+                        source: sendimg
+                        color: Style.buttonColor
+                    }
 
                     onClicked: {
-                        messages.append({"guid": 1, "messText":chatMessageField.text, "messTime": "18:00"})
-                        listView.positionViewAtEnd()
+                        messagesControler.sendNewMessage(chatMessageField.text)
+                        chatListView.positionViewAtEnd()
                         chatMessageField.clear()
                     }
                 }
@@ -183,4 +230,3 @@ Page {
         }
     }
 }
-

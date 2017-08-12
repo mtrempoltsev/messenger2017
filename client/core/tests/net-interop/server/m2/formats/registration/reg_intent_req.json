@@ -1,0 +1,10 @@
+{
+  "title": "Registration Intent Request Schema v.0.1",
+  "type": "object",
+  "properties": {
+      "public_key": {
+          "type": "string"
+      }
+  },
+  "required": ["public_key"]
+}

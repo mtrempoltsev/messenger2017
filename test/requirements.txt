@@ -1,0 +1,4 @@
+pycryptodome==3.4.6
+requests==2.18.3
+six==1.10.0
+urllib3==1.22

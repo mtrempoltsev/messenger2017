@@ -4,7 +4,10 @@
 
 // client/shared_client/
 #include "chat.h"
+#include "error.h"
 #include "message.h"
+
+using m2::Error;
 
 /*
   Привет из кора!
@@ -13,7 +16,8 @@
   m2::core::Core core;                    // стартуем ядро
   m2::core::CoreDispatcher dispatcher;    // стартуем диспетчер (к - кэп)
 
-  Ну а потом вы будете вызывать MessageStoryнас через этот самый диспетчер примерно так:
+  Ну а потом вы будете вызывать MessageStoryнас через этот самый диспетчер
+  примерно так:
 
   void zaregaiMenyaKnopka(){
     RegisterHandler handler;
@@ -42,19 +46,19 @@
 namespace m2 {
 
 struct LoginHandler final {
-    using CompletionHandler = std::function<void(std::string uuid)>;
-    using ErrorHandler = std::function<void(Error &&error)>;
+  using CompletionHandler = std::function<void(std::string uuid)>;
+  using ErrorHandler = std::function<void(Error &&error)>;
 
-    CompletionHandler onCompletion;
-    ErrorHandler onError;
+  CompletionHandler onCompletion;
+  ErrorHandler onError;
 };
 
 struct RegisterHandler final {
-    using CompletionHandler = std::function<void()>;
-    using ErrorHandler = std::function<void(Error &&error)>;
+  using CompletionHandler = std::function<void()>;
+  using ErrorHandler = std::function<void(Error &&error)>;
 
-    CompletionHandler onCompletion;
-    ErrorHandler onError;
+  CompletionHandler onCompletion;
+  ErrorHandler onError;
 };
 
 /********* MESSAGES *********
@@ -70,40 +74,42 @@ struct RegisterHandler final {
 см. core/include/core_dispatcher.h
     void GetMessageStory(const std::string &id, MessageStoryHandler handler);
 
-3. Струткура того, что мы вам возвращаем (через аргументы CompletionHandler и ErrorHandler) и как
+3. Струткура того, что мы вам возвращаем (через аргументы CompletionHandler и
+ErrorHandler) и как
 вам это получать
 см. client/shared_client/message.h
 */
 struct MessageStoryHandler final {
-    using MessageStory = std::vector<m2::core::Message>;
+  using MessageStory = std::vector<m2::core::Message>;
 
-    using CompletionHandler = std::function<void(const MessageStory &)>;
-    using ErrorHandler = std::function<void(/*Error &&error*/)>;
+  using CompletionHandler = std::function<void(const MessageStory &)>;
+  using ErrorHandler = std::function<void(/*Error &&error*/)>;
 
-    CompletionHandler onCompletion;
-    ErrorHandler onError;
+  CompletionHandler onCompletion;
+  ErrorHandler onError;
 };
 
 /********* CHATS *********
 1. Вы нас вызываете (GUI --> Core)
-    dispatcher.GetChats(userId, handler)
+    dispatcher.GetChats(handler)
 
 2. Параметры, которые мы хотим чтобы вы нам передали при вызове
 (см. core/include/core_dispatcher.h)
     void GetChats(ChatsHandler handler);
 
-3. Струткура того, что мы вам возвращаем (через аргументы CompletionHandler и ErrorHandler) и как
+3. Струткура того, что мы вам возвращаем (через аргументы CompletionHandler и
+ErrorHandler) и как
 вам это получать
 см. client/shared_client/chat.h
 */
 struct ChatsHandler final {
-    using ChatsMap = std::unordered_map<size_t, m2::core::Chat>;
+  using ChatsMap = std::unordered_map<int, m2::core::Chat>;
 
-    using CompletionHandler = std::function<void(const ChatsMap &)>;
-    using ErrorHandler = std::function<void(/*Error &&error*/)>;
+  using CompletionHandler = std::function<void(const ChatsMap &)>;
+  using ErrorHandler = std::function<void(/*Error &&error*/)>;
 
-    CompletionHandler onCompletion;
-    ErrorHandler onError;
+  CompletionHandler onCompletion;
+  ErrorHandler onError;
 };
 
 /********* CONTACTS *********
@@ -121,14 +127,21 @@ void GetContact(const std::string &id, MessageStoryHandler handler);
 // client/shared_client/contact.h
 */
 
-// ...
+// struct ContactHandler final {
+//  using CompletionHandler = std::function<void(std::vector<Contact>)>;
+//  using ErrorHandler = std::function<void(/*Error &&error*/)>;
+
+//  CompletionHandler onCompletion;
+//  ErrorHandler onError;
+//};
 
 /********* SERVER LIST *********/
 struct ServerSetHandler final {
-    using CompletionHandler = std::function<void(const std::list<std::string> &servers)>;
-    using ErrorHandler = std::function<void(/*Error &&error*/)>;
+  using CompletionHandler =
+      std::function<void(const std::list<std::string> &servers)>;
+  using ErrorHandler = std::function<void(/*Error &&error*/)>;
 
-    CompletionHandler onCompletion;
-    ErrorHandler onError;
+  CompletionHandler onCompletion;
+  ErrorHandler onError;
 };
 }

@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.1
+import ContactsModel 1.0
 
 RowLayout {
     function getMsgAligment() {
@@ -15,20 +16,8 @@ RowLayout {
         return Qt.LeftToRight
     }
 
-    function getTimeAligment() {
-        if (msgListView.myMessagesDirection)
-            return sentByMe ? Qt.AlignLeft : Qt.AlignRight
-        return Qt.AlignRight
-    }
-
-    function getTimeDirection() {
-        if (msgListView.myMessagesDirection)
-            return sentByMe ? Qt.LeftToRight : Qt.RightToLeft
-        return Qt.RightToLeft
-    }
-
     id: delegateItem
-    readonly property bool sentByMe: guid == 1
+    readonly property bool sentByMe: FromUuid == "1"
     layoutDirection: getLayoutDirection()
     Layout.alignment: getMsgAligment()
     width: parent.width
@@ -40,43 +29,51 @@ RowLayout {
 
         fillMode: Image.PreserveAspectFit
         Layout.alignment: Qt.AlignTop
-        //заглушка
-        source: contacts.get(guid).avatar
+        source: contactsModel.getDataForID(FromUuid, ContactsModel.Avatar)
     }
 
     ColumnLayout {
-        Text {
-            Layout.alignment: Qt.AlignTop | getMsgAligment()
-
-            id: itemUserName
-            text: contacts.get(model.guid).name
-            color: sentByMe ? "#9d81ba" : "red"
-        }
-
         RowLayout {
-            layoutDirection: getTimeDirection()
+            Layout.alignment: Qt.AlignTop | getMsgAligment()
+            layoutDirection: getLayoutDirection()
             Text {
-                Layout.alignment: getTimeAligment()
-                id: itemTime
-                text: model.messTime
-                color: "lightGray"
+                id: itemUserName
+                text: contactsModel.getDataForID(FromUuid, ContactsModel.Name)
+                color: sentByMe ? "#9d81ba" : "red"
             }
 
-            Label {
-                property real maxLen: delegateItem.width - itemIcon.width - delegateItem.spacing - itemTime.width - 4
-                id: msgLabel
-                text: model.messText
-                Layout.maximumWidth: {
-                    maxLen
-                }
-                background: Rectangle {
-                    id: msgLabelBackground
-                    color: sentByMe ? "lightgrey" : "lightblue"
-                    width: msgLabel.maxLen
-                           > msgLabel.paintedWidth ? msgLabel.paintedWidth : msgLabel.maxLen
-                }
+            Text {
+                id: itemTime
+                text: MessTime
+                color: "lightGray"
+            }
+        }
 
-                color: sentByMe ? "black" : "white"
+        Label {
+            Layout.alignment: getMsgAligment()
+            property real maxLen: delegateItem.width - itemIcon.width
+                                  - delegateItem.spacing - 4 - padding * 2
+            id: msgLabel
+            text: MessText
+            color: "black"
+            wrapMode: Label.WrapAnywhere
+            padding: 5
+
+            Layout.maximumWidth: maxLen
+
+            Connections {
+                target: window
+                onWidthChanged: msgLabel.Layout.maximumWidth = (msgLabel.Layout.maximumWidth
+                                < msgLabel.maxLen ? msgLabel.maxLen : msgLabelBackground.width)+0.1
+            }
+
+            background: Rectangle {
+                id: msgLabelBackground
+                color: sentByMe ? "lightblue" : "white"
+                border.width: 1
+                radius: 5
+                width: Math.min(msgLabel.maxLen,
+                                msgLabel.paintedWidth) + parent.padding * 2
             }
         }
     }

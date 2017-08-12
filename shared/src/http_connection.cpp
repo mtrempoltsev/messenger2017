@@ -71,24 +71,18 @@ void m2::HttpConnection::perform(
 void m2::HttpConnection::perform(const HttpRequest& request, const Data& requestData, Data& responseData,
     CompletionHandler completion, ProgressHandler progress)
 {
-    const char* sectionName = "data";
+    //const char* sectionName = "data";
 
     assert(curlPost_ == nullptr);
 
     struct curl_httppost* last = nullptr;
 
-    curl_formadd(&curlPost_, &last,
-        CURLFORM_PTRNAME, sectionName,
-        CURLFORM_PTRCONTENTS, requestData.data(),
-        CURLFORM_CONTENTSLENGTH, requestData.size(), CURLFORM_END);
-
     curl_easy_setopt(curl_, CURLOPT_HTTPPOST, curlPost_);
-
+    curl_easy_setopt(curl_, CURLOPT_POSTFIELDS, requestData.data());
     perform(request, responseData, completion, progress);
 }
 
-void m2::HttpConnection::perform(
-    const HttpRequest& request, WriteFunction writeFunction, CompletionHandler completion, ProgressHandler progress)
+void m2::HttpConnection::perform(const HttpRequest& request, WriteFunction writeFunction, CompletionHandler completion, ProgressHandler progress)
 {
     completion_ = completion;
     progress_ = progress;
@@ -126,8 +120,12 @@ void m2::HttpConnection::onPerformComplete(CURLcode result)
         {
             header_.clear();
         }
-
+        if (result != CURLE_OK) {
+            auto buf = curl_easy_strerror(result);
+            response->header.insert(response->header.begin(), buf, buf + strlen(buf));
+        }
         //TODO add actual codes
+
         completion_(result == CURLE_OK ? PerformResult::Success : PerformResult::NetworkError, std::move(response));
     }
 }

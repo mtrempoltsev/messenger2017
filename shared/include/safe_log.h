@@ -21,7 +21,7 @@ Write a debug message:
 #pragma once
 
 #ifndef SL_ERROR
-#define SL_ERROR m2::safelog::SafeLog::MessageType::ERROR
+#define SL_ERROR m2::safelog::SafeLog::MessageType::FAIL
 
 #endif //SL_ERROR
 
@@ -55,12 +55,12 @@ namespace safelog {
 
     enum class MessageType
     {
-      ERROR,
+      FAIL,
       WARNING,
       DEBUG,
       INFO
     };
-    
+
     SafeLog();
     SafeLog(const std::string & filePath);
     ~SafeLog();

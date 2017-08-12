@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "chat.h"
-
 #include "message.h"
 
 namespace m2 {
@@ -29,14 +28,17 @@ namespace core {
         const ChatsMap& GetChats() const;
         bool ChatExists(int id) { return (chatsIds_.count(id) > 0); }
 
+        std::unordered_map<int, Chat> GetChats() { return startedChats_; }
+
+        // sending and recieveing (?) messages
         void SendMessage(Message& message);
 
     private:
         // chatId and history
         MessageStory emptyStory_;
         std::unordered_map<int, MessageStory> storyByChat_;
+        std::unordered_map<int, Chat> startedChats_;
         std::set<int> chatsIds_;  // список начатых чатов
     };
-
 }  // core
 }  // m2

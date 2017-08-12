@@ -1,16 +1,28 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Styles 1.4
+import QtGraphicalEffects 1.0
+
+import Controler.Chats 1.0
 
 Rectangle {
+    id: contactWidget
     antialiasing: false
+    color: Style.mainBackground
+
+
+    ChatsControler{
+        id: chatsControler
+    }
+
 
     //top rect
     Rectangle {
-        z:1
+        z: 1
         id: searchline
         height: 40
         width: parent.width
+        color: parent.color
 
         //search rect
         TextField {
@@ -32,11 +44,10 @@ Rectangle {
             x: parent.width - 35
             y: 5
 
-                background: Rectangle {
-                    radius: 5
-                    border.width: 0
-                    color: parent.hovered ? "#a0dea0" : "white"
-                }
+            background: Rectangle {
+                radius: 5
+                color: parent.hovered ? Style.hover : Style.mainBackground
+            }
             topPadding: 5
             bottomPadding: 5
             leftPadding: 5
@@ -48,6 +59,11 @@ Rectangle {
                 height: 10
                 source: "/img/new_message.png"
             }
+            ColorOverlay {
+                anchors.fill: newimg
+                source: newimg
+                color: Style.buttonColor
+            }
 
             onClicked: {
                 adding.state = "Visible"
@@ -55,114 +71,6 @@ Rectangle {
         }
     }
 
-    // list delegate
-    Component {
-        id: contactDelegate
-        Item {
-            id: contactItem
-            width: parent.width
-
-            //seting start state
-            state: "Normal"
-
-            //for filtering
-            visible: regExp(searchText.text, "i").test(name)
-            height: visible ? 50 : 0
-
-            // item view
-            Column {
-                Rectangle {
-                    id: itemRect
-
-                    width: contactItem.width
-                    height: contactItem.height-1
-
-                    Image {
-                        id: itemIcon
-                        width: 40
-                        height: 40
-                        x: 5
-                        y: 5
-
-                        fillMode: Image.PreserveAspectFit
-
-                        source: icon
-                    }
-
-                    Text {
-                        id: iconText
-                        height: 40
-                        x: 60
-                        y: 5
-
-                        verticalAlignment: Text.AlignVCenter
-                        renderType: Text.NativeRendering
-                        font.pixelSize: 14
-
-                        text: name
-                    }
-                }
-                Rectangle {
-                    color: "lightGray"
-                    height: 1
-                    width: contactItem.width
-                }
-            }
-
-            //item states
-            states: [
-                State {
-                    name: "Normal"
-                    PropertyChanges {
-                        target: itemRect
-                        color: listView.currentIndex == index ? "#a0dea0" : "white"
-                    }
-                },
-                State {
-                    name: "Hover"
-                    PropertyChanges {
-                        target: itemRect
-                        color: listView.currentIndex == index ? "#63ce63" : "#eeeeee"
-                    }
-                }
-            ]
-
-            //item states transitions
-            transitions: [
-                Transition {
-                    from: "*"
-                    to: "Normal"
-                    ColorAnimation {
-                        duration: 100
-                    }
-                },
-                Transition {
-                    from: "*"
-                    to: "Hover"
-                    ColorAnimation {
-                        duration: 100
-                    }
-                }
-            ]
-
-            MouseArea {
-                hoverEnabled: true
-                anchors.fill: parent
-                onEntered: {
-                    contactItem.state = 'Hover'
-                }
-                onExited: {
-                    contactItem.state = "Normal"
-                }
-
-                onClicked: {
-                    rightside.pop()
-                    rightside.pushNoAnimation(["qrc:/qml/ChatPage.qml"])
-                    listView.currentIndex = index
-                }
-            }
-        }
-    }
 
     //contacts view
     ListView {
@@ -171,8 +79,20 @@ Rectangle {
         height: parent.height-40
 
         anchors.top: searchline.bottom
-        model: ContactWidgetModel {}
-        delegate: contactDelegate
+        model: chatModel
+        delegate: ContactListDelegateItem {}
         currentIndex: -1
+
+        onCurrentIndexChanged: {
+            chatsControler.changeCurrentChat(listView.currentIndex)
+        }
+    }
+
+    Component.onCompleted: {
+        if (chatModel.rowCount() != 0)
+        {
+            listView.currentIndex = 0;
+            rightside.pushNoAnimation(["qrc:/qml/ChatPage.qml"])
+        }
     }
 }

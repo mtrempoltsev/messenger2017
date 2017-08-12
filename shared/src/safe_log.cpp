@@ -12,7 +12,7 @@ using namespace std::chrono;
 
 static std::map<SafeLog::MessageType, std::string> labelNameMap =
 {
-  { SafeLog::MessageType::ERROR, "[Error]: "},
+  { SafeLog::MessageType::FAIL, "[Error]: "},
   { SafeLog::MessageType::WARNING, "[Warning]: " },
   { SafeLog::MessageType::DEBUG, "[Debug]: " },
   { SafeLog::MessageType::INFO, "[Info]" }
