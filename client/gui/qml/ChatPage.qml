@@ -1,10 +1,16 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.1
+import QtQuick 2.9
+import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import Controler.Message 1.0
 
 Page {
     id: chatPage
-    anchors.fill: parent
+
+    MessagesControler{
+        id: messagesControler
+
+        onNewMessage: {}
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -83,6 +89,17 @@ Page {
 
         /////////////////////////////////////////////////////////////////////
 
+        ChatListView {
+            id: chatListView
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            displayMarginBeginning: 40
+            displayMarginEnd: 40
+
+            model: messagesModel
+        }
+
         //////////////////////////////////////////////////////////////////////
 
         Rectangle {
@@ -91,12 +108,6 @@ Page {
             height: 1
             Layout.fillWidth: true
             anchors.bottom: footer_chat.top
-        }
-
-
-        Rectangle{
-            anchors.fill: parent
-            ChatListView{id: listView; model: ChatMessagesModel{id: messages}}
         }
 
         Page {
@@ -137,25 +148,16 @@ Page {
                     Layout.maximumWidth: -1
                     Layout.maximumHeight: (chatPage.height - header_chat.height) / 3
 
+                    TextArea {
+                        id: chatMessageField
+                        selectByMouse: true
 
-
-
-                TextArea {
-                    id: chatMessageField
-                    selectByMouse: true
-
-                    wrapMode: TextEdit.Wrap
-                    renderType: Text.NativeRendering
-                    Layout.alignment: Qt.AlignBottom
-                    placeholderText: qsTr("Напишите сообщение...")
-
-                    background: Rectangle {
-                        radius: 10
-
-                        color: parent.hovered ? "#a0dea0" : "white"
+                        wrapMode: TextEdit.Wrap
+                        renderType: Text.NativeRendering
+                        placeholderText: qsTr("Напишите сообщение...")
                     }
                 }
-                }
+
                 Button {
                     id: chatSend
 
@@ -165,17 +167,23 @@ Page {
                     Layout.minimumWidth: 40
                     Layout.maximumWidth: 40
                     Layout.maximumHeight: 40
+                    Layout.alignment: Qt.AlignBottom
+
+                    background: Rectangle {
+                        radius: 10
+
+                        color: parent.hovered ? "#a0dea0" : "white"
+                    }
 
                     contentItem: Image {
                         id: sendimg
                         source: "/img/send.png"
                     }
 
-                    text: "send"
-
                     onClicked: {
-                        messages.append({"guid": 1, "messText":chatMessageField.text, "messTime": "18:00"})
-                        listView.positionViewAtEnd()
+                        //TODO:перекинуть на хендлер
+                        messagesControler.sendNewMessage(chatMessageField.text)
+                        chatListView.positionViewAtEnd()
                         chatMessageField.clear()
                     }
                 }
@@ -183,4 +191,3 @@ Page {
         }
     }
 }
-

@@ -98,7 +98,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT s
 #list(APPEND CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY}/cmake")
 get_filename_component(M2_GLOBAL_3RD_PARTY "${M2_GLOBAL_3RD_PARTY}/cotire-1.7.10/CMake" ABSOLUTE)
 set (CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY}")
-include(cotire)
+#include(cotire)
 message(${CMAKE_MODULE_PATH})
 cotire(${PROJECT_NAME})
 

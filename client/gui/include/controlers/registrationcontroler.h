@@ -2,6 +2,9 @@
 #define REGISTRATIONCONTROLER_H
 
 #include <QObject>
+#include <QVariant>
+
+
 namespace m2 {
 namespace gui {
 namespace controler {
@@ -13,14 +16,11 @@ public:
     explicit RegistrationControler(QObject* parent = nullptr);
 
     static void declareQML();
-    Q_INVOKABLE void registerMe(const QString &server) const;
-
-    void registrationSuccessed(const std::string &guid);
-
-    void registrationFailed();
+    Q_INVOKABLE void registerMe(const int &serverIndex) const;
+    Q_INVOKABLE QVariant getServerList();
 
 signals:
-    void startRegister() const;
+    void startRegister(const int &serverIndex) const;
     void finishRegisterSuccessed() const;
     void finishRegisterFailed(const QString msg) const;
 

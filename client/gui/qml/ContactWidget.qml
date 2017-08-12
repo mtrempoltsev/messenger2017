@@ -66,7 +66,7 @@ Rectangle {
             state: "Normal"
 
             //for filtering
-            visible: regExp(searchText.text, "i").test(name)
+            visible: RegExp(searchText.text, "i").test(Name)
             height: visible ? 50 : 0
 
             // item view
@@ -86,7 +86,7 @@ Rectangle {
 
                         fillMode: Image.PreserveAspectFit
 
-                        source: icon
+                        source: Avatar
                     }
 
                     Text {
@@ -99,7 +99,7 @@ Rectangle {
                         renderType: Text.NativeRendering
                         font.pixelSize: 14
 
-                        text: name
+                        text: Name
                     }
                 }
                 Rectangle {
@@ -171,7 +171,7 @@ Rectangle {
         height: parent.height-40
 
         anchors.top: searchline.bottom
-        model: ContactWidgetModel {}
+        model: chatModel
         delegate: contactDelegate
         currentIndex: -1
     }
