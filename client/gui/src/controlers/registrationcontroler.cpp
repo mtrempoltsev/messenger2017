@@ -1,30 +1,43 @@
-#include "registrationcontroler.h"
+#include "include/controlers/registrationcontroler.h"
+
 #include <QtQml>
-#include "guiadapter.h"
+
+#include "include/guiadapter.h"
 
 namespace m2 {
 namespace gui {
-    namespace controler {
+namespace controler {
 
-        RegistrationControler::RegistrationControler() {}
 
-        void RegistrationControler::declareQML() {
-            qmlRegisterType<RegistrationControler>("Controler.Registration", 1, 0,
-                                                   "RegistraionControler");
-        }
+RegistrationControler::RegistrationControler(QObject* parent)
+    :QObject(parent)
+{
+    GuiAdapter* adapter = GuiAdapter::getGuiAdapter();
 
-        void RegistrationControler::registerMe(const QString &server) const {
-            // TODO get core
-            emit startRegister();
-            //    emit finishRegisterSuccessed();
-        }
+    connect(this, SIGNAL(startRegister(QString)), adapter, SLOT(registerToServer(QString)));
+    connect(adapter, SIGNAL(registrationSuccessed()), this, SIGNAL(finishRegisterSuccessed()));
+    connect(adapter, SIGNAL(registrationFailed(QString)), this, SIGNAL(finishRegisterFailed(QString)));
+}
 
-        void RegistrationControler::registrationSuccessed(const std::string &guid) {
-            GuiAdapter::getInstance().setGuid(guid);
-            emit finishRegisterSuccessed();
-        }
 
-        void RegistrationControler::registrationFailed() { emit finishRegisterFailed("Error"); }
-    }
+void RegistrationControler::declareQML()
+{
+    qmlRegisterType<RegistrationControler>("Controler.Registration", 1, 0, "RegistraionControler");
+}
+
+
+void RegistrationControler::registerMe(const QString &server) const
+{
+    emit startRegister(server);
+}
+
+
+QVariant RegistrationControler::getServerList()
+{
+    return QVariant(GuiAdapter::getGuiAdapter()->getServerList());
+}
+
+
+}
 }
 }

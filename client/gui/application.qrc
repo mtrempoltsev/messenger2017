@@ -10,18 +10,21 @@
         <file>img/new_message.png</file>
         <file>img/settings.png</file>
         <file>qml/ChatListView.qml</file>
-        <file>qml/ChatMessagesModel.qml</file>
         <file>qml/ChatPage.qml</file>
-        <file>qml/ContactsList.qml</file>
         <file>demo/asd.jpg</file>
         <file>demo/dsa.jpg</file>
         <file>qml/ContactWidget.qml</file>
-        <file>qml/ContactWidgetModel.qml</file>
         <file>img/affix.png</file>
         <file>img/send.png</file>
         <file>qml/ChatListDelegateItem.qml</file>
         <file>qml/LoginPage.qml</file>
         <file>qml/RectangleLogo.qml</file>
         <file>qml/PageWithLogo.qml</file>
+        <file>qml/ContactListDelegateItem.qml</file>
+        <file>qml/Style.qml</file>
+        <file>qml/SettingsListDelegateItem.qml</file>
+        <file>qml/qmldir</file>
+        <file>img/arrow.png</file>
+        <file>img/chats.png</file>
     </qresource>
 </RCC>

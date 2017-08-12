@@ -9,10 +9,13 @@ PageWithLogo {
 
     controler: RegistraionControler {
         id: registerControler
+
         onStartRegister: root.state="loading"
+
         onFinishRegisterFailed: {
             root.state="error"
         }
+
         onFinishRegisterSuccessed:  {
             root.state = "base state"
             stackView.pop()
@@ -55,18 +58,15 @@ PageWithLogo {
         anchors.left: parent.left
         anchors.right: parent.right
         editable: true
-        model: ListModel {
-            id: model
-            ListElement { text: "test-server.io"}
-            ListElement { text: "dev-server.io" }
-            ListElement { text: "mail.ru"}
-        }
+        model: registerControler.getServerList()
+
         onAccepted: {
             if (find(currentText) === -1) {
                 model.append({text: editText})
                 currentIndex = find(editText)
             }
         }
+
     }
 
     Button {

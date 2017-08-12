@@ -1,5 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
+import "."
 
 Rectangle {
     id: adding
@@ -82,7 +83,7 @@ Rectangle {
         id: dialog
         width: 300
         height: 300
-        color: "#ffffff"
+        color: Style.mainBackground
         anchors.centerIn: adding
         radius: 10
 
@@ -93,6 +94,7 @@ Rectangle {
 
         Text {
             id: title
+            color: Style.textColor
             font.pointSize: 20
             text: qsTr("Добавить пользователя")
             anchors.horizontalCenter: parent.horizontalCenter
@@ -110,7 +112,13 @@ Rectangle {
             id: cancel_button
             width: 130
             height: 40
-            text: qsTr("Отмена")
+
+            contentItem: Text {
+                text: qsTr("Отмена")
+                color: Style.buttonColor
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
 
             anchors.left: parent.left
             anchors.leftMargin: 12
@@ -120,7 +128,7 @@ Rectangle {
             background: Rectangle {
                 radius: 5
                 border.width: 0
-                color: parent.hovered ? "#a0dea0" : "white"
+                color: parent.hovered ? Style.hover : Style.mainBackground
             }
 
             onClicked: {
@@ -128,11 +136,18 @@ Rectangle {
             }
         }
 
+
         Button {
             id: add_button
             width: 130
             height: 40
-            text: qsTr("Добавить")
+
+            contentItem: Text {
+                text: qsTr("Добавить")
+                color: Style.buttonColor
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
 
             anchors.right: parent.right
             anchors.rightMargin: 12
@@ -142,7 +157,7 @@ Rectangle {
             background: Rectangle {
                 radius: 5
                 border.width: 0
-                color: parent.hovered ? "#a0dea0" : "white"
+                color: parent.hovered ? Style.hover : Style.mainBackground
             }
 
             onClicked: {
@@ -150,12 +165,14 @@ Rectangle {
             }
         }
 
+
         Text {
             anchors.left: guid_textField.left
             anchors.bottom: guid_textField.top
             anchors.bottomMargin: 5
 
             text: qsTr("Введите GUID пользователя:")
+            color: Style.textColor
             font.pixelSize: 15
         }
 

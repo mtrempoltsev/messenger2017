@@ -5,7 +5,6 @@ import QtQuick.Layouts 1.1
 ListView{
     //заглушка
     id: msgListView
-    ContactsList{id: contacts}
 
     property bool myMessagesDirection: true
 
