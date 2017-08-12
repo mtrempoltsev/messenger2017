@@ -4,9 +4,9 @@ set(CORE_PROJECT_NAME m2-core CACHE STRING "m2-core project name")
 project(${CORE_PROJECT_NAME})
 
 set(M2_ROOT ${CMAKE_SOURCE_DIR}/../ CACHE STRING "m2-client root dir")
-set(SUBPROJECT_ROOT "${M2_ROOT}/core")
+get_filename_component(SUBPROJECT_ROOT "${M2_ROOT}/core" ABSOLUTE)
 get_filename_component(SHARED_ROOT "${M2_ROOT}/../shared" ABSOLUTE)
-
+get_filename_component(CLI_SHARED_ROOT "${M2_ROOT}/shared" ABSOLUTE)
 option(ENABLE_TESTS "Enable m2-core tests" OFF)
 
 
@@ -75,13 +75,14 @@ if(MSVC)
     set_source_group("sources" ${SUBPROJECT_ROOT} ${HEADERS} ${SOURCES})
 endif()
 
+
+
 # ----------------------- Dependencies ----------------------
 
 include_directories(${SUBPROJECT_ROOT})
 include_directories(${SUBPROJECT_ROOT}/include)
 include_directories(${SUBPROJECT_ROOT}/../shared_client)
 
-message(STATUS "SHARED ROOT: ${SHARED_ROOT}")
 include_directories(${SHARED_ROOT}/include)
 
 # ------------------------  3rd-parties  ------------------------
@@ -105,15 +106,34 @@ set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT s
 get_filename_component(M2_COTIRE "${M2_GLOBAL_3RD_PARTY}/cotire-1.7.10/CMake" ABSOLUTE)
 set (CMAKE_MODULE_PATH "${M2_GLOBAL_3RD_PARTY};${M2_GLOBAL_3RD_PARTY}/cmake;${M2_COTIRE}")
 
-
-
 # -------------------------    DEPENDENCIES   --------------------------
+
+# ----------------------------------------------------------
+
+if (WIN32)
+    SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+    SET(BUILD_SHARED_LIBRARIES OFF)
+    SET(CURL_STATICLIB ON)
+    set(CMAKE_CXX_FLAGS -DCURL_STATICLIB)
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static -static-libs")
+    find_library(SSL_LIB libssl.a REQUIRED)
+    find_library(CRYPTO_LIB libcrypto.a REQUIRED)
+    find_library(LIBEVENTS_LIB libevent.a REQUIRED)
+    find_library(LIBEVENTS_CORE_LIB libevent_core.a REQUIRED)
+    find_library(LIBEVENTS_EXTRA_LIB libevent_extra.a REQUIRED)
+    find_library(CURL_LIB libcurl.a REQUIRED)
+    message(STATUS "LIB: ${CRYPTO_LIB}")
+
+endif()
+
+# --------------------------------------------------------
 
 find_package(Boost COMPONENTS REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
 find_package(CURL REQUIRED)
 include_directories(${CURL_INCLUDE_DIRS})
+message(STATUS "CURL: ${CURL_INCLUDE_DIRS}")
 
 find_package(Libevent REQUIRED)
 include_directories(${LIBEVENT_INCLUDE_DIRS})
@@ -128,9 +148,17 @@ include(cotire)
 cotire(${PROJECT_NAME})
 
 
-target_link_libraries(${PROJECT_NAME}
-    ${Boost_LIBRARIES} -lboost_system -lboost_filesystem)
-target_link_libraries(${PROJECT_NAME}
-    -lcurl -levent -lcrypto)
+#---------------------------------------
 
+
+message(STATUS "Libraries: ${Boost_LIBRARY_DIRS} ${CURL_LIBRARIES} ${LIBEVENT_LIBRARIES} ${OPENSSL_LIBRARIES}")
+link_directories(${Boost_LIBRARY_DIRS})
+
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${CURL_LIB}
+        ${LIBEVENTS_LIB} ${LIBEVENTS_CORE_LIB} ${LIBEVENTS_EXTRA_LIB} ${SSL_LIB} ${CRYPTO_LIB} )
+
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME} ws2_32 wldap32)
+
+endif()
 
