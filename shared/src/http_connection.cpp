@@ -1,4 +1,5 @@
 #include <cassert>
+#include <string.h>
 
 #include "../include/http_client.h"
 

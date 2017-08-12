@@ -17,8 +17,8 @@ RegisterManager::StringsPair RegisterManager::deserialize (const std::string &da
     stream << data;
 
     boost::property_tree::read_json (stream, request);
-    info.serverString = base64_decode(request.get<std::string> ("server_string"));
-    info.clientString = base64_decode(request.get<std::string> ("client_string"));
+    info.serverString = base64::base64_decode(request.get<std::string> ("server_string"));
+    info.clientString = base64::base64_decode(request.get<std::string> ("client_string"));
 
     return info;
 }

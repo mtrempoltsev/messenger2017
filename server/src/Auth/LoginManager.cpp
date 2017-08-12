@@ -7,6 +7,9 @@
 #include <shared/include/base64.h>
 
 #include "Auth/LoginManager.h"
+
+#include <base64.h>
+
 using namespace m2::server;
 
 HttpResponse::Code LoginManager::doAction(const std::string &data, std::string &response)
@@ -41,8 +44,8 @@ Manager::StringsPair LoginManager::deserialize(const std::string &data)
     stream << data;
 
     boost::property_tree::read_json(stream, request);
-    info.serverString = base64_decode(request.get<std::string>("server_string"));
-    info.clientString = base64_decode(request.get<std::string>("client_string"));
+    info.serverString = base64::base64_decode(request.get<std::string>("server_string"));
+    info.clientString = base64::base64_decode(request.get<std::string>("client_string"));
 
     return info;
 }
@@ -80,7 +83,7 @@ std::string LoginManager::createResponse(const StringsPair &pair, userInfo &resu
         result.status = response_result::ok;
         pt::ptree tree;
         std::stringstream stream;
-        tree.put("reason", base64_encode("hello", 5));
+        tree.put("reason", base64::base64_encode("hello"));
         boost::property_tree::write_json(stream, tree);
         //return std::string();
         return stream.str();
