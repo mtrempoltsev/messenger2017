@@ -21,6 +21,7 @@ set(HEADERS
     include/guiadapter.h
     include/controlers/registrationcontroler.h
     include/controlers/logincontroler.h
+    include/controlers/chatscontroler.h
     include/controlers/messagescontroler.h
     include/models/chats_filter_proxy_model.h
     include/models/chats_model.h
@@ -35,6 +36,7 @@ set(SOURCES
     src/guiadapter.cpp
     src/controlers/registrationcontroler.cpp
     src/controlers/logincontroler.cpp
+    src/controlers/chatscontroler.cpp
     src/controlers/messagescontroler.cpp
     src/models/chats_filter_proxy_model.cpp
     src/models/chats_model.cpp

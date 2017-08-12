@@ -2,15 +2,13 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+#include <include/controlers/chatscontroler.h>
 #include <include/controlers/logincontroler.h>
 #include <include/controlers/messagescontroler.h>
 #include <include/controlers/registrationcontroler.h>
 
-#include <QQmlContext>
-
 #include <include/models/chats_filter_proxy_model.h>
 #include <include/models/contacts_model.h>
-#include <include/models/messages_model.h>
 
 #include <include/guiadapter.h>
 
@@ -40,6 +38,7 @@ int main(int argc, char *argv[]) {
   RegistrationControler::declareQML();
   MessagesControler::declareQML();
   ContactsModel::declareQML();
+  ChatsControler::declareQML();
 
   /* START CORE */
   std::cout << "start core" << std::endl;
@@ -52,8 +51,18 @@ int main(int argc, char *argv[]) {
   //  if (engine.rootObjects().isEmpty())
   //    return -1;
 
-  GuiAdapter *adapter = GuiAdapter::getGuiAdapter();
-  adapter->setDispatcher(dispatcher);
+  //  GuiAdapter *adapter = GuiAdapter::getGuiAdapter();
+  // GuiAdapter::getGuiAdapter()->addModelsToEngineRoot(&engine);
+
+  QQmlApplicationEngine engine;
+
+  GuiAdapter::getGuiAdapter()->addModelsToEngineRoot(&engine);
+
+  engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
+  if (engine.rootObjects().isEmpty())
+    return -1;
+
+  GuiAdapter::getGuiAdapter()->setDispatcher(dispatcher);
 
   RegisterHandler regCallback;
   regCallback.onCompletion = []() { std::cout << "Registration complete"; };
@@ -65,14 +74,6 @@ int main(int argc, char *argv[]) {
   } catch (std::exception &ex) {
     std::cout << ex.what();
   }
-
-  QQmlApplicationEngine engine;
-
-  GuiAdapter::getGuiAdapter()->addModelsToEngineRoot(&engine);
-
-  engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
-  if (engine.rootObjects().isEmpty())
-    return -1;
 
   //  RegisterHandler rh;
   //  rh.onCompletion = []() { std::cout << "REGISTERED OK!" << std::endl; };

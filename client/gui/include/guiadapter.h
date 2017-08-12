@@ -52,6 +52,8 @@ class GuiAdapter : public QObject {
 public:
   static GuiAdapter *getGuiAdapter();
 
+  void setDispatcher(std::shared_ptr<m2::core::CoreDispatcher> dispatcher);
+
 public slots:
   void addModelsToEngineRoot(QQmlApplicationEngine *engine);
 
@@ -72,14 +74,13 @@ public slots:
   QStringList getServerList();
 
   void loginToServer();
-  // void loginToServerCallback();
+  void loginToServerCallback();
 
-  void registerToServer(const int &serverIndex);
-  // void registerToServerCallback();
-  void setDispatcher(std::shared_ptr<m2::core::CoreDispatcher> dispatcher);
+  void registerToServer(const QString &server);
+  void registerToServerCallback();
 
   /// for messages
-  void sendMessage(ModelsElements::MessageData) const;
+  void sendMessage(const ModelsElements::MessageData &message);
   void loadChatHistory();
   void uploadChatHistory() const;
 
@@ -91,7 +92,7 @@ public slots:
   /// for chats
   void deleteChat(const QString &chatID);
   void createChat(const QString &uuid);
-  QHash<QString, ModelsElements::ChatData> loadChats();
+  void loadChats();
 
   /// for chats callbacks
   void addChatCallback(ebucheeYadro::Chat chat);
@@ -99,11 +100,14 @@ public slots:
       std::unordered_map<std::string, ebucheeYadro::Chat> chatsTable);
 
   /// for contacts
-  QHash<QString, ModelsElements::ContactData> loadContacts();
+  void loadContacts();
 
   /// for contacts callbacks
   void loadContactsCallback(
       std::unordered_map<std::string, ebucheeYadro::Contact> contactsTable);
+
+  QString getCurrentChatName();
+  QString getCurrentChatAvatar();
 
 signals:
   void messagesLoaded(QVector<ModelsElements::MessageData>);
@@ -119,6 +123,9 @@ signals:
   void registrationSuccessed();
   void registrationFailed(const QString msg);
 
+  void chatsLoaded(QHash<QString, ModelsElements::ChatData>);
+  void contactsLoaded(QHash<QString, ModelsElements::ContactData>);
+
 private:
   GuiAdapter();
   ~GuiAdapter();
@@ -129,6 +136,7 @@ private:
 
   QString myUuid;
   QString currentChatID;
+
   std::shared_ptr<m2::core::CoreDispatcher> dispatcher_;
 };
 }

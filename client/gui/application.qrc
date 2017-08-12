@@ -20,5 +20,11 @@
         <file>qml/LoginPage.qml</file>
         <file>qml/RectangleLogo.qml</file>
         <file>qml/PageWithLogo.qml</file>
+        <file>qml/ContactListDelegateItem.qml</file>
+        <file>qml/Style.qml</file>
+        <file>qml/SettingsListDelegateItem.qml</file>
+        <file>qml/qmldir</file>
+        <file>img/arrow.png</file>
+        <file>img/chats.png</file>
     </qresource>
 </RCC>
