@@ -1,0 +1,13 @@
+{
+  "title": "Registration Intent Response Schema v.0.1",
+  "type": "object",
+  "properties": {
+      "server_string": {
+          "type": "string"
+      },
+      "client_string": {
+          "type": "string"
+      }
+  },
+  "required": ["server_string", "client_string"]
+}
