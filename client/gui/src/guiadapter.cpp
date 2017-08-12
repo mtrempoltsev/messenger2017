@@ -63,9 +63,9 @@ void GuiAdapter::connectionLostCallback() {}
 
 QStringList GuiAdapter::getServerList() {
   ///запросим у сервера список серверов
-  std::list<std::string> list;
-  list.push_back("neEbaServer");
-  list.push_back("ebaServer");
+  std::list<std::string> list = dispatcher_.get()->GetServerList();
+  //  list.push_back("neEbaServer");
+  //  list.push_back("ebaServer");
 
   QStringList servers;
   foreach (auto item, list) { servers.append(QString::fromStdString(item)); }
@@ -124,19 +124,27 @@ void GuiAdapter::sendMessage(const ModelsElements::MessageData &message) {
 
 void GuiAdapter::loadChatHistory() {
   //вызываем ядро, просим стартовую историю по текущему chatID
+  auto story = dispatcher_.get()->GetMessageStory(currentChatID.toStdString());
+
   //кастуем, отдаем контролеру
 
   QVector<ModelsElements::MessageData> messList;
-
-  /// а здесь пока побудет заглушка
-  if (currentChatID == "0") {
-    messList.append(MessageData("0", "0", "Eba eto ya", "17:00"));
-    messList.append(MessageData("0", "1", "Da", "18:00"));
-  } else {
-    messList.append(MessageData("1", "0", "Eba eto ti", "19:00"));
-    messList.append(MessageData("1", "1", "Net, Eba eto ti", "20:00"));
-    messList.append(MessageData("1", "0", "Nu blya", "21:00"));
+  for (auto &message : story) {
+    QString messChat = QString::number(message.GetChatId());
+    QString messFrom = QString::fromStdString(message.GetFrom());
+    QString messText = QString::fromStdString(message.GetText());
+    QString messTime = QString::fromStdString(message.GetSendTime());
+    messList.append(MessageData(messChat, messFrom, messText, messTime));
   }
+  /// а здесь пока побудет заглушка
+  //  if (currentChatID == "0") {
+  //    messList.append(MessageData("0", "0", "Eba eto ya", "17:00"));
+  //    messList.append(MessageData("0", "1", "Da", "18:00"));
+  //  } else {
+  //    messList.append(MessageData("1", "0", "Eba eto ti", "19:00"));
+  //    messList.append(MessageData("1", "1", "Net, Eba eto ti", "20:00"));
+  //    messList.append(MessageData("1", "0", "Nu blya", "21:00"));
+  //  }
 
   emit messagesLoaded(messList);
 }
@@ -174,18 +182,40 @@ void GuiAdapter::createChat(const QString &uuid) {
 
 void GuiAdapter::loadChats() {
   /// кидаем ядру запрос на список диалогов
-  /// кастуем в наши структуры
+  auto chats = dispatcher_.get()->GetChats();
 
   /// а пока тут заглушка
-
   QHash<QString, ModelsElements::ChatData> chatList;
-  chatList.insert("0",
-                  ChatData("0", MessageData("0", "0", "Eba eto ya", "17:00"),
-                           "Eba1", "/demo/dsa.jpg", 1));
+  /// кастуем в наши структуры
+  /// Алина: хз как вы хотите кастовать
+  for (auto &it : chats) {
+    auto message = it.second.GetLastMessage();
+    QString messChat = QString::number(message.GetChatId());
+    QString messFrom = QString::fromStdString(message.GetFrom());
+    QString messText = QString::fromStdString(message.GetText());
+    QString messTime = QString::fromStdString(message.GetSendTime());
 
-  chatList.insert("1",
-                  ChatData("1", MessageData("0", "0", "Eba eto ti", "19:00"),
-                           "Eba2", "/demo/asd.jpg", 1));
+    ModelsElements::MessageData messageData(messChat, messFrom, messText,
+                                            messTime);
+
+    QString id = QString::fromStdString(it.second.GetChatId());
+    QString name = QString::fromStdString(it.second.GetName());
+    QString ava = QString::fromStdString(it.second.GetAvatar());
+    int unread = it.second.GetUnreadable();
+
+    ModelsElements::ChatData bufChat(id, messageData, name, ava, unread);
+    chatList[id] = bufChat;
+  }
+
+  //  chatList.insert("0",
+  //                  ChatData("0", MessageData("0", "0", "Eba eto ya",
+  //                  "17:00"),
+  //                           "Eba1", "/demo/dsa.jpg", 1));
+
+  //  chatList.insert("1",
+  //                  ChatData("1", MessageData("0", "0", "Eba eto ti",
+  //                  "19:00"),
+  //                           "Eba2", "/demo/asd.jpg", 1));
 
   emit chatsLoaded(chatList);
 }
@@ -202,8 +232,16 @@ void GuiAdapter::loadChatsCallback(
 void GuiAdapter::loadContacts() {
   /// подтянем список контактов, кастанем и вернем
   /// список контактов так же содержит нас самих
+  //  auto contactList1 = dispatcher_.get()->GetContacts();
 
   QHash<QString, ModelsElements::ContactData> contactList;
+  //  for (auto &it : contactList1) {
+  //    QString id = QString::fromStdString(it.GetId());
+  //    QString nick = QString::fromStdString(it.GetNickname());
+  //    QString ava = QString::fromStdString(it.GetAvatar());
+
+  //    contactList.insert(id, ContactData(id, nick, ava));
+  //  }
   contactList.insert("1", ContactData("1", "me", "/demo/dsa.jpg"));
   contactList.insert("0", ContactData("0", "Eba", "/demo/asd.jpg"));
 

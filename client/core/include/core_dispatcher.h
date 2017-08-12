@@ -51,10 +51,14 @@ public:
   std::string GetUserUuid();
 
   // messages
-  void GetMessageStory(const std::string &id, MessageStoryHandler handler);
+  std::vector<Message>
+  GetMessageStory(const std::string &id /*, MessageStoryHandler handler*/);
 
   // chats
   std::unordered_map<int, Chat> GetChats();
+
+  // contacts
+  std::vector<Contact> GetContacts();
 
   void stopCore();
 

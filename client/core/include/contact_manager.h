@@ -13,6 +13,8 @@ class ContactManager {
  public:
   using ContactList = std::vector<Contact>;
 
+  ContactManager() { /*LoadContactList();*/
+  }
   void LoadContactList();
   const ContactList &GetContactList() const;
   void AddContact(const std::string &uuid, const std::string &nickname);

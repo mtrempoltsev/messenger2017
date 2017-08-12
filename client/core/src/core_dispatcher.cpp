@@ -15,19 +15,21 @@ namespace core {
 
 using namespace safelog;
 
-void CoreDispatcher::GetMessageStory(const std::string &idStr,
-                                     MessageStoryHandler handler) {
+std::vector<Message>
+CoreDispatcher::GetMessageStory(const std::string &idStr /*,
+                                     MessageStoryHandler handler*/) {
   // some uber-thread stuff (begin)
 
   // int id =
   // FIXME: int instead of int! we need string --> int conversion
   int id = std::stoi(idStr);
 
-  if (core_->GetMessageManager()->ChatExists(id)) {
-    auto story = core_->GetMessageManager()->GetMessageStory(id);
-    handler.onCompletion(story);
-  } else
-    handler.onError();
+  //  if (core_->GetMessageManager()->ChatExists(id)) {
+  std::vector<Message> story = core_->GetMessageManager()->GetMessageStory(id);
+  return story;
+  //    handler.onCompletion(story);
+  //  } else
+  //    handler.onError();
   // some uber-thread stuff  (end)
 }
 
@@ -89,6 +91,10 @@ std::string CoreDispatcher::GetUserUuid() { return GetUserUuid(); }
 
 std::unordered_map<int, Chat> CoreDispatcher::GetChats() {
   return core_->GetMessageManager()->GetChats();
+}
+
+std::vector<Contact> CoreDispatcher::GetContacts() {
+  return core_->GetContactManager()->GetContactList();
 }
 
 } // core

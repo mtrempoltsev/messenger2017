@@ -13,13 +13,13 @@ namespace core {
 
 using namespace boost::property_tree;
 
-std::istream& operator>>(std::istream& stream, Message& message) {
+std::istream &operator>>(std::istream &stream, Message &message) {
   stream >> message.chat_id_ >> message.from_uuid_ >> message.sendTime_ >>
       message.text_;
   return stream;
 }
 
-std::ostream& operator<<(std::ostream& stream, const Message& message) {
+std::ostream &operator<<(std::ostream &stream, const Message &message) {
   stream << message.chat_id_ << " " << message.from_uuid_ << " "
          << message.sendTime_ << " " << message.text_;
   return stream;
@@ -32,15 +32,15 @@ MessageManager::MessageManager() {
   chatsIds_.insert(3);
 
   // загружаем истории всех чатов
-  for (auto& it : chatsIds_) {
+  for (auto &it : chatsIds_) {
     LoadMessageStory(it);
   }
 }
-const MessageManager::MessageStory& MessageManager::GetMessageStory(
-    const int chatId) const {
-  if (storyByChat_.count(chatId) > 0)  // если есть чат с заданным id
+const MessageManager::MessageStory &
+MessageManager::GetMessageStory(const int chatId) const {
+  if (storyByChat_.count(chatId) > 0) // если есть чат с заданным id
     return storyByChat_.at(chatId);
-  else  // чата нет
+  else // чата нет
     /* FIXME: мб надо какой-нибудь optional<Error> ? */
     return emptyStory_;
 }
@@ -58,7 +58,7 @@ void MessageManager::LoadMessageStory(int chatId) {
       ptree pt;
       read_json(stream, pt);
       MessageBuilder mb;
-      for (auto& it : pt.get_child("messages")) {
+      for (auto &it : pt.get_child("messages")) {
         mb.chat_id = it.second.get<int>("chat_id");
         mb.from_uuid = it.second.get<std::string>("from_uuid");
         // TODO: time (from string --> time?)
@@ -71,12 +71,12 @@ void MessageManager::LoadMessageStory(int chatId) {
       // после того, как вся история прочитана, формируем "чат" и берём
       // последнее
       // сообщение из диалога
-      Chat bufChat(mb.chat_id, "NO CHAT NAME", "panda.jpg", Message(mb), 0);
+      Chat bufChat(mb.chat_id, "NO CHAT NAME", "/demo/asd.jpg", Message(mb), 0);
       startedChats_[mb.chat_id] = bufChat;
 
       stream.close();
     }
-  } catch (std::exception& ex) {
+  } catch (std::exception &ex) {
   }
 }
 
@@ -88,8 +88,8 @@ void MessageManager::SaveMessageStory() {
   try {
     if (stream.is_open()) {
       ptree pt, jsonHistory, child;
-      for (auto& story : storyByChat_) {
-        for (auto& message : story.second) {
+      for (auto &story : storyByChat_) {
+        for (auto &message : story.second) {
           child.put("chat_id", message.GetChatId());
           child.put("from_uuid", message.GetFrom());
           child.put("send_time", message.GetSendTime());
@@ -101,11 +101,11 @@ void MessageManager::SaveMessageStory() {
         stream.close();
       }
     }
-  } catch (std::exception& ex) {
+  } catch (std::exception &ex) {
     // TODO: exception handling
     std::cout << "SAVE exception " << ex.what() << std::endl;
   }
 }
 
-}  // core
-}  // m2
+} // core
+} // m2
