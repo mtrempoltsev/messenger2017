@@ -9,10 +9,16 @@ ChatsFilterProxyModel::ChatsFilterProxyModel(QObject* parent) : QSortFilterProxy
     this->setSourceModel(model);
 }
 
-void ChatsFilterProxyModel::addNewChat()
+
+void ChatsFilterProxyModel::addNewChat(const QString &ID, const QString &Name, QString Avatar)
 {
-    //TODO: заглушка
-    model->addNewChat("asd", "New Eba");
+    model->addNewChat(ID, Name, Avatar);
+}
+
+
+void ChatsFilterProxyModel::addNewChat(const ChatData &chat)
+{
+    model->addNewChat(chat);
 }
 
 
@@ -22,9 +28,9 @@ void ChatsFilterProxyModel::deleteChat(const QString& ID)
 }
 
 
-void ChatsFilterProxyModel::updateChat(const QString& ID, const MessageData mess)
+void ChatsFilterProxyModel::updateChat(const MessageData mess)
 {
-    model->updateChatMessage(ID, mess);
+    model->updateChatMessage(mess.chatUuid.toString(), mess);
 }
 
 
@@ -37,6 +43,18 @@ void ChatsFilterProxyModel::clearChatUnread(const QString& ID)
 void ChatsFilterProxyModel::loadChatList(QHash<QString, ModelsElements::ChatData> &chatList)
 {
     model->loadChatList(chatList);
+}
+
+
+QString ChatsFilterProxyModel::getChatName(const QString &ID)
+{
+    return model->getChatName(ID);
+}
+
+
+QString ChatsFilterProxyModel::getChatAvatar(const QString &ID)
+{
+    return model->getChatAvatar(ID);
 }
 
 

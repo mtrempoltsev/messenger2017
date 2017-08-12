@@ -17,7 +17,7 @@ RowLayout {
     }
 
     id: delegateItem
-    readonly property bool sentByMe: FromUuid == 1
+    readonly property bool sentByMe: FromUuid == "1"
     layoutDirection: getLayoutDirection()
     Layout.alignment: getMsgAligment()
     width: parent.width

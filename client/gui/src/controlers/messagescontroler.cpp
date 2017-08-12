@@ -1,7 +1,9 @@
 #include <include/controlers/messagescontroler.h>
+#include <include/models/chats_filter_proxy_model.h>
 
 #include <QtQml>
 #include <QDate>
+
 
 using namespace m2::gui::controler;
 using namespace ModelsElements;
@@ -13,8 +15,9 @@ MessagesControler::MessagesControler(QObject *parent) : QObject(parent)
 
     connect(adapter, SIGNAL(newMessage(ModelsElements::MessageData)), this, SLOT(receiveMessage(ModelsElements::MessageData)));
     connect(adapter, SIGNAL(messagesLoaded(QVector<ModelsElements::MessageData>)), this, SLOT(loadChat(QVector<ModelsElements::MessageData>)));
+    connect(adapter, SIGNAL(currentChatChanged(QString)), this, SLOT(changeChat()));
 
-    loadHistory();
+    changeChat();
 }
 
 
@@ -26,9 +29,14 @@ void MessagesControler::declareQML()
 
 void MessagesControler::sendNewMessage(const QString &text)
 {
-    MessageData newMess(adapter->getMyUuid(), adapter->getCurrentChatID(), text, QDateTime::currentDateTime().toString("hh:mm"));
-    messagesModel->addMessage(newMess);
+    MessageData newMess(adapter->getCurrentChatID(), adapter->getMyUuid(), text, QDateTime::currentDateTime().toString("hh:mm"));
     adapter->sendMessage(newMess);
+}
+
+
+void MessagesControler::getChatData()
+{
+    emit chatChanged(adapter->getCurrentChatName(), adapter->getCurrentChatAvatar());
 }
 
 
@@ -45,7 +53,16 @@ void MessagesControler::loadChat(QVector<ModelsElements::MessageData> messages)
 }
 
 
-void MessagesControler::receiveMessage(MessageData message)
+void MessagesControler::receiveMessage(const MessageData &message)
 {
     messagesModel->addMessage(message);
+}
+
+
+void MessagesControler::changeChat()
+{
+    messagesModel->cleanChat();
+    loadHistory();
+
+    getChatData();
 }

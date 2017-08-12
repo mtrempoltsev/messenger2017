@@ -21,21 +21,22 @@ public:
     explicit MessagesControler(QObject* parent = 0);
     static void declareQML();
 
-    Q_INVOKABLE void sendNewMessage(const QString &text);
-    Q_INVOKABLE void loadHistory();
-
-
 public slots:
+    Q_INVOKABLE void loadHistory();
+    Q_INVOKABLE void sendNewMessage(const QString &text);
+    Q_INVOKABLE void getChatData();
+
+
     void loadChat(QVector<ModelsElements::MessageData> messages);
-    void receiveMessage(ModelsElements::MessageData message);
+    void receiveMessage(const ModelsElements::MessageData &message);
+    void changeChat();
 
 signals:
     void newMessage();
-
+    void chatChanged(QString name, QString avatar);
 
 private:
     MessagesModel* messagesModel;
-
     GuiAdapter* adapter;
 };
 

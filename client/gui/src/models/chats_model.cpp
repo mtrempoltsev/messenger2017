@@ -1,22 +1,12 @@
 #include "include/models/chats_model.h"
 
-#include <QByteArray>
+#include <QDebug>
 
 using namespace ModelsElements;
 
 ChatsModel::ChatsModel(QObject *parent) : QAbstractListModel(parent)
 {
-    itemList.insert("0",ChatData(
-                        "0",
 
-                        MessageData(
-                            "1", "0",
-                            "Eba?",
-                            "18:00"),
-
-                        "Eba",
-                        "/demo/dsa.jpg",
-                        1));
 }
 
 
@@ -34,22 +24,23 @@ QVariant ChatsModel::data(const QModelIndex &index, int role) const
         QHash<QString, ChatData>::const_iterator iter = itemList.constBegin() + index.row();
 
         switch (role) {
-        case ChatDataRoles::ChatID:
+        case ChatID:
             return iter.value().chatID;
-        case ChatDataRoles::Name:
+        case Name:
             return iter.value().name;
-        case ChatDataRoles::Avatar:
+        case Avatar:
             return iter.value().avatar;
-        case ChatDataRoles::LastMessageGuid:
+        case LastMessageGuid:
             return iter.value().lastMessage.fromUuid;
-        case ChatDataRoles::LastMessageText:
+        case LastMessageText:
             return iter.value().lastMessage.messText;
-        case ChatDataRoles::LastMessageTime:
+        case LastMessageTime:
             return iter.value().lastMessage.messTime;
-        case ChatDataRoles::Unreadable:
+        case Unreadable:
             return iter.value().avatar;
         }
     }
+
     return QVariant();
 }
 
@@ -73,27 +64,50 @@ QHash<int, QByteArray> ChatsModel::roleNames() const
 void ChatsModel::deleteChat(const QString& ID)
 {
     if (itemList.contains(ID))
+    {
+        beginRemoveRows(index(0,0), 0, itemList.size() - 1);
         itemList.remove(ID);
+        endRemoveRows();
+    }
 }
 
 
 void ChatsModel::clearChatUnread(const QString& ID)
 {
     if (itemList.contains(ID))
+    {
         itemList[ID].unreadable = QVariant(0);
+        emit dataChanged(index(0,0), index(itemList.size() - 1,0));
+    }
+}
+
+
+QString ChatsModel::getChatName(const QString &ID)
+{
+    return getChatByID(ID)->name.toString();
+}
+
+
+QString ChatsModel::getChatAvatar(const QString &ID)
+{
+    return getChatByID(ID)->avatar.toString();
 }
 
 
 void ChatsModel::updateChatMessage(const QString& ID, const MessageData mess)
 {
     if (itemList.contains(ID))
+    {
         itemList[ID].lastMessage = mess;
+        emit dataChanged(index(0,0), index(itemList.size() - 1,0));
+    }
 }
 
 
 void ChatsModel::loadChatList(QHash<QString, ModelsElements::ChatData> &chatList)
 {
     itemList = chatList;
+    emit dataChanged(index(0,0), index(itemList.size() - 1,0));
 }
 
 
@@ -118,9 +132,15 @@ void ChatsModel::addNewChat(const QString& ID, const QString &name, QString avat
                         avatar,
                         0));
 
+    endInsertRows();
+}
+
+
+void ChatsModel::addNewChat(const ChatData &chat)
+{
+    beginInsertRows(QModelIndex(), itemList.size(), itemList.size());
+
+    itemList.insert(chat.chatID.toString(), chat);
 
     endInsertRows();
-
-    QModelIndex index = createIndex(0, 0, static_cast<void *>(0));
-    emit dataChanged(index, index);
 }

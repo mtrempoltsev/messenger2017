@@ -6,25 +6,7 @@ using namespace ModelsElements;
 
 MessagesModel::MessagesModel(QObject *parent) : QAbstractListModel(parent)
 {
-    itemList.append(MessageData(
-                            "1","0",
-                            "Eba?",
-                            "10:00"
-                            ));
-
-        itemList.append(MessageData(
-                            "0","0",
-                            "Eba",
-                            "10:10"
-                            ));
-
-        itemList.append(MessageData(
-                            "1", "0",
-                            "Eba?1",
-                            "11:00"
-                            ));
-
-       qDebug()<<"create MessagesModel";
+    qDebug()<<"create MessagesModel";
 }
 
 
@@ -36,7 +18,14 @@ MessagesModel::~MessagesModel()
 
 void MessagesModel::addMessage(const MessageData &mess)
 {
+    beginInsertRows(QModelIndex(), itemList.size(), itemList.size());
+
     itemList.append(mess);
+
+    endInsertRows();
+
+    QModelIndex index = createIndex(itemList.size(), itemList.size(), static_cast<void *>(0));
+    emit dataChanged(index, index);
 }
 
 
@@ -48,7 +37,12 @@ void MessagesModel::loadMessageHistory()
 
 void MessagesModel::cleanChat()
 {
+    beginRemoveRows(QModelIndex(), 0, itemList.size() - 1);
     itemList.clear();
+    endRemoveRows();
+
+    QModelIndex index = createIndex(0, 0, static_cast<void *>(0));
+    emit dataChanged(index, index);
 }
 
 

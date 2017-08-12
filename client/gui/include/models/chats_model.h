@@ -23,13 +23,18 @@ public:
         Unreadable
     };
 
+
     ChatsModel(QObject *parent = 0);
 
 
     void addNewChat(const QString& ID, const QString &Name, QString Avatar = QString());
+    void addNewChat(const ModelsElements::ChatData &chat);
     void deleteChat(const QString& ID);
     void updateChatMessage(const QString& ID, const ModelsElements::MessageData mess);
     void clearChatUnread(const QString& ID);
+
+    QString getChatName(const QString &ID);
+    QString getChatAvatar(const QString &ID);
 
     void loadChatList(QHash<QString, ModelsElements::ChatData> &chatList);
 

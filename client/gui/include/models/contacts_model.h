@@ -23,8 +23,9 @@ public:
     Q_ENUMS(ContactDataRoles)
 
     ContactsModel(QObject* parent = 0);
+    static void declareQML();
 
-    void loadContactList(); //TODO: заглушка
+
     ModelsElements::ContactData *getContactByID(const QString &ID);
 
     Q_INVOKABLE QVariant getDataForID(const QString &ID, const int role);
@@ -33,7 +34,9 @@ public:
     virtual QVariant data(const QModelIndex &index, int role) const;
     virtual QHash<int, QByteArray> roleNames() const;
 
-    static void declareQML();
+
+public slots:
+    void loadContactList(QHash<QString, ModelsElements::ContactData> &contactList);
 
 private:
     QHash <QString, ModelsElements::ContactData> contacts;

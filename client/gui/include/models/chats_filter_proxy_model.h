@@ -13,12 +13,15 @@ class ChatsFilterProxyModel : public QSortFilterProxyModel
 public:
     ChatsFilterProxyModel(QObject* parent = 0);
 
-    void addNewChat();  //TODO: заглушка
+    void addNewChat(const QString& ID, const QString &Name, QString Avatar = QString());
+    void addNewChat(const ModelsElements::ChatData &chat);
     void deleteChat(const QString& ID);
-    void updateChat(const QString& ID, const ModelsElements::MessageData mess);
+    void updateChat(const ModelsElements::MessageData mess);
     void clearChatUnread(const QString& ID);
     void loadChatList(QHash<QString, ModelsElements::ChatData> &chatList);    //TODO: заглушка
 
+    QString getChatName(const QString &ID);
+    QString getChatAvatar(const QString &ID);
 
     void setNameFilter(const QString &nameFilter);
 

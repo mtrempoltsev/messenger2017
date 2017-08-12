@@ -16,11 +16,11 @@ public:
     explicit RegistrationControler(QObject* parent = nullptr);
 
     static void declareQML();
-    Q_INVOKABLE void registerMe(const int &serverIndex) const;
+    Q_INVOKABLE void registerMe(const QString &server) const;
     Q_INVOKABLE QVariant getServerList();
 
 signals:
-    void startRegister(const int &serverIndex) const;
+    void startRegister(const QString &server) const;
     void finishRegisterSuccessed() const;
     void finishRegisterFailed(const QString msg) const;
 

@@ -14,7 +14,7 @@ RegistrationControler::RegistrationControler(QObject* parent)
 {
     GuiAdapter* adapter = GuiAdapter::getGuiAdapter();
 
-    connect(this, SIGNAL(startRegister(int)), adapter, SLOT(registerToServer(int)));
+    connect(this, SIGNAL(startRegister(QString)), adapter, SLOT(registerToServer(QString)));
     connect(adapter, SIGNAL(registrationSuccessed()), this, SIGNAL(finishRegisterSuccessed()));
     connect(adapter, SIGNAL(registrationFailed(QString)), this, SIGNAL(finishRegisterFailed(QString)));
 }
@@ -26,9 +26,9 @@ void RegistrationControler::declareQML()
 }
 
 
-void RegistrationControler::registerMe(const int &serverIndex) const
+void RegistrationControler::registerMe(const QString &server) const
 {
-    emit startRegister(serverIndex);
+    emit startRegister(server);
 }
 
 

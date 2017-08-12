@@ -1,5 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
+import QtGraphicalEffects 1.0
+import "."
 
 Page {
     id: root
@@ -13,10 +15,15 @@ Page {
         source: "/demo/ava.jpg"
     }
 
+    background: Rectangle {
+        color: Style.mainBackground
+    }
+
     Text {
         id: text_name
         text: qsTr("Владимир Пряхин")
         font.pixelSize: 20
+        color: Style.textColor
 
         anchors.left: avatar.right
         anchors.leftMargin: 10
@@ -57,17 +64,31 @@ Page {
 
         background: Rectangle {
             radius: 10
-            color: parent.hovered ? "#a0dea0" : "white"
+            color: parent.hovered ? Style.hover : Style.mainBackground
         }
 
         contentItem: Image {
             id: setimg
             source: "/img/settings.png"
         }
+        ColorOverlay {
+            anchors.fill: setimg
+            source: setimg
+            color: Style.buttonColor
+        }
 
         onClicked: {
-            //stackView.push("qrc:/qml/SettingsPage.qml")
-            rightside.push("qrc:/qml/SettingsPage.qml")
+            if (settings.visible) {
+                contacts.visible = true
+                settings.visible = false
+                setimg.source = "/img/settings.png"
+            } else {
+                contacts.visible = false
+                settings.visible = true
+                setimg.source = "/img/chats.png"
+            }
+
+            //            rightside.push("qrc:/qml/SettingsPage.qml")
         }
     }
 }

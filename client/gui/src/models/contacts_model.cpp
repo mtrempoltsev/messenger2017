@@ -1,19 +1,25 @@
 #include "include/models/contacts_model.h"
+#include <include/guiadapter.h>
+
+#include <QDebug>
 
 using namespace ModelsElements;
-
+using namespace m2::gui::controler;
 
 ContactsModel::ContactsModel(QObject *parent) : QAbstractListModel(parent)
 {
-    //TODO: заглушка
-    contacts.insert("1", ContactData("1", "me", "/demo/dsa.jpg"));
-    contacts.insert("0", ContactData("0", "Eba", "/demo/asd.jpg"));
 }
 
 
-void ContactsModel::loadContactList() //TODO: заглушка
+void ContactsModel::declareQML()
 {
+    qmlRegisterUncreatableType<ContactsModel>("ContactsModel", 1, 0, "ContactsModel", "none");
+}
 
+
+void ContactsModel::loadContactList(QHash<QString, ContactData> &contactList)
+{
+    contacts = contactList;
 }
 
 
@@ -80,9 +86,4 @@ QHash<int, QByteArray> ContactsModel::roleNames() const
     roles[Avatar] = "Avatar";
 
     return roles;
-}
-
-void ContactsModel::declareQML()
-{
-    qmlRegisterUncreatableType<ContactsModel>("ContactsModel", 1, 0, "ContactsModel", "none");
 }

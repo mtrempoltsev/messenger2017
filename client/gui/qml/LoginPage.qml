@@ -10,17 +10,14 @@ PageWithLogo {
     controler:  LoginControler {
         id: loginControler
 
-
         onFinishLoginFailed: {
             loginPage.state = "error"
         }
-
 
         onFinishLoginSuccessed: {
             loginPage.state = "base state"
             stackView.push("qrc:/qml/MainPage.qml")
         }
-
 
         onStartLogin: loginPage.state = "loading"
     }
